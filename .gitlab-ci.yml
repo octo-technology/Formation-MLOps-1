@@ -1,0 +1,14 @@
+stages:
+- validation
+
+supports-de-tp:
+  stage: validation
+  image: continuumio/miniconda3:4.8.2
+  before_script:
+    - apt-get install -yq bats
+    - apt-get install -yq make && make help
+    - conda init bash && source ~/.bashrc
+    - make conda-env && conda activate python_indus
+    - conda env list
+  script:
+    - conda activate python_indus && make test-tps
