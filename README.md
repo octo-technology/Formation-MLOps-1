@@ -12,7 +12,7 @@ First, clone the project from GitLab : (if you are on Windows you will
 need [Git for windows](https://gitforwindows.org/) and do git command in Git Bash)
 
 ```sh
-git clone git@gitlab.com:etoulemonde/formation_indus_ds.git
+git clone git@github.com:octo-technology/Formation-MLOps-1.git
 ```
 
 ### 2. Open it in pycharm and configure pycharm
@@ -30,10 +30,21 @@ If on Windows, configure your terminal in Pycharm so that you can run all comman
 
 Third, make sure you have miniconda or anaconda installed. If not, install it!
 
+Change directory into the repo you cloned
+
+```sh
+cd Formation-MLOps-1
+```
+
 Create a conda env
 
 ```sh
 conda create -n formation_mlops_1 python=3.10
+```
+
+Activate your env
+
+```sh
 conda activate formation_mlops_1
 ```
 
@@ -46,7 +57,6 @@ pip install -r requirements.txt
 Start a jupyter notebook in the folder
 
 ```sh
-cd Formation-MLOps-1
 jupyter-notebook
 ```
 
