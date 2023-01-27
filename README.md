@@ -30,6 +30,22 @@ Following instructor demonstration you will create a documentation using
 `sphinx`. The result will be some `html` pages. 
 
 
+Installation
+-------------------
+Install the required package in the proper environment.
+
+```shell
+pip install -r requirements_test.txt
+```
+
+Initiate your documentation by running the following commands.
+```shell
+mkdir ./docs
+cd docs
+sphinx-quickstart
+```
+
+
 When I'm done ?
 ---------------
 When you are done, please wait for the rest of the group.
