@@ -1,6 +1,6 @@
 # Add sphinx doc (5)
 
-![branch build status](https://github.com/octo-technology/Formation-MLOps-1/actions/workflows/ci.yml/badge.svg?branch=5_add_sphinx_doc)
+![branch build status](https://github.com/octo-technology/Formation-MLOps-1/actions/workflows/validation_ci.yml/badge.svg?branch=5_add_sphinx_doc)
 
 What is this?
 -------------
