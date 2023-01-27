@@ -11,6 +11,15 @@ At this step :
 - Your functions are tested
 - Your package have a documentation
 
+
+Installation
+------------
+Update required package in the proper environment.
+
+```shell
+pip install -r requirements_test.txt
+```
+
 What is the goal ?
 -------------------
 The goal at this step is to create a CI with GitHub Actions.
