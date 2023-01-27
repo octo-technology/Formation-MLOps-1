@@ -1,6 +1,10 @@
+# Comment functions (2)
+
+![branch build status](https://github.com/octo-technology/Formation-MLOps-1/actions/workflows/ci.yml/badge.svg?branch=2_comment_functions)
+
 What is this?
 -------------
-At this step : 
+At this step :
 - Your notebook is clean and running
 - You have a few documented functions
 
@@ -8,9 +12,9 @@ What is the goal ?
 -------------------
 The goal at this step is to extract your functions in a `.py` file.
 
-You will then be able to reuse those functions in other notebooks. 
+You will then be able to reuse those functions in other notebooks.
 
-To do that : 
+To do that :
 - Create a `src` folder
 - Create a `feature_engineering.py` file in this folder
 - Cut from notebook and paste in `.py` file the code of your functions
@@ -26,11 +30,11 @@ When I'm done ?
 ---------------
 When you are done, please wait for the rest of the group.
 
-For the next step of the practical work, you can either 
+For the next step of the practical work, you can either
 keep on working on the code as it is, or checkout branch `3_extract_code_into_source`
 
-To checkout branch `3_extract_code_into_source` you need to either commit 
-or stash your changes : 
+To checkout branch `3_extract_code_into_source` you need to either commit
+or stash your changes :
 ```
 git stash
 git checkout 3_extract_code_into_source
