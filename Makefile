@@ -18,9 +18,9 @@ test-tps:
 
 .PHONY: sphinx  ## crée la documentation
 sphinx:
-	sphinx-build -b html docs docs/_build	
+	sphinx-build -b html docs docs/_build
 
 
-.PHONY: distribution  ## crée le package 
+.PHONY: distribution  ## crée le package
 distribution:
 	python3 setup.py sdist bdist_wheel
