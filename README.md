@@ -1,3 +1,7 @@
+# Clean notebook (1)
+
+![branch build status](https://github.com/octo-technology/Formation-MLOps-1/actions/workflows/ci.yml/badge.svg?branch=1_clean_notebook)
+
 What is this?
 -------------
 This is the second branch of this practical work.
@@ -6,7 +10,7 @@ At this step your notebook is clean, running, and you have a few functions.
 
 What is the goal ?
 -------------------
-The goal at this step is to document functions. 
+The goal at this step is to document functions.
 
 To do that you should use type hinting and docstrings.
 
@@ -19,11 +23,11 @@ When I'm done ?
 ---------------
 When you are done, please wait for the rest of the group.
 
-For the next step of the practical work, you can either 
+For the next step of the practical work, you can either
 keep on working on the code as it is, or checkout branch `2_comment_functions`
 
-To checkout branch `2_comment_functions` you need to either commit 
-or stash your changes : 
+To checkout branch `2_comment_functions` you need to either commit
+or stash your changes :
 ```
 git stash
 git checkout 2_comment_functions
