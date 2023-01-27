@@ -11,21 +11,6 @@ At this step :
 - Your functions are tested
 
 
-Installation
--------------------
-Install the required package in the proper environment.
-
-```shell
-pip install sphinx==6.1.3
-```
-
-Initiate your documentation by running the following commands.
-```shell
-mkdir ./docs
-cd docs
-sphinx-quickstart
-```
-
 What is the goal ?
 -------------------
 The goal at this step is to generate a sphinx documentation.
