@@ -16,7 +16,7 @@ def process_name(train: pd.DataFrame, test: pd.DataFrame):
 
     """
     for df in [train, test]:
-        df['Name_Len'] = df['Name'].apply(lambda x: len(x))
+        df['Name_Len'] = df['Name'].apply(len)
         df['Name_Title'] = df['Name'].apply(lambda x: x.split(',')[1]).apply(lambda x: x.split()[0])
 
 
@@ -47,8 +47,13 @@ def size_family(train: pd.DataFrame, test: pd.DataFrame):
 
     """
     for df in [train, test]:
-        df['Family_Size'] = np.where((df['SibSp'] + df['Parch']) == 0, 'Solo',
-                                     np.where((df['SibSp'] + df['Parch']) <= 3, 'Nuclear', 'Big'))
+        df['Family_Size'] = np.where(
+                                (df['SibSp'] + df['Parch']) == 0, 'Solo',
+                                np.where(
+                                    (df['SibSp'] + df['Parch']) <= 3, 'Nuclear',
+                                    'Big'
+                                )
+                            )
 
 
 def group_ticket(train: pd.DataFrame, test: pd.DataFrame):
@@ -67,11 +72,15 @@ def group_ticket(train: pd.DataFrame, test: pd.DataFrame):
     letter_group_2 = ['W', '4', '7', '6', 'L', '5', '8']
     for df in [train, test]:
         df['Ticket_Letter'] = df['Ticket'].apply(lambda x: str(x)[0])
-        df['Ticket_Letter'] = df['Ticket_Letter'].apply(lambda x: str(x))
-        df['Ticket_Category'] = np.where((df['Ticket_Letter']).isin(letter_group_1), df['Ticket_Letter'],
-                                         np.where((df['Ticket_Letter']).isin(letter_group_2),
-                                                  'Low_ticket', 'Other_ticket'))
-        df['Ticket_Length'] = df['Ticket'].apply(lambda x: len(x))
+        df['Ticket_Letter'] = df['Ticket_Letter'].apply(str)
+        df['Ticket_Category'] = np.where(
+                                    (df['Ticket_Letter']).isin(letter_group_1), df['Ticket_Letter'],
+                                    np.where(
+                                        (df['Ticket_Letter']).isin(letter_group_2), 'Low_ticket',
+                                        'Other_ticket'
+                                    )
+                                )
+        df['Ticket_Length'] = df['Ticket'].apply(len)
 
 
 def get_cabin_first_letter(train: pd.DataFrame, test: pd.DataFrame):
@@ -114,7 +123,7 @@ def dummy_cabin_number(train: pd.DataFrame, test: pd.DataFrame) -> Tuple[pd.Data
 def impute_embarked(train: pd.DataFrame, test: pd.DataFrame):
     """
     Fills the null values in the Embarked column with the most commonly
-    occuring value, which is 'S.'
+    occurring value, which is 'S.'
 
     Args:
         train: The train set
@@ -143,10 +152,10 @@ def dummies(train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list):
 
     """
     for column in dummy_columns:
-        train[column] = train[column].apply(lambda x: str(x))
-        test[column] = test[column].apply(lambda x: str(x))
+        train[column] = train[column].apply(str)
+        test[column] = test[column].apply(str)
 
-        good_cols = [column + '_' + i for i in train[column].unique() if i in test[column].unique()]
+        good_cols = [f'{column}_{i}' for i in train[column].unique() if i in test[column].unique()]
         train = pd.concat((train, pd.get_dummies(train[column], prefix=column)[good_cols]), axis=1)
         test = pd.concat((test, pd.get_dummies(test[column], prefix=column)[good_cols]), axis=1)
     return train, test
