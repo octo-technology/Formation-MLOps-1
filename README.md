@@ -1,8 +1,6 @@
 # Initial state (0)
 
-![branch build status][badge]
-
-[badge]: https://gitlab.com/octo-technology/octo-bda/cercle-formation/dsind/badges/0_initial_state/pipeline.svg
+![branch build status](https://github.com/octo-technology/Formation-MLOps-1/actions/workflows/ci.yml/badge.svg?branch=0_initial_state)
 
 ## What is this
 
