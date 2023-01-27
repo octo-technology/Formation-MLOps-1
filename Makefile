@@ -25,7 +25,7 @@ conda-env:
 notebook-validation:
 	jupyter nbconvert --to notebook --execute notebook/titanic.ipynb
 
-.PHONY: tp1-validation  ## 1️⃣ Valide que le TP1 est fonctionnel. L'import de pandas dans le notebook doit échouer.
+.PHONY: tp-validation  ## 1️⃣ Valide que le TP1 est fonctionnel. L'import de pandas dans le notebook doit échouer.
 tp1-validation:
 	$(MAKE) notebook-validation 2>execution_output.log || true
 	execution_output=$$(cat execution_output.log && rm -f execution_output.log)

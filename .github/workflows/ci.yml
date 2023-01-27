@@ -13,5 +13,5 @@ jobs:
         cache: 'pip' # caching pip dependencies
     - name: Install python libraries
       run: pip install -r requirements.txt
-    - name: Run tp1-validation
-      run: make tp1-validation
+    - name: Run tp-validation
+      run: make tp-validation
