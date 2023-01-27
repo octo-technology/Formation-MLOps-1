@@ -4,7 +4,7 @@ import pandas as pd
 from src.feature_engineering import process_name, impute_age
 
 
-def test_process_name_should_create_column_name_lenght():
+def test_process_name_should_create_column_name_length():
     # Given
     train = pd.DataFrame(
         {
@@ -26,7 +26,7 @@ def test_process_name_should_create_column_name_lenght():
                  'Wirz, Mr. Albert',
                  'Hirvonen, Mrs. Alexander (Helga E Lindqvist)']
         })
-    expected_test_lenght = [16, 32, 25, 16, 44]
+    expected_test_length = [16, 32, 25, 16, 44]
 
     # When
     process_name(train, test)
@@ -35,7 +35,7 @@ def test_process_name_should_create_column_name_lenght():
     assert "Name_Len" in train.columns
     assert "Name_Len" in test.columns
     assert train["Name_Len"].tolist() == expected_train_length
-    assert test["Name_Len"].tolist() == expected_test_lenght
+    assert test["Name_Len"].tolist() == expected_test_length
 
 
 def test_names_should_create_column_name_title():
