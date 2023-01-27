@@ -12,7 +12,7 @@ help:
 notebook-validation:
 	jupyter nbconvert --to notebook --execute notebook/titanic.ipynb
 
-.PHONY: tp2-validation  ## 1️⃣ Valide que le notebook est bien clean
+.PHONY: tp-validation  ## 1️⃣ Valide que le notebook est bien clean
 tp2-validation:
 	$(MAKE) notebook-validation 2>execution_output.log || true
 	execution_output=$$(cat execution_output.log && rm -f execution_output.log)
