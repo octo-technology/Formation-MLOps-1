@@ -16,6 +16,13 @@ The goal at this step is to test your functions.
 Following instructor demonstration you will create a few unit tests using
 `unittest` or `pytest` frame work.
 
+Installation
+------------
+Install the required package in the proper environment.
+
+```shell
+pip install -r requirements_test.py
+```
 
 When I'm done ?
 ---------------
