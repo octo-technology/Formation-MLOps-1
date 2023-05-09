@@ -14,6 +14,17 @@ In this branch you will find :
 - A `setup.py`
 - A predict notebook that reload model and make predictions.
 
+How to run the docker container ?
+---------------------------------
+
+```
+docker build -t mlops-1 .
+docker run -p 80:80 mlops-1
+```
+
+The API is exposed and can be reached at 0.0.0.0:80
+The doc is available [here](http://127.0.0.1/docs)
+
 How to restart ?
 ----------------
 
