@@ -1,14 +1,32 @@
 from typing import Tuple, List
+from abc import ABCMeta, abstractmethod
 
 import numpy as np
 import pandas as pd
 
-from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import KBinsDiscretizer
 
 
-class ProcessNameTransformer(BaseEstimator, TransformerMixin):
+class Transformer(metaclass=ABCMeta):
+    """Abstract class used for data preprocessing."""
+
+    @abstractmethod
+    def fit(self, X: pd.DataFrame):
+        """Fits the transformation based on training data."""
+        pass
+
+    @abstractmethod
+    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
+        """Applies transformation after fit."""
+        pass
+
+    def fit_transform(self, X: pd.DataFrame) -> pd.DataFrame:
+        """Fits data on X and applies the transformation."""
+        self.fit(X)
+        return self.transform(X)
+
+
+class ProcessNameTransformer(Transformer):
     """
     Creates two separate columns: a numeric column indicating the length of a
     passenger's Name field, and a categorical column that extracts the
@@ -25,7 +43,7 @@ class ProcessNameTransformer(BaseEstimator, TransformerMixin):
         return X_new
 
 
-class ImputeAgeTransformer(BaseEstimator, TransformerMixin):
+class ImputeAgeTransformer(Transformer):
     """
     Imputes the null values of the Age column by filling in the mean value of
     the passenger's corresponding title and class.
@@ -57,7 +75,7 @@ class ImputeAgeTransformer(BaseEstimator, TransformerMixin):
         return X_new
 
 
-class SizeFamilyTransformer(BaseEstimator, TransformerMixin):
+class SizeFamilyTransformer(Transformer):
     """
     Combines the SibSp and Parch columns into a new variable that indicates
     family size, and group the family size variable into three categories.
@@ -78,7 +96,7 @@ class SizeFamilyTransformer(BaseEstimator, TransformerMixin):
         return X_new
 
 
-class FillFareNaTransformer(BaseEstimator, TransformerMixin):
+class FillFareNaTransformer(Transformer):
     """
     Fills NA Fares values with fitted mean value.
     """
@@ -95,7 +113,7 @@ class FillFareNaTransformer(BaseEstimator, TransformerMixin):
         return X_new
 
 
-class GroupTicketTransformer(BaseEstimator, TransformerMixin):
+class GroupTicketTransformer(Transformer):
     """
     The Ticket column is used to create three new columns: Ticket_Letter, which
     indicates the first letter of each ticket (with the smaller-n values being
@@ -125,7 +143,7 @@ class GroupTicketTransformer(BaseEstimator, TransformerMixin):
         return X_new
 
 
-class GetCabinFirstLetterTransformer(BaseEstimator, TransformerMixin):
+class GetCabinFirstLetterTransformer(Transformer):
     """
     Extracts the first letter of the Cabin column
     """
@@ -139,7 +157,7 @@ class GetCabinFirstLetterTransformer(BaseEstimator, TransformerMixin):
         return X_new
 
 
-class GetCabinNumberTransformer(BaseEstimator, TransformerMixin):
+class GetCabinNumberTransformer(Transformer):
     """
     Extracts the number of the Cabin column
     """
@@ -157,7 +175,7 @@ class GetCabinNumberTransformer(BaseEstimator, TransformerMixin):
         return X_new
 
 
-class DummyCabinNumberTransformer(BaseEstimator, TransformerMixin):
+class DummyCabinNumberTransformer(Transformer):
     """
     Get the category from cabin number and dummify it
     """
@@ -182,7 +200,7 @@ class DummyCabinNumberTransformer(BaseEstimator, TransformerMixin):
         return X_new
 
 
-class ImputeEmbarkedTransformer(BaseEstimator, TransformerMixin):
+class ImputeEmbarkedTransformer(Transformer):
     """
     Fills the null values in the Embarked column with the most commonly
     occurring value, which is 'S.'
@@ -197,7 +215,7 @@ class ImputeEmbarkedTransformer(BaseEstimator, TransformerMixin):
         return X_new
 
 
-class DummyColsTransformer(BaseEstimator, TransformerMixin):
+class DummyColsTransformer(Transformer):
     """
     Converts our categorical columns into dummy variables, and then drops the
     original categorical columns. It also makes sure that each category is
@@ -226,7 +244,7 @@ class DummyColsTransformer(BaseEstimator, TransformerMixin):
         return X_new
 
 
-class DropColsTransformer(BaseEstimator, TransformerMixin):
+class DropColsTransformer(Transformer):
     """
     Drops columns in the given list
     """
@@ -247,35 +265,42 @@ class DropColsTransformer(BaseEstimator, TransformerMixin):
         return X_new
 
 
-def get_preprocessing_pipeline(dummy_columns: List[str], drop_columns: List[str]) -> Pipeline:
-    """
-    Returns a sklearn transformation pipeline to perform proprocessing of train and test datasets
+class MainTransformer(Transformer):
+    """Every required transformations chained in a pipeline."""
 
-    Args:
-        dummy_columns: The columns to be dummified.
-        drop_columns: The columns to be dropped.
+    transformations: List[Transformer]
 
-    Returns:
-        pipe: A pipeline instance of type sklearn.pipeline.Pipeline.
-    """
+    def __init__(self, dummy_columns: List[str], drop_columns: List[str]):
 
-    pipe = Pipeline(
-        [
-            ("process_name_transformer", ProcessNameTransformer()),
-            ("impute_age_transformer", ImputeAgeTransformer()),
-            ("get_cabin_first_letter_transformer", GetCabinFirstLetterTransformer()),
-            ("impute_embarked_transformer", ImputeEmbarkedTransformer()),
-            ("size_family_transformer", SizeFamilyTransformer()),
-            ("fill_fare_na_transformer", FillFareNaTransformer()),
-            ("group_ticket_transformer", GroupTicketTransformer()),
-            ("get_cabin_number_transformer", GetCabinNumberTransformer()),
-            ("dummy_cabin_number_transformer", DummyCabinNumberTransformer(n_bins=3)),
-            ("dummy_cols_transformer", DummyColsTransformer(dummy_columns=dummy_columns)),
-            ("drop_cols_transformer", DropColsTransformer(drop_columns=drop_columns)),
+        self.transformations = [
+            ProcessNameTransformer(),
+            ImputeAgeTransformer(),
+            GetCabinFirstLetterTransformer(),
+            ImputeEmbarkedTransformer(),
+            SizeFamilyTransformer(),
+            FillFareNaTransformer(),
+            GroupTicketTransformer(),
+            GetCabinNumberTransformer(),
+            DummyCabinNumberTransformer(n_bins=3),
+            DummyColsTransformer(dummy_columns=dummy_columns),
+            DropColsTransformer(drop_columns=drop_columns),
         ]
-    )
 
-    return pipe
+    def fit(self, X: pd.DataFrame):
+        X_new = X.copy()
+
+        for transformation in self.transformations:
+            X_new = transformation.fit_transform(X_new)
+
+        return self
+
+    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
+        X_new = X.copy()
+
+        for transformation in self.transformations:
+            X_new = transformation.transform(X_new)
+
+        return X_new
 
 
 def process_data(train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list, drop_columns: list) -> Tuple[
@@ -296,11 +321,11 @@ def process_data(train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list, d
         new_test
 
     """
-    pipe = get_preprocessing_pipeline(dummy_columns=dummy_columns, drop_columns=drop_columns)
+    transformer = MainTransformer(dummy_columns=dummy_columns, drop_columns=drop_columns)
 
-    pipe.fit(train)
+    transformer.fit(train)
 
-    train_processed = pipe.transform(train)
-    test_processed = pipe.transform(test)
+    train_processed = transformer.transform(train)
+    test_processed = transformer.transform(test)
 
     return train_processed, test_processed
