@@ -1,56 +1,52 @@
 from typing import Tuple, List
-from abc import ABCMeta, abstractmethod
 
 import numpy as np
 import pandas as pd
 
-from sklearn.preprocessing import KBinsDiscretizer
 
+class Preprocessor():
+    """General class used for preprocessing."""
 
-class Transformer(metaclass=ABCMeta):
-    """Abstract class used for data preprocessing."""
+    # Mean values to fill missing data
 
-    @abstractmethod
-    def fit(self, X: pd.DataFrame):
-        """Fits the transformation based on training data."""
-        pass
-
-    @abstractmethod
-    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
-        """Applies transformation after fit."""
-        pass
-
-    def fit_transform(self, X: pd.DataFrame) -> pd.DataFrame:
-        """Fits data on X and applies the transformation."""
-        self.fit(X)
-        return self.transform(X)
-
-
-class ProcessNameTransformer(Transformer):
-    """
-    Creates two separate columns: a numeric column indicating the length of a
-    passenger's Name field, and a categorical column that extracts the
-    passenger's title.
-    """
-
-    def fit(self, X: pd.DataFrame):
-        return self
-
-    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
-        X_new = X.copy()
-        X_new['Name_Len'] = X_new['Name'].apply(len)
-        X_new['Name_Title'] = X_new['Name'].apply(lambda x: x.split(',')[1]).apply(lambda x: x.split()[0])
-        return X_new
-
-
-class ImputeAgeTransformer(Transformer):
-    """
-    Imputes the null values of the Age column by filling in the mean value of
-    the passenger's corresponding title and class.
-    """
-
+    # Age
     age_mean: np.float64
     grouped_age_means: pd.Series
+    # Fare
+    mean_fare: float
+
+    # Dummies values labels
+
+    # Cabin numbers
+    cabin_number_bins: np.ndarray
+    # All dummies
+    dummy_columns_values: List[str]
+
+    def __init__(
+        self,
+        dummy_columns: List[str] = None,
+        drop_columns: List[str] = None,
+        letter_group_1: List[str] = None,
+        letter_group_2: List[str] = None,
+    ):
+
+        # Ticket letter groups
+        self.letter_group_1 = letter_group_1 if letter_group_1 is not None else ['1', '2', '3', 'S', 'P', 'C', 'A']
+        self.letter_group_2 = letter_group_2 if letter_group_2 is not None else ['W', '4', '7', '6', 'L', '5', '8']
+
+        self.dummy_columns = dummy_columns if dummy_columns is not None else []
+        self.drop_columns = drop_columns if drop_columns is not None else []
+
+    def process_name(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Creates two separate columns: a numeric column indicating the length of a
+        passenger's Name field, and a categorical column that extracts the
+        passenger's title.
+        """
+        df_new = df.copy()
+        df_new['Name_Len'] = df_new['Name'].apply(len)
+        df_new['Name_Title'] = df_new['Name'].apply(lambda x: x.split(',')[1]).apply(lambda x: x.split()[0])
+        return df_new
 
     def _get_mean_age_if_exist(self, name_title: str, p_class: int):
         if (name_title, p_class) in self.grouped_age_means.index:
@@ -58,249 +54,195 @@ class ImputeAgeTransformer(Transformer):
         else:
             return self.age_mean
 
-    def fit(self, X: pd.DataFrame):
-        self.age_mean = X["Age"].mean()
-        self.grouped_age_means = X.groupby(['Name_Title', 'Pclass'])['Age'].mean().copy()
-
-        return self
-
-    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
-        X_new = X.copy()
-        X_new['Age_Null_Flag'] = X_new['Age'].isnull().apply(int)
-        X_new.loc[X_new['Age'].isnull(), "Age"] = X_new.loc[X_new['Age'].isnull()].apply(
+    def impute_age(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Imputes the null values of the Age column by filling in the mean value of
+        the passenger's corresponding title and class.
+        """
+        df_new = df.copy()
+        df_new['Age_Null_Flag'] = df_new['Age'].isnull().apply(int)
+        df_new.loc[df_new['Age'].isnull(), "Age"] = df_new.loc[df_new['Age'].isnull()].apply(
             lambda x: self._get_mean_age_if_exist(x["Name_Title"], x["Pclass"]),
             axis=1
         ).copy()
+        return df_new
 
-        return X_new
-
-
-class SizeFamilyTransformer(Transformer):
-    """
-    Combines the SibSp and Parch columns into a new variable that indicates
-    family size, and group the family size variable into three categories.
-    """
-
-    def fit(self, X: pd.DataFrame):
-        return self
-
-    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
-        X_new = X.copy()
-        X_new['Family_Size'] = np.where(
-            (X_new['SibSp'] + X_new['Parch']) == 0, 'Solo',
+    def size_family(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Combines the SibSp and Parch columns into a new variable that indicates
+        family size, and group the family size variable into three categories.
+        """
+        df_new = df.copy()
+        df_new['Family_Size'] = np.where(
+            (df_new['SibSp'] + df_new['Parch']) == 0, 'Solo',
             np.where(
-                (X_new['SibSp'] + X_new['Parch']) <= 3, 'Nuclear',
+                (df_new['SibSp'] + df_new['Parch']) <= 3, 'Nuclear',
                 'Big'
             )
         )
-        return X_new
+        return df_new
 
+    def fill_fare_na(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Fills NA Fares values with fitted mean value.
+        """
+        df_new = df.copy()
+        df_new['Fare'].fillna(self.mean_fare, inplace=True)
+        return df_new
 
-class FillFareNaTransformer(Transformer):
-    """
-    Fills NA Fares values with fitted mean value.
-    """
-
-    mean_fare: float
-
-    def fit(self, X: pd.DataFrame):
-        self.mean_fare = X['Fare'].mean()
-        return self
-
-    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
-        X_new = X.copy()
-        X_new['Fare'].fillna(self.mean_fare, inplace=True)
-        return X_new
-
-
-class GroupTicketTransformer(Transformer):
-    """
-    The Ticket column is used to create three new columns: Ticket_Letter, which
-    indicates the first letter of each ticket (with the smaller-n values being
-    grouped based on survival rate); Ticket_Category, which indicated the category
-    of the ticket, and Ticket_Length, which indicates the length of the Ticket field.
-    """
-
-    def __init__(self, letter_group_1: List[str] = None, letter_group_2: List[str] = None):
-        self.letter_group_1 = letter_group_1 if letter_group_1 is not None else ['1', '2', '3', 'S', 'P', 'C', 'A']
-        self.letter_group_2 = letter_group_2 if letter_group_2 is not None else ['W', '4', '7', '6', 'L', '5', '8']
-
-    def fit(self, X: pd.DataFrame):
-        return self
-
-    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
-        X_new = X.copy()
-        X_new['Ticket_Letter'] = X_new['Ticket'].apply(lambda x: str(x)[0])
-        X_new['Ticket_Letter'] = X_new['Ticket_Letter'].apply(str)
-        X_new['Ticket_Category'] = np.where(
-                                    (X_new['Ticket_Letter']).isin(self.letter_group_1), X_new['Ticket_Letter'],
+    def group_ticket(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        The Ticket column is used to create three new columns: Ticket_Letter, which
+        indicates the first letter of each ticket (with the smaller-n values being
+        grouped based on survival rate); Ticket_Category, which indicated the category
+        of the ticket, and Ticket_Length, which indicates the length of the Ticket field.
+        """
+        df_new = df.copy()
+        df_new['Ticket_Letter'] = df_new['Ticket'].apply(lambda x: str(x)[0])
+        df_new['Ticket_Letter'] = df_new['Ticket_Letter'].apply(str)
+        df_new['Ticket_Category'] = np.where(
+                                    (df_new['Ticket_Letter']).isin(self.letter_group_1), df_new['Ticket_Letter'],
                                     np.where(
-                                        (X_new['Ticket_Letter']).isin(self.letter_group_2), 'Low_ticket',
+                                        (df_new['Ticket_Letter']).isin(self.letter_group_2), 'Low_ticket',
                                         'Other_ticket'
                                     )
                                 )
-        X_new['Ticket_Length'] = X_new['Ticket'].apply(len)
-        return X_new
+        df_new['Ticket_Length'] = df_new['Ticket'].apply(len)
+        return df_new
 
+    def get_cabin_first_letter(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Extracts the first letter of the Cabin column.
+        """
+        df_new = df.copy()
+        df_new['Cabin_Letter'] = df_new['Cabin'].apply(lambda x: str(x)[0])
+        return df_new
 
-class GetCabinFirstLetterTransformer(Transformer):
-    """
-    Extracts the first letter of the Cabin column
-    """
-
-    def fit(self, X: pd.DataFrame):
-        return self
-
-    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
-        X_new = X.copy()
-        X_new['Cabin_Letter'] = X_new['Cabin'].apply(lambda x: str(x)[0])
-        return X_new
-
-
-class GetCabinNumberTransformer(Transformer):
-    """
-    Extracts the number of the Cabin column
-    """
-
-    def fit(self, X: pd.DataFrame):
-        return self
-
-    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
-        X_new = X.copy()
-        X_new['Cabin_Number'] = X_new['Cabin'].apply(lambda x: str(x).split(' ')[-1][1:])
-        X_new['Cabin_Number'].replace('an', np.NaN, inplace=True)
-        X_new['Cabin_Number'] = X_new['Cabin_Number'].apply(
+    def get_cabin_number(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Extracts the number of the Cabin column.
+        """
+        df_new = df.copy()
+        df_new['Cabin_Number'] = df_new['Cabin'].apply(lambda x: str(x).split(' ')[-1][1:])
+        df_new['Cabin_Number'].replace('an', np.NaN, inplace=True)
+        df_new['Cabin_Number'] = df_new['Cabin_Number'].apply(
             lambda x: int(x) if not pd.isnull(x) and x != '' else np.NaN
         )
-        return X_new
+        return df_new
 
+    def get_dummy_cabin_number(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Get the category from cabin number and dummify it.
+        """
+        df_new = df.copy()
+        dummies_cols = [f"Cabin_Number_{i}" for i in range(3)]
 
-class DummyCabinNumberTransformer(Transformer):
-    """
-    Get the category from cabin number and dummify it
-    """
-    def __init__(self, n_bins=3):
-        self.n_bins = n_bins
-        self.kbins_discretizer = KBinsDiscretizer(n_bins=n_bins, encode="onehot-dense", strategy="quantile")
+        df_new.loc[:, dummies_cols] = 0
 
-    def fit(self, X: pd.DataFrame):
-        self.kbins_discretizer = self.kbins_discretizer.fit(X['Cabin_Number'].dropna().values.reshape(-1, 1))
-        return self
+        concerned_index = df_new['Cabin_Number'].dropna().index
 
-    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
-        X_new = X.copy()
-        dummies_cols = [f"Cabin_Number_{i}" for i in range(self.n_bins)]
+        if df_new.loc[~df_new["Cabin_Number"].isna()].shape[0] > 0:
+            categories = pd.cut(
+                df_new.loc[concerned_index, 'Cabin_Number'],
+                bins=self.cabin_number_bins,
+                labels=False,
+                include_lowest=True
+            )
+            df_new.loc[concerned_index, dummies_cols] = pd.get_dummies(categories, prefix="Cabin_Number")
 
-        X_new.loc[:, dummies_cols] = 0
+        return df_new
 
-        if X_new.loc[~X["Cabin_Number"].isna()].shape[0] > 0:
-            one_hot = self.kbins_discretizer.transform(X_new['Cabin_Number'].dropna().values.reshape(-1, 1))
-            X_new.loc[~X["Cabin_Number"].isna(), dummies_cols] = one_hot
+    def impute_embarked(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Fills the null values in the Embarked column with the most commonly
+        occurring value, which is 'S'.
+        """
+        df_new = df.copy()
+        df_new['Embarked'] = df_new['Embarked'].fillna('S')
+        return df_new
 
-        return X_new
-
-
-class ImputeEmbarkedTransformer(Transformer):
-    """
-    Fills the null values in the Embarked column with the most commonly
-    occurring value, which is 'S.'
-    """
-
-    def fit(self, X: pd.DataFrame):
-        return self
-
-    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
-        X_new = X.copy()
-        X_new['Embarked'] = X_new['Embarked'].fillna('S')
-        return X_new
-
-
-class DummyColsTransformer(Transformer):
-    """
-    Converts our categorical columns into dummy variables, and then drops the
-    original categorical columns. It also makes sure that each category is
-    present in both the training and test datasets.
-    """
-    def __init__(self, dummy_columns):
-        self.columns = None
-        self.dummy_columns = dummy_columns
-
-    def fit(self, X: pd.DataFrame):
-        self.columns = pd.get_dummies(X.loc[:, self.dummy_columns].applymap(str), prefix=self.dummy_columns).columns
-        return self
-
-    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
-        X_new = X.copy()
-        X_new.loc[:, self.columns] = 0
-        X_new.loc[:, self.dummy_columns] = X_new.loc[:, self.dummy_columns].applymap(str)
+    def dummy_cols(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Converts our categorical columns into dummy variables, and then drops the
+        original categorical columns. It also makes sure that each category is
+        present in both the training and test datasets.
+        """
+        df_new = df.copy()
+        df_new.loc[:, self.dummy_columns_values] = 0
+        df_new.loc[:, self.dummy_columns] = df_new.loc[:, self.dummy_columns].applymap(str)
 
         dummies = pd.get_dummies(
-            X_new[self.dummy_columns], columns=self.dummy_columns, prefix=self.dummy_columns
+            df_new[self.dummy_columns], columns=self.dummy_columns, prefix=self.dummy_columns
         )
 
-        dummies = dummies.drop([col for col in dummies.columns if col not in self.columns], axis=1)
+        dummies = dummies.drop([col for col in dummies.columns if col not in self.dummy_columns_values], axis=1)
 
-        X_new.loc[:, dummies.columns] = dummies
-        return X_new
+        df_new.loc[:, dummies.columns] = dummies
+        return df_new
 
-
-class DropColsTransformer(Transformer):
-    """
-    Drops columns in the given list
-    """
-    def __init__(self, drop_columns: List[str]):
+    def drop_cols(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-        Args:
-            drop_columns: The columns to be dropped. If None is passed,
-                default values are applied.
+        Drops columns in the given list.
         """
-        self.drop_columns = drop_columns
+        df_new = df.copy()
+        df_new = df_new.drop(self.drop_columns, axis=1)
+        return df_new
 
-    def fit(self, X: pd.DataFrame):
-        return self
+    def fit_transform(self, df: pd.DataFrame):
+        """
+        Fits the proprocessing steps on train data and transform it.
+        """
+        df_new = df.copy()
 
-    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
-        X_new = X.copy()
-        X_new.drop(self.drop_columns, inplace=True, axis=1)
-        return X_new
+        df_new = self.process_name(df=df_new)
 
+        self.age_mean = df_new["Age"].mean()
+        self.grouped_age_means = df_new.groupby(['Name_Title', 'Pclass'])['Age'].mean()
+        df_new = self.impute_age(df=df_new)
 
-class MainTransformer(Transformer):
-    """Every required transformations chained in a pipeline."""
+        self.mean_fare = df_new['Fare'].mean()
+        df_new = self.fill_fare_na(df=df_new)
 
-    transformations: List[Transformer]
+        df_new = self.impute_embarked(df=df_new)
+        df_new = self.size_family(df=df_new)
+        df_new = self.group_ticket(df=df_new)
 
-    def __init__(self, dummy_columns: List[str], drop_columns: List[str]):
+        df_new = self.get_cabin_number(df=df_new)
+        _, self.cabin_number_bins = pd.qcut(df_new['Cabin_Number'], 3, retbins=True, labels=False)
+        df_new = self.get_dummy_cabin_number(df=df_new)
 
-        self.transformations = [
-            ProcessNameTransformer(),
-            ImputeAgeTransformer(),
-            GetCabinFirstLetterTransformer(),
-            ImputeEmbarkedTransformer(),
-            SizeFamilyTransformer(),
-            FillFareNaTransformer(),
-            GroupTicketTransformer(),
-            GetCabinNumberTransformer(),
-            DummyCabinNumberTransformer(n_bins=3),
-            DummyColsTransformer(dummy_columns=dummy_columns),
-            DropColsTransformer(drop_columns=drop_columns),
-        ]
+        df_new = self.get_cabin_first_letter(df=df_new)
+        df_new = self.get_cabin_number(df=df_new)
 
-    def fit(self, X: pd.DataFrame):
-        X_new = X.copy()
+        self.dummy_columns_values = pd.get_dummies(
+            df_new.loc[:, self.dummy_columns].applymap(str), prefix=self.dummy_columns
+        ).columns
 
-        for transformation in self.transformations:
-            X_new = transformation.fit_transform(X_new)
+        df_new = self.dummy_cols(df=df_new)
+        df_new = self.drop_cols(df=df_new)
 
-        return self
+        return df_new
 
-    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
-        X_new = X.copy()
+    def transform(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Apply transformations based on fitted parameters.
+        """
+        df_new = df.copy()
 
-        for transformation in self.transformations:
-            X_new = transformation.transform(X_new)
+        df_new = self.process_name(df=df_new)
+        df_new = self.impute_age(df=df_new)
+        df_new = self.fill_fare_na(df=df_new)
+        df_new = self.impute_embarked(df=df_new)
+        df_new = self.size_family(df=df_new)
+        df_new = self.group_ticket(df=df_new)
+        df_new = self.get_cabin_number(df=df_new)
+        df_new = self.get_cabin_first_letter(df=df_new)
+        df_new = self.get_cabin_number(df=df_new)
+        df_new = self.get_dummy_cabin_number(df=df_new)
+        df_new = self.dummy_cols(df=df_new)
+        df_new = self.drop_cols(df=df_new)
 
-        return X_new
+        return df_new
 
 
 def process_data(train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list, drop_columns: list) -> Tuple[
@@ -321,11 +263,9 @@ def process_data(train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list, d
         new_test
 
     """
-    transformer = MainTransformer(dummy_columns=dummy_columns, drop_columns=drop_columns)
+    preprocessor = Preprocessor(dummy_columns=dummy_columns, drop_columns=drop_columns)
 
-    transformer.fit(train)
-
-    train_processed = transformer.transform(train)
-    test_processed = transformer.transform(test)
+    train_processed = preprocessor.fit_transform(train)
+    test_processed = preprocessor.transform(test)
 
     return train_processed, test_processed
