@@ -1,15 +1,13 @@
 # set base image
 FROM python:3.11
 
-WORKDIR /code
+COPY ./src /src
+COPY ./setup.py /setup.py
+COPY ./requirements.txt /requirements.txt
 
-COPY ./src /code/src
-COPY ./setup.py /code/setup.py
-COPY ./requirements.txt /code/requirements.txt
+COPY ./models /models
 
-COPY ./models /code/models
-
-COPY ./api /code/api
+COPY ./api /api
 
 RUN pip install --no-cache-dir .
 

@@ -91,13 +91,13 @@ def test_impute_age_should_create_2_columns_age_and_age_null_flag():
             "Pclass": [2, 0, 2, 1, 0]
         })
 
-    # When
     preprocessor = Preprocessor()
 
     # impute age reffers to fitted parameters.
     preprocessor.grouped_age_means = pd.Series(dtype='object')
     preprocessor.age_mean = 0
 
+    # When
     train = preprocessor.impute_age(train)
     test = preprocessor.impute_age(test)
 
@@ -125,13 +125,13 @@ def test_impute_age_should_set_age_column_without_missing_value():
             "Pclass": [2, 0, 2, 1, 0]
         })
 
-    # When
     preprocessor = Preprocessor()
 
     # impute age reffers to fitted parameters.
     preprocessor.grouped_age_means = pd.Series(dtype='object')
     preprocessor.age_mean = 0
 
+    # When
     train = preprocessor.impute_age(train)
     test = preprocessor.impute_age(test)
 
@@ -155,13 +155,13 @@ def test_age_impute_should_return_dataframe_binary_age_null_flag():
             "Pclass": [2, 0, 2, 1, 0]
         })
 
-    # When
     preprocessor = Preprocessor()
 
     # impute age reffers to fitted parameters.
     preprocessor.grouped_age_means = pd.Series(dtype='object')
     preprocessor.age_mean = 0
 
+    # When
     train = preprocessor.impute_age(train)
     test = preprocessor.impute_age(test)
 
@@ -185,13 +185,13 @@ def test_impute_age_should_flag_null_values_in_age_column():
             "Pclass": [2, 0, 2, 1, 0]
         })
 
-    # When
     preprocessor = Preprocessor()
 
     # impute age reffers to fitted parameters.
     preprocessor.grouped_age_means = pd.Series(dtype='object')
     preprocessor.age_mean = 0
 
+    # When
     train = preprocessor.impute_age(train)
     test = preprocessor.impute_age(test)
 

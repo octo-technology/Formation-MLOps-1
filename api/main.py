@@ -12,8 +12,35 @@ app = FastAPI()
 with open("./models/model_rf.pkl", "rb") as file_in:
     model: RandomForestClassifier = pickle.load(file_in)
 
-with open("./models/transformer.pkl", "rb") as file_in:
+with open("./models/preprocessor.pkl", "rb") as file_in:
     preprocessor: Preprocessor = pickle.load(file_in)
+
+
+column_dtypes = {
+    "PassengerId": "int64",
+    "Pclass": "int64",
+    "Name": "object",
+    "Sex": "object",
+    "Age": "float64",
+    "SibSp": "int64",
+    "Parch": "int64",
+    "Ticket": "object",
+    "Fare": "float64",
+    "Cabin": "object",
+    "Embarked": "object",
+}
+
+object_cols = [col for col, dtype in column_dtypes.items() if dtype == "object"]
+other_cols = [col for col, dtype in column_dtypes.items() if dtype != "object"]
+
+
+def fillna(df: pd.DataFrame) -> pd.DataFrame:
+    """Replace missing values by the correct value."""
+
+    df.loc[:, object_cols] = df.loc[:, object_cols].fillna("nan")
+    df.loc[:, other_cols] = df.loc[:, other_cols].fillna(np.nan)
+
+    return df
 
 
 @app.get("/predict/{pclass}/{name}/{sex}/")
@@ -29,23 +56,6 @@ async def predict(
     cabin: Optional[str] = None,
     embarked: Optional[str] = None,
 ):
-
-    column_dtypes = {
-        "PassengerId": "int64",
-        "Pclass": "int64",
-        "Name": "object",
-        "Sex": "object",
-        "Age": "float64",
-        "SibSp": "int64",
-        "Parch": "int64",
-        "Ticket": "object",
-        "Fare": "float64",
-        "Cabin": "object",
-        "Embarked": "object",
-    }
-
-    object_cols = [col for col, dtype in column_dtypes.items() if dtype == "object"]
-    other_cols = [col for col, dtype in column_dtypes.items() if dtype != "object"]
 
     input = pd.DataFrame(
         {
@@ -63,12 +73,11 @@ async def predict(
         }
     )
 
-    input.loc[:, object_cols] = input.loc[:, object_cols].fillna("nan")
-    input.loc[:, other_cols] = input.loc[:, other_cols].fillna(np.nan)
+    input = fillna(df=input)
 
-    processed_input = preprocessor.transform(input)
-    input_proba = model.predict_proba(processed_input)
+    processed_input: pd.DataFrame = preprocessor.transform(input)
+    input_proba: np.ndarray = model.predict_proba(processed_input)
 
     return {
-        "input_proba": (input_proba[0, 0], input_proba[0, 1])
+        "input_proba": (round(input_proba[0, 0], 10), round(input_proba[0, 1], 10))
     }

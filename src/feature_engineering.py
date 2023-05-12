@@ -13,7 +13,7 @@ class Preprocessor():
     age_mean: np.float64
     grouped_age_means: pd.Series
     # Fare
-    mean_fare: float
+    fare_mean: float
 
     # Dummies values labels
 
@@ -87,7 +87,7 @@ class Preprocessor():
         Fills NA Fares values with fitted mean value.
         """
         df_new = df.copy()
-        df_new['Fare'].fillna(self.mean_fare, inplace=True)
+        df_new['Fare'].fillna(self.fare_mean, inplace=True)
         return df_new
 
     def group_ticket(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -200,7 +200,7 @@ class Preprocessor():
         self.grouped_age_means = df_new.groupby(['Name_Title', 'Pclass'])['Age'].mean()
         df_new = self.impute_age(df=df_new)
 
-        self.mean_fare = df_new['Fare'].mean()
+        self.fare_mean = df_new['Fare'].mean()
         df_new = self.fill_fare_na(df=df_new)
 
         df_new = self.impute_embarked(df=df_new)
