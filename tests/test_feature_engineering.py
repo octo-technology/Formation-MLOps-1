@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.feature_engineering import ProcessNameTransformer, ImputeAgeTransformer
+from src.feature_engineering import Preprocessor
 
 
 def test_process_name_should_create_column_name_lenght():
@@ -29,10 +29,9 @@ def test_process_name_should_create_column_name_lenght():
     expected_test_lenght = [16, 32, 25, 16, 44]
 
     # When
-    process_name_transformer = ProcessNameTransformer()
-    process_name_transformer.fit(train)
-    train = process_name_transformer.transform(train)
-    test = process_name_transformer.transform(test)
+    preprocessor = Preprocessor()
+    train = preprocessor.process_name(train)
+    test = preprocessor.process_name(test)
 
     # Then
     assert "Name_Len" in train.columns
@@ -66,10 +65,9 @@ def test_process_name_should_create_column_name_title():
     expected_test_titles = ["Mr.", "Mrs.", "Mr.", "Mr.", "Mrs."]
 
     # When
-    process_name_transformer = ProcessNameTransformer()
-    process_name_transformer.fit(train)
-    train = process_name_transformer.transform(train)
-    test = process_name_transformer.transform(test)
+    preprocessor = Preprocessor()
+    train = preprocessor.process_name(train)
+    test = preprocessor.process_name(test)
 
     # Then
     assert "Name_Title" in train.columns
@@ -94,10 +92,14 @@ def test_impute_age_should_create_2_columns_age_and_age_null_flag():
         })
 
     # When
-    impute_age_transformer = ImputeAgeTransformer()
-    impute_age_transformer.fit(train)
-    train = impute_age_transformer.transform(train)
-    test = impute_age_transformer.transform(test)
+    preprocessor = Preprocessor()
+
+    # impute age reffers to fitted parameters.
+    preprocessor.grouped_age_means = pd.Series(dtype='object')
+    preprocessor.age_mean = 0
+
+    train = preprocessor.impute_age(train)
+    test = preprocessor.impute_age(test)
 
     # Then
     assert "Age" in train.columns
@@ -124,10 +126,14 @@ def test_impute_age_should_set_age_column_without_missing_value():
         })
 
     # When
-    impute_age_transformer = ImputeAgeTransformer()
-    impute_age_transformer.fit(train)
-    train = impute_age_transformer.transform(train)
-    test = impute_age_transformer.transform(test)
+    preprocessor = Preprocessor()
+
+    # impute age reffers to fitted parameters.
+    preprocessor.grouped_age_means = pd.Series(dtype='object')
+    preprocessor.age_mean = 0
+
+    train = preprocessor.impute_age(train)
+    test = preprocessor.impute_age(test)
 
     # Then
     assert train["Age"].notnull().all()
@@ -150,10 +156,14 @@ def test_age_impute_should_return_dataframe_binary_age_null_flag():
         })
 
     # When
-    impute_age_transformer = ImputeAgeTransformer()
-    impute_age_transformer.fit(train)
-    train = impute_age_transformer.transform(train)
-    test = impute_age_transformer.transform(test)
+    preprocessor = Preprocessor()
+
+    # impute age reffers to fitted parameters.
+    preprocessor.grouped_age_means = pd.Series(dtype='object')
+    preprocessor.age_mean = 0
+
+    train = preprocessor.impute_age(train)
+    test = preprocessor.impute_age(test)
 
     # Then
     for output in (train, test):
@@ -176,10 +186,14 @@ def test_impute_age_should_flag_null_values_in_age_column():
         })
 
     # When
-    impute_age_transformer = ImputeAgeTransformer()
-    impute_age_transformer.fit(train)
-    train = impute_age_transformer.transform(train)
-    test = impute_age_transformer.transform(test)
+    preprocessor = Preprocessor()
+
+    # impute age reffers to fitted parameters.
+    preprocessor.grouped_age_means = pd.Series(dtype='object')
+    preprocessor.age_mean = 0
+
+    train = preprocessor.impute_age(train)
+    test = preprocessor.impute_age(test)
 
     # Then
     assert train["Age_Null_Flag"].tolist() == [0, 0, 0, 1, 0]
