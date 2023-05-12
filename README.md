@@ -25,6 +25,13 @@ docker run -p 80:80 mlops-1
 The API is exposed and can be reached at 0.0.0.0:80
 The doc is available [here](http://127.0.0.1/docs)
 
+[Call example](http://127.0.0.1/predict/2/Nasser,%20Mrs.%20Nicholas%20(Adele%20Achem)/female/?&age=14.0&sibSp=1&parch=0&ticket=237736&fare=30.0708&embarked=C) that should return the following message:
+```
+input_proba:
+0	0.1997672537546488
+1	0.8002327462453511
+```
+
 How to restart ?
 ----------------
 

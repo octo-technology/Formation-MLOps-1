@@ -5,15 +5,15 @@ import numpy as np
 import pandas as pd
 import pickle
 from sklearn.ensemble._forest import RandomForestClassifier
-from sklearn.pipeline import Pipeline
+from indus.feature_engineering import Preprocessor
 
 app = FastAPI()
 
 with open("./models/model_rf.pkl", "rb") as file_in:
     model: RandomForestClassifier = pickle.load(file_in)
 
-with open("./models/preprocess_sk_pipeline.pkl", "rb") as file_in:
-    pipe: Pipeline = pickle.load(file_in)
+with open("./models/transformer.pkl", "rb") as file_in:
+    preprocessor: Preprocessor = pickle.load(file_in)
 
 
 @app.get("/predict/{pclass}/{name}/{sex}/")
@@ -66,7 +66,7 @@ async def predict(
     input.loc[:, object_cols] = input.loc[:, object_cols].fillna("nan")
     input.loc[:, other_cols] = input.loc[:, other_cols].fillna(np.nan)
 
-    processed_input = pipe.transform(input)
+    processed_input = preprocessor.transform(input)
     input_proba = model.predict_proba(processed_input)
 
     return {
