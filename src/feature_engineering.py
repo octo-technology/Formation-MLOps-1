@@ -4,6 +4,95 @@ import numpy as np
 import pandas as pd
 
 
+##############################
+
+# Preprocessing class template
+
+class Preprocessor():
+    """General class used for preprocessing."""
+
+    # Values you want to store when fitting data.
+    # You will be abble to acces and modify them in your methods by calling "self.your_variable".
+    # In this example the age_mean and grouped_age_means will be updated in the fit function and used in
+    # the impute_age() method.
+
+    # Age means
+    age_mean: np.float64
+    grouped_age_means: pd.Series
+
+    # What we used to pass to our functions as argument, such as dummy_columns must be set during the instantiation.
+    # Eventually we will only call "my_instance = Preprocessor(dummy_columns, drop_column)" and
+    # "my_instance.fit_transform(train)" or "my_instance.transform(test)"
+    def __init__(self, dummy_columns: List[str], drop_column: List[str]):
+
+        # We store these values as class arguments.
+        self.dummy_columns = dummy_columns
+        self.drop_column = drop_column
+
+    # We can copy our functions we need to midify two things:
+    # First add self to the arguments, this refers to the instance of the class.
+    # Remove the others arguments we computed along the execution, they should be stored as class parameters and used
+    # as presented in "_get_mean_age_if_exist()".
+    def process_name(self, df: pd.DataFrame) -> pd.DataFrame:
+        ...
+
+    def _get_mean_age_if_exist(self, name_title: str, p_class: int):
+        if (name_title, p_class) in self.grouped_age_means.index:
+            return self.grouped_age_means[name_title, p_class]
+        else:
+            return self.age_mean
+
+    def impute_age(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Imputes the null values of the Age column by filling in the mean value of
+        the passenger's corresponding title and class.
+        """
+        df_new = df.copy()
+        df_new['Age_Null_Flag'] = df_new['Age'].isnull().apply(int)
+        df_new.loc[df_new['Age'].isnull(), "Age"] = df_new.loc[df_new['Age'].isnull()].apply(
+            lambda x: self._get_mean_age_if_exist(x["Name_Title"], x["Pclass"]),
+            axis=1
+        ).copy()
+        return df_new
+
+    # Finally we add a fit_transform() and transform() function to fit our class and apply it on our data.
+    def fit_transform(self, df: pd.DataFrame):
+        """
+        Fits the preprocessing steps on train data and transform it.
+        """
+        df_new = df.copy()
+
+        # Class methods are called the same way as class arguments: self.my_function()
+        df_new = self.process_name(df=df_new)
+
+        # Our instance arguments are updated here and can then be used by the function "_get_mean_age_if_exist()".
+        self.age_mean = df_new["Age"].mean()
+        self.grouped_age_means = df_new.groupby(['Name_Title', 'Pclass'])['Age'].mean()
+
+        df_new = self.impute_age(df=df_new)
+
+        ...
+
+        return df_new
+
+    # The tranform function is meant to be called after the fit, we do not have to learn our parameters again.
+    def transform(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Apply transformations based on fitted parameters.
+        """
+        df_new = df.copy()
+
+        # Apply our transformations.
+        df_new = self.process_name(df=df_new)
+        df_new = self.impute_age(df=df_new)
+
+        ...
+
+        return df_new
+
+##############################
+
+
 def process_name(df: pd.DataFrame) -> pd.DataFrame:
     """
     Creates two separate columns: a numeric column indicating the length of a
