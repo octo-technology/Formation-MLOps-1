@@ -4,3 +4,4 @@ flake8==6.0.0
 vulture==2.7
 safety==2.3.5
 bandit==1.7.4
+httpx==0.24.0
