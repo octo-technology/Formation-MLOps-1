@@ -9,6 +9,10 @@ def process_name(df: pd.DataFrame) -> pd.DataFrame:
     Creates two separate columns: a numeric column indicating the length of a
     passenger's Name field, and a categorical column that extracts the
     passenger's title.
+
+    Args:
+        df: The train or test set
+
     """
     df_new = df.copy()
     df_new['Name_Len'] = df_new['Name'].apply(len)
@@ -17,6 +21,16 @@ def process_name(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _get_mean_age_if_exist(name_title: str, p_class: int, age_mean: np.float64, grouped_age_means: pd.Series):
+    """
+    Given a title and class returns train set mean age if known, else global train set mean age.
+
+    Args:
+        name_title: Passenger title
+        p_class: Passenger class
+        age_mean: Global train set mean age
+        grouped_age_means: Train set mean age given a name title and p class
+
+    """
     if (name_title, p_class) in grouped_age_means.index:
         return grouped_age_means[name_title, p_class]
     else:
@@ -27,6 +41,12 @@ def impute_age(df: pd.DataFrame, age_mean: np.float64, grouped_age_means: pd.Ser
     """
     Imputes the null values of the Age column by filling in the mean value of
     the passenger's corresponding title and class.
+
+    Args:
+        df: The train or test set
+        age_mean: Global train set mean age
+        grouped_age_means: Train set mean age given a name title and p class
+
     """
     df_new = df.copy()
     df_new['Age_Null_Flag'] = df_new['Age'].isnull().apply(int)
@@ -41,6 +61,10 @@ def size_family(df: pd.DataFrame) -> pd.DataFrame:
     """
     Combines the SibSp and Parch columns into a new variable that indicates
     family size, and group the family size variable into three categories.
+
+    Args:
+        df: The train or test set
+
     """
     df_new = df.copy()
     df_new['Family_Size'] = np.where(
@@ -56,6 +80,11 @@ def size_family(df: pd.DataFrame) -> pd.DataFrame:
 def fill_fare_na(df: pd.DataFrame, fare_mean: float) -> pd.DataFrame:
     """
     Fills NA Fares values with fitted mean value.
+
+    Args:
+        df: The train or test set
+        fare_mean: Train set mean fare
+
     """
     df_new = df.copy()
     df_new['Fare'].fillna(fare_mean, inplace=True)
@@ -68,6 +97,10 @@ def group_ticket(df: pd.DataFrame) -> pd.DataFrame:
     indicates the first letter of each ticket (with the smaller-n values being
     grouped based on survival rate); Ticket_Category, which indicated the category
     of the ticket, and Ticket_Length, which indicates the length of the Ticket field.
+
+    Args:
+        df: The train or test set
+
     """
     letter_group_1 = ['1', '2', '3', 'S', 'P', 'C', 'A']
     letter_group_2 = ['W', '4', '7', '6', 'L', '5', '8']
@@ -89,6 +122,10 @@ def group_ticket(df: pd.DataFrame) -> pd.DataFrame:
 def get_cabin_first_letter(df: pd.DataFrame) -> pd.DataFrame:
     """
     Extracts the first letter of the Cabin column.
+
+    Args:
+        df: The train or test set
+
     """
     df_new = df.copy()
     df_new['Cabin_Letter'] = df_new['Cabin'].apply(lambda x: str(x)[0])
@@ -98,6 +135,10 @@ def get_cabin_first_letter(df: pd.DataFrame) -> pd.DataFrame:
 def get_cabin_number(df: pd.DataFrame) -> pd.DataFrame:
     """
     Extracts the number of the Cabin column.
+
+    Args:
+        df: The train or test set
+
     """
     df_new = df.copy()
     df_new['Cabin_Number'] = df_new['Cabin'].apply(lambda x: str(x).split(' ')[-1][1:])
@@ -111,6 +152,11 @@ def get_cabin_number(df: pd.DataFrame) -> pd.DataFrame:
 def get_dummy_cabin_number(df: pd.DataFrame, cabin_number_bins: np.ndarray) -> pd.DataFrame:
     """
     Get the category from cabin number and dummify it.
+
+    Args:
+        df: The train or test set
+        cabin_number_bins: Cabin nubers categories
+
     """
     df_new = df.copy()
     dummies_cols = [f"Cabin_Number_{i}" for i in range(3)]
@@ -135,6 +181,10 @@ def impute_embarked(df: pd.DataFrame) -> pd.DataFrame:
     """
     Fills the null values in the Embarked column with the most commonly
     occurring value, which is 'S'.
+
+    Args:
+        df: The train or test set
+
     """
     df_new = df.copy()
     df_new['Embarked'] = df_new['Embarked'].fillna('S')
@@ -146,6 +196,13 @@ def dummy_cols(df: pd.DataFrame, dummy_columns: List[str], dummy_columns_values:
     Converts our categorical columns into dummy variables, and then drops the
     original categorical columns. It also makes sure that each category is
     present in both the training and test datasets.
+
+    Args:
+        df: The train or test set
+        dummy_columns: The columns to be dummified.
+        dummy_columns_values: The dummified columns values
+            Each different value from the train set dummy columns correspond to one feature.
+
     """
     df_new = df.copy()
     df_new.loc[:, dummy_columns_values] = 0
@@ -164,6 +221,11 @@ def dummy_cols(df: pd.DataFrame, dummy_columns: List[str], dummy_columns_values:
 def drop_cols(df: pd.DataFrame, drop_columns: List[str]) -> pd.DataFrame:
     """
     Drops columns in the given list.
+
+    Args:
+        df: The train or test set
+        drop_columns: The columns to be dropped.
+
     """
     df_new = df.copy()
     df_new = df_new.drop(drop_columns, axis=1)
@@ -178,10 +240,8 @@ def process_data(train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list, d
     Args:
         train: The train set
         test: The test set
-        drop_columns: The columns to be dropped. If None is passed,
-            default values are applied.
-        dummy_columns: The columns to be dummified. If None is passed,
-            default values are applied.
+        drop_columns: The columns to be dropped.
+        dummy_columns: The columns to be dummified.
 
     Returns:
         new_train
