@@ -4,7 +4,7 @@ import pandas as pd
 from src.feature_engineering import process_name, impute_age
 
 
-def test_process_name_should_create_column_name_lenght():
+def test_process_name_should_create_column_name_length():
     # Given
     test = pd.DataFrame(
         {
@@ -15,15 +15,14 @@ def test_process_name_should_create_column_name_lenght():
                  'Wirz, Mr. Albert',
                  'Hirvonen, Mrs. Alexander (Helga E Lindqvist)']
         })
-    expected_test_lenght = [16, 32, 25, 16, 44]
+    expected_test_length = [16, 32, 25, 16, 44]
 
     # When
     test = process_name(test)
 
     # Then
     assert "Name_Len" in test.columns
-    assert test["Name_Len"].tolist() == expected_test_lenght
-
+    assert test["Name_Len"].tolist() == expected_test_length
 
 
 def test_process_name_should_create_column_name_title():
@@ -68,7 +67,6 @@ def test_impute_age_should_create_2_columns_age_and_age_null_flag():
     assert "Age_Null_Flag" in test.columns
 
 
-
 def test_impute_age_should_set_age_column_without_missing_value():
     # Given
     # note : at least one pair Title-Pclass covering the null case should exist
@@ -89,7 +87,6 @@ def test_impute_age_should_set_age_column_without_missing_value():
 
     # Then
     assert test["Age"].notnull().all()
-
 
 
 def test_age_impute_should_return_dataframe_binary_age_null_flag():
