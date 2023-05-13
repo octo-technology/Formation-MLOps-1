@@ -1,3 +1,6 @@
+# uncomment this code.
+
+"""
 from fastapi.responses import Response
 from fastapi.testclient import TestClient
 
@@ -23,3 +26,5 @@ def test_process_name_should_create_column_name_lenght():
 
 # Warning: The api requires the processing class and model pickles in order to run.
 # In order to run these tests on the github CI you developped, the pickle files must be included to the repository.
+# Your package must also be installed on the github test instance during CI configuration.
+"""
