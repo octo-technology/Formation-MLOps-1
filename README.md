@@ -21,7 +21,7 @@ Installation
 Install the required package in the proper environment.
 
 ```shell
-pip install -r requirements_test.py
+pip install -r requirements_test.txt
 ```
 
 When I'm done ?
