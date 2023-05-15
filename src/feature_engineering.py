@@ -29,6 +29,18 @@ class Preprocessor():
         letter_group_1: List[str] = None,
         letter_group_2: List[str] = None,
     ):
+        """
+        Instanciate preprocessor instances.
+
+        Args:
+            drop_columns: The columns to be dropped.
+            dummy_columns: The columns to be dummified.
+            letter_group_1: Ticket letter group 1. If None is passed,
+                default values are applied.
+            letter_group_2: Ticket letter group 2. If None is passed,
+                default values are applied.
+
+        """
 
         # Ticket letter groups
         self.letter_group_1 = letter_group_1 if letter_group_1 is not None else ['1', '2', '3', 'S', 'P', 'C', 'A']
@@ -42,6 +54,10 @@ class Preprocessor():
         Creates two separate columns: a numeric column indicating the length of a
         passenger's Name field, and a categorical column that extracts the
         passenger's title.
+
+        Args:
+            df: The train or test set
+
         """
         df_new = df.copy()
         df_new['Name_Len'] = df_new['Name'].apply(len)
@@ -49,6 +65,14 @@ class Preprocessor():
         return df_new
 
     def _get_mean_age_if_exist(self, name_title: str, p_class: int):
+        """
+        Given a title and class returns train set mean age if known, else global train set mean age.
+
+        Args:
+            name_title: Passenger title
+            p_class: Passenger class
+
+        """
         if (name_title, p_class) in self.grouped_age_means.index:
             return self.grouped_age_means[name_title, p_class]
         else:
@@ -58,6 +82,10 @@ class Preprocessor():
         """
         Imputes the null values of the Age column by filling in the mean value of
         the passenger's corresponding title and class.
+
+        Args:
+            df: The train or test set
+
         """
         df_new = df.copy()
         df_new['Age_Null_Flag'] = df_new['Age'].isnull().apply(int)
@@ -71,6 +99,10 @@ class Preprocessor():
         """
         Combines the SibSp and Parch columns into a new variable that indicates
         family size, and group the family size variable into three categories.
+
+        Args:
+            df: The train or test set
+
         """
         df_new = df.copy()
         df_new['Family_Size'] = np.where(
@@ -85,6 +117,10 @@ class Preprocessor():
     def fill_fare_na(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Fills NA Fares values with fitted mean value.
+
+        Args:
+            df: The train or test set
+
         """
         df_new = df.copy()
         df_new['Fare'].fillna(self.fare_mean, inplace=True)
@@ -96,6 +132,10 @@ class Preprocessor():
         indicates the first letter of each ticket (with the smaller-n values being
         grouped based on survival rate); Ticket_Category, which indicated the category
         of the ticket, and Ticket_Length, which indicates the length of the Ticket field.
+
+        Args:
+            df: The train or test set
+
         """
         df_new = df.copy()
         df_new['Ticket_Letter'] = df_new['Ticket'].apply(lambda x: str(x)[0])
@@ -113,6 +153,10 @@ class Preprocessor():
     def get_cabin_first_letter(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Extracts the first letter of the Cabin column.
+
+        Args:
+            df: The train or test set
+
         """
         df_new = df.copy()
         df_new['Cabin_Letter'] = df_new['Cabin'].apply(lambda x: str(x)[0])
@@ -121,6 +165,10 @@ class Preprocessor():
     def get_cabin_number(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Extracts the number of the Cabin column.
+
+        Args:
+            df: The train or test set
+
         """
         df_new = df.copy()
         df_new['Cabin_Number'] = df_new['Cabin'].apply(lambda x: str(x).split(' ')[-1][1:])
@@ -133,6 +181,10 @@ class Preprocessor():
     def get_dummy_cabin_number(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Get the category from cabin number and dummify it.
+
+        Args:
+            df: The train or test set
+
         """
         df_new = df.copy()
         dummies_cols = [f"Cabin_Number_{i}" for i in range(3)]
@@ -156,6 +208,10 @@ class Preprocessor():
         """
         Fills the null values in the Embarked column with the most commonly
         occurring value, which is 'S'.
+
+        Args:
+            df: The train or test set
+
         """
         df_new = df.copy()
         df_new['Embarked'] = df_new['Embarked'].fillna('S')
@@ -183,6 +239,10 @@ class Preprocessor():
     def drop_cols(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Drops columns in the given list.
+
+        Args:
+            df: The train or test set
+
         """
         df_new = df.copy()
         df_new = df_new.drop(self.drop_columns, axis=1)
@@ -191,6 +251,10 @@ class Preprocessor():
     def fit_transform(self, df: pd.DataFrame):
         """
         Fits the proprocessing steps on train data and transform it.
+
+        Args:
+            df: The train set
+
         """
         df_new = df.copy()
 
@@ -226,6 +290,10 @@ class Preprocessor():
     def transform(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Apply transformations based on fitted parameters.
+
+        Args:
+            df: The test set
+
         """
         df_new = df.copy()
 
@@ -253,10 +321,8 @@ def process_data(train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list, d
     Args:
         train: The train set
         test: The test set
-        drop_columns: The columns to be dropped. If None is passed,
-            default values are applied.
-        dummy_columns: The columns to be dummified. If None is passed,
-            default values are applied.
+        drop_columns: The columns to be dropped.
+        dummy_columns: The columns to be dummified.
 
     Returns:
         new_train
