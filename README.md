@@ -28,6 +28,8 @@ You should :
 - Complete the Dockerfile
 - Build & run your docker image.
 
+- Bonus: Add api test.
+
 How to run the docker container ?
 ---------------------------------
 
