@@ -10,7 +10,7 @@ class Preprocessor():
     # Mean values to fill missing data
 
     # Age
-    age_mean: np.float64
+    age_mean: float
     grouped_age_means: pd.Series
     # Fare
     fare_mean: float
