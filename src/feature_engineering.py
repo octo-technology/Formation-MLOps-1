@@ -20,7 +20,7 @@ def process_name(df: pd.DataFrame) -> pd.DataFrame:
     return df_new
 
 
-def _get_mean_age_if_exist(name_title: str, p_class: int, age_mean: np.float64, grouped_age_means: pd.Series):
+def _get_mean_age_if_exist(name_title: str, p_class: int, age_mean: float, grouped_age_means: pd.Series):
     """
     Given a title and class returns train set mean age if known, else global train set mean age.
 
@@ -37,7 +37,7 @@ def _get_mean_age_if_exist(name_title: str, p_class: int, age_mean: np.float64, 
         return age_mean
 
 
-def impute_age(df: pd.DataFrame, age_mean: np.float64, grouped_age_means: pd.Series) -> pd.DataFrame:
+def impute_age(df: pd.DataFrame, age_mean: float, grouped_age_means: pd.Series) -> pd.DataFrame:
     """
     Imputes the null values of the Age column by filling in the mean value of
     the passenger's corresponding title and class.
