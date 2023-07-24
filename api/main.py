@@ -1,20 +1,22 @@
+import os
+import pickle
 from typing import Optional
 
-from fastapi import FastAPI
 import numpy as np
 import pandas as pd
-import pickle
+from fastapi import FastAPI
 from sklearn.ensemble._forest import RandomForestClassifier
+
+from models import MODELS_PATH
 from src.feature_engineering import Preprocessor
 
 app = FastAPI()
 
-with open("./models/model_rf.pkl", "rb") as file_in:
+with open(os.path.join(MODELS_PATH, "model_rf.pkl"), "rb") as file_in:
     model: RandomForestClassifier = pickle.load(file_in)
 
-with open("./models/preprocessor.pkl", "rb") as file_in:
+with open(os.path.join(MODELS_PATH, "preprocessor.pkl"), "rb") as file_in:
     preprocessor: Preprocessor = pickle.load(file_in)
-
 
 column_dtypes = {
     "PassengerId": "int64",
@@ -45,18 +47,17 @@ def fillna(df: pd.DataFrame) -> pd.DataFrame:
 
 @app.get("/predict/{pclass}/{name}/{sex}/")
 async def predict(
-    pclass: int,
-    name: str,
-    sex: str,
-    age: Optional[float] = None,
-    sib_sp: Optional[int] = None,
-    parch: Optional[int] = None,
-    ticket: Optional[str] = None,
-    fare: Optional[float] = None,
-    cabin: Optional[str] = None,
-    embarked: Optional[str] = None,
+        pclass: int,
+        name: str,
+        sex: str,
+        age: Optional[float] = None,
+        sib_sp: Optional[int] = None,
+        parch: Optional[int] = None,
+        ticket: Optional[str] = None,
+        fare: Optional[float] = None,
+        cabin: Optional[str] = None,
+        embarked: Optional[str] = None,
 ):
-
     input = pd.DataFrame(
         {
             "PassengerId": [1],
