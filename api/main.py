@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import pickle
 from sklearn.ensemble._forest import RandomForestClassifier
-from indus.feature_engineering import Preprocessor
+from src.feature_engineering import Preprocessor
 
 app = FastAPI()
 
