@@ -20,16 +20,21 @@ git checkout 6_start_docker
 ```
 
 Nouveauté sur cette branche :
+
 - Le fichier `setup.py` est créé.
 - Une API est mise à disposition
 
 L'objectif de ce TP est de créer une application avec une image docker.
 
-## Créer un package python
+## Découpler entraînement et inférence
 
 Duration: 0:20:00
 
-En suivant la démonstration de l'instructeur, vous allez créer un `package` python.
+La première étape pour réussir à faire une application qui permet de faire des predictions est de réussir à découpler
+prédiction et entraînement.
+
+Pour cela, il nous faut sauvegarder le modèle et aussi tous les objets appris au moment du préprocessing.
+
 
 ## Lien vers le TP suivant
 
