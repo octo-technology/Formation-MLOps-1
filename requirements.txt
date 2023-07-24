@@ -10,5 +10,5 @@ fastapi==0.95.2
 uvicorn==0.22.0
 
 # Temp fix due to broken new version of jupyter-nbextensions-configurator 0.6.3 incompatible with notebook 7.0.0
-notebook=6.5.4
+notebook==6.5.4
 jupyter-nbextensions-configurator==0.6.2
