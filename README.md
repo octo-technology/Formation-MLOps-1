@@ -1,50 +1,18 @@
-# Create unit tests (4)
+# Formation MLOps 1 : Industrialisation de la Data Science
 
-![branch build status](https://github.com/octo-technology/Formation-MLOps-1/actions/workflows/ci.yml/badge.svg?branch=4_create_unit_tests)
+Pour suivre ce TP, nous allons utiliser les GitHub pages suivantes : 
 
-What is this?
--------------
-At this step :
-- Your notebook is clean and running
-- You have a few documented functions
-- Your functions are in a specific `.py` file
-- Your functions are tested
+[TP 0 Installation de l'environnement](https://octo-technology.github.io/Formation-MLOps-1/tp0#0)
 
+[TP 1 Nettoyer le notebook](https://octo-technology.github.io/Formation-MLOps-1/tp1#0)
 
-What is the goal ?
--------------------
-The goal at this step is to generate a sphinx documentation.
+[TP 2 Écrire des tests unitaires](https://octo-technology.github.io/Formation-MLOps-1/tp2#0)
 
-Following instructor demonstration you will create a documentation using
-`sphinx`. The result will be some `html` pages.
+[TP 3 Documenter avec Sphinx](https://octo-technology.github.io/Formation-MLOps-1/tp3#0)
 
+[TP 4 Écrire un script de CI](https://octo-technology.github.io/Formation-MLOps-1/tp4#0)
 
-Installation
--------------------
-Install the required package in the proper environment.
+[TP 5 Créer un package python](https://octo-technology.github.io/Formation-MLOps-1/tp5#0)
 
-```shell
-pip install -r requirements_test.txt
-```
+[TP 6 Créer une API, et la conteneuriser](https://octo-technology.github.io/Formation-MLOps-1/tp6#0)
 
-Initiate your documentation by running the following commands.
-```shell
-mkdir ./docs
-cd docs
-sphinx-quickstart
-```
-
-
-When I'm done ?
----------------
-When you are done, please wait for the rest of the group.
-
-For the next step of the practical work, you can either
-keep on working on the code as it is, or checkout branch `5_add_sphinx_doc`
-
-To check out branch `5_add_sphinx_doc` you need to either commit
-or stash your changes :
-```
-git stash
-git checkout 5_add_sphinx_doc
-```
