@@ -1,53 +1,18 @@
-# Initial state (0)
+# Formation MLOps 1 : Industrialisation de la Data Science
 
-![branch build status](https://github.com/octo-technology/Formation-MLOps-1/actions/workflows/ci.yml/badge.svg?branch=0_initial_state)
+Pour suivre ce TP, nous allons utiliser les GitHub pages suivantes : 
 
-## What is this
+[TP 0 Installation de l'environnement](https://octo-technology.github.io/Formation-MLOps-1/tp0#0)
 
-This is the initial branch of the practical work.
+[TP 1 Nettoyer le notebook](https://octo-technology.github.io/Formation-MLOps-1/tp1#0)
 
-If you explore the project you will find :
+[TP 2 Écrire des tests unitaires](https://octo-technology.github.io/Formation-MLOps-1/tp2#0)
 
-```plain text
-    .
-    └── formation_indus_ds
-        ├── input
-        |   ├── test.csv
-        |   ├── train.csv
-        ├── notebook
-        |   ├── titanic.ipynb
-        README.md
-```
+[TP 3 Documenter avec Sphinx](https://octo-technology.github.io/Formation-MLOps-1/tp3#0)
 
-This the state of a data science prototype built by one of your colleagues.
+[TP 4 Écrire un script de CI](https://octo-technology.github.io/Formation-MLOps-1/tp4#0)
 
-## What is the goal
+[TP 5 Créer un package python](https://octo-technology.github.io/Formation-MLOps-1/tp5#0)
 
--------------------
-The goal of this first step is to clean the notebook following code practices you just discovered :
+[TP 6 Créer une API, et la conteneuriser](https://octo-technology.github.io/Formation-MLOps-1/tp6#0)
 
-- Variables names
-- Conventions
-- Respect cells order
-- Printing
-- Removing useless code
-- Making short instructions
-- Respect immutability
-- Create functions
-
-One test to check if you are done is to restart the notebook and run all cells (symbol >>)
-
-## When I'm done
-
-When you are done, please wait for the rest of the group.
-
-For the next step of the practical work, you can either
-keep on working on the code as it is, or checkout branch `1_clean_notebook`
-
-To checkout branch `1_clean_notebook` you need to either commit
-or stash your changes :
-
-```bash
-git stash
-git checkout 1_clean_notebook
-```
