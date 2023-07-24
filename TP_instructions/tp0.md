@@ -28,13 +28,13 @@ git clone git@github.com:octo-technology/Formation-MLOps-1.git
 
 NB : Si vous êtes sur Windows, vous aurez besoin de l'utilitaire [Git for windows](https://gitforwindows.org/)
 
-## Ouvrir pycharm est le configure
+## Ouvrir PyCharm et le configurer
 
 Duration: 0:03:00
 
-Ouvrir le projet sur pycharm
+Ouvrir le projet sur PyCharm
 
-Si vous êtes sous Windows, configurez votre terminal dans Pycharm afin de pouvoir exécuter toutes les commandes :
+Si vous êtes sous Windows, configurez votre terminal dans PyCharm afin de pouvoir exécuter toutes les commandes :
 
 - Allez dans Paramètres > Outils > Terminal
 - Modifiez le "Shell path" par : `cmd.exe "/K" "C:\Users\>>me<<Miniconda3\Scripts\activate.bat"`
@@ -82,7 +82,7 @@ jupyter-notebook
 Si l'environnement `formation_mlops_1` n'est pas disponible dans l'interface `jupyter` :
 
 - Quittez jupyter-notebook avec un <kbd>ctrl</kbd>+<kbd>c</kbd> dans le terminal
-- Lancer `conda install -n formation_mlops_1 nb_conda_kernels`
+- Lancer `ipython kernel install --name "PythonIndus" --user`
 - Relancer `jupyter-notebook`
 
 ## Comment suivre ce TP

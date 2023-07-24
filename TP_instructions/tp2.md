@@ -106,8 +106,7 @@ def test_process_name():
    # Then
    pd.testing.assert_frame_equal(expected_df, result_df)
 ```
-Pour écrire les données de tests, nous recommandons (si ce ne sont pas des données personnelles ou
-confidentielles) d'utiliser des données de la production.
+Pour écrire les données de tests, nous recommandons (si ce ne sont pas des données personnelles ou confidentielles) d'utiliser des données de la production.
 
 Exécuter les tests en cliquant sur la petite flèche verte à côté du nom de la fonction
 
