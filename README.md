@@ -1,34 +1,18 @@
-# Add github actions ci (6)
+# Formation MLOps 1 : Industrialisation de la Data Science
 
-![branch build status](https://github.com/octo-technology/Formation-MLOps-1/actions/workflows/validation_ci.yml/badge.svg?branch=6_add_github_actions_ci)
+Pour suivre ce TP, nous allons utiliser les GitHub pages suivantes : 
 
-What is this?
--------------
-At this step :
-- Your notebook is clean and running
-- You have a few documented functions
-- Your functions are in a specific `.py` file
-- Your functions are tested
-- Your package have a documentation
+[TP 0 Installation de l'environnement](https://octo-technology.github.io/Formation-MLOps-1/tp0#0)
 
-What is the goal ?
--------------------
-The goal at this step is to package your code so that it will be easily installed elsewhere.
+[TP 1 Nettoyer le notebook](https://octo-technology.github.io/Formation-MLOps-1/tp1#0)
 
-Following instructor demonstration you will create a python package.
+[TP 2 Écrire des tests unitaires](https://octo-technology.github.io/Formation-MLOps-1/tp2#0)
 
-When I'm done ?
----------------
-This is the end of this practical work.
+[TP 3 Documenter avec Sphinx](https://octo-technology.github.io/Formation-MLOps-1/tp3#0)
 
-Now you know how to go from an 'ugly' notebook to a documented, tested package.
+[TP 4 Écrire un script de CI](https://octo-technology.github.io/Formation-MLOps-1/tp4#0)
 
-To see a correction what you should have achieved you can check out branch `7_package`
-```shell
-git stash
-git checkout 7_package
-```
+[TP 5 Créer un package python](https://octo-technology.github.io/Formation-MLOps-1/tp5#0)
 
-Also in branch `7_package` there is an optional task to create a predict notebook using
-`pickle` to save and load model.
+[TP 6 Créer une API, et la conteneuriser](https://octo-technology.github.io/Formation-MLOps-1/tp6#0)
 
