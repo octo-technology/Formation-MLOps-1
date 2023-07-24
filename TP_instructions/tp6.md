@@ -37,12 +37,9 @@ Pour cela, il nous faut sauvegarder le modèle et aussi tous les objets appris a
 
 ### Construire une classe de pré-processing
 
-Pour sauvegarder les informations apprises au moment du pré-processing, nous proposons d'implémenter une
-classe `Preprocessor`
-qui a deux méthodes inspirées de l'API `scikit-learn` : `fit_transform` et `transform`.
+Pour sauvegarder les informations apprises au moment du pré-processing, nous proposons d'implémenter une classe `Preprocessor` qui a deux méthodes inspirées de l'API `scikit-learn` : `fit_transform` et `transform`.
 
-Nous avons proposé un début d'implémentation dans `src.feature_engineering` à vous de compléter cette classe en y
-ajoutant toutes les méthodes.
+Nous avons proposé un début d'implémentation dans `src.feature_engineering` à vous de compléter cette classe en y ajoutant toutes les méthodes.
 
 ### Sauvegarder le modèle et le pré-processor
 
@@ -118,8 +115,7 @@ docker build -t mlops-1 .
 docker run -p 80:80 mlops-1
 ```
 
-L'API est exposée et peut être atteinte à 0.0.0.0:80 La documentation est disponible [ici](http://127.0.0.1/docs),
-générée par swagger, elle peut également être utilisée pour interagir avec l'API.
+L'API est exposée et peut être atteinte à 0.0.0.0:80 La documentation est disponible [ici](http://127.0.0.1/docs), générée par swagger, elle peut également être utilisée pour interagir avec l'API.
 
 Sinon, vous pouvez faire appel à la même route d'exemple.
 
