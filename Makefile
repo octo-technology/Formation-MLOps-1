@@ -16,8 +16,8 @@ notebook-validation:
 tp-validation:
 	$(MAKE) notebook-validation 2>execution_output.log || true
 	execution_output=$$(cat execution_output.log && rm -f execution_output.log)
-	rm notebook/titanic.nbconvert.ipynb
-	rm notebook/y_test_predictions.csv
+	rm notebook/titanic.nbconvert.ipynb 2> /dev/null || true
+	rm notebook/y_test_predictions.csv 2> /dev/null || true
 	echo "Le notebook a été exécuté de bout en bout:"
 	echo "-----------------------"
 	echo "$$execution_output"
