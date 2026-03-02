@@ -1,0 +1,30 @@
+[project]
+name = "Formation-MLOps-1"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi>=0.135.1",
+    "matplotlib>=3.10.8",
+    "numpy>=2.4.2",
+    "pandas>=3.0.1",
+    "scikit-learn>=1.8.0",
+    "seaborn>=0.13.2",
+    "uvicorn>=0.41.0",
+]
+
+[tool.uv.workspace]
+members = [
+    "Formation-MLOps-1",
+]
+
+[dependency-groups]
+dev = [
+    "bandit>=1.9.4",
+    "jupyter>=1.1.1",
+    "pytest>=9.0.2",
+    "ruff>=0.15.4",
+    "safety>=3.7.0",
+    "sphinx>=9.1.0",
+    "vulture>=2.14",
+]
