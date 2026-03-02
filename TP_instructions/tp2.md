@@ -27,6 +27,13 @@ Nouveauté sur cette branche :
 
 L'objectif de ce TP est d'écrire quelques tests unitaires.
 
+## Installer pytest 
+Duration: 0:05:00
+
+```
+uv add pytest --dev
+```
+
 ## Écrire mon premier test unitaire
 
 Duration: 0:10:00
@@ -108,7 +115,7 @@ def test_process_name():
 ```
 Pour écrire les données de tests, nous recommandons (si ce ne sont pas des données personnelles ou confidentielles) d'utiliser des données de la production.
 
-Exécuter les tests en cliquant sur la petite flèche verte à côté du nom de la fonction
+Exécuter les tests en cliquant sur la petite flèche verte à côté du nom de la fonction ou lancer la commande `uv run pytest` ou `pytest`
 
 ## Écrire d'autres tests
 

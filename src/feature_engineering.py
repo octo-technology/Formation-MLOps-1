@@ -1,10 +1,8 @@
-from typing import Tuple, List
-
 import numpy as np
 import pandas as pd
 
 
-class Preprocessor():
+class Preprocessor:
     """General class used for preprocessing."""
 
     # Mean values to fill missing data
@@ -20,14 +18,14 @@ class Preprocessor():
     # Cabin numbers
     cabin_number_bins: np.ndarray
     # All dummies
-    dummy_columns_values: List[str]
+    dummy_columns_values: list[str]
 
     def __init__(
         self,
-        dummy_columns: List[str] = None,
-        drop_columns: List[str] = None,
-        letter_group_1: List[str] = None,
-        letter_group_2: List[str] = None,
+        dummy_columns: list[str] | None = None,
+        drop_columns: list[str] | None = None,
+        letter_group_1: list[str] | None = None,
+        letter_group_2: list[str] | None = None,
     ):
         """
         Instanciate preprocessor instances.
@@ -75,8 +73,7 @@ class Preprocessor():
         """
         if (name_title, p_class) in self.grouped_age_means.index:
             return self.grouped_age_means[name_title, p_class]
-        else:
-            return self.age_mean
+        return self.age_mean
 
     def impute_age(self, df: pd.DataFrame) -> pd.DataFrame:
         """
@@ -245,8 +242,7 @@ class Preprocessor():
 
         """
         df_new = df.copy()
-        df_new = df_new.drop(self.drop_columns, axis=1)
-        return df_new
+        return df_new.drop(self.drop_columns, axis=1)
 
     def fit_transform(self, df: pd.DataFrame):
         """
@@ -283,9 +279,7 @@ class Preprocessor():
         ).columns
 
         df_new = self.dummy_cols(df=df_new)
-        df_new = self.drop_cols(df=df_new)
-
-        return df_new
+        return self.drop_cols(df=df_new)
 
     def transform(self, df: pd.DataFrame) -> pd.DataFrame:
         """
@@ -308,12 +302,10 @@ class Preprocessor():
         df_new = self.get_cabin_number(df=df_new)
         df_new = self.get_dummy_cabin_number(df=df_new)
         df_new = self.dummy_cols(df=df_new)
-        df_new = self.drop_cols(df=df_new)
-
-        return df_new
+        return self.drop_cols(df=df_new)
 
 
-def process_data(train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list, drop_columns: list) -> Tuple[
+def process_data(train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list, drop_columns: list) -> tuple[
         pd.DataFrame, pd.DataFrame]:
     """
     Apply all neccessary transformations to clean train and test data

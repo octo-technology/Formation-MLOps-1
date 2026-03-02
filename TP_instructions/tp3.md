@@ -28,10 +28,10 @@ L'objectif de ce TP est de créer une doc HTML avec Sphinx.
 
 Duration: 0:15:00
 
-1. Assurez-vous d'avoir installé les dépendances de dev : `pip install -r requiments_test.txt`
+1. Assurez-vous d'avoir installé les dépendances de dev : `uv sync`
 2. Créez un dossier pour héberger la documentation : `mkdir ./docs`
 3. Allez dans ce dossier : `cd docs`
-4. Lancez le helper de sphinx : `sphinx-quick-start`
+4. Lancez le helper de sphinx : `sphinx-quickstart`
 5. Avec le formateur, complétez la configuration
 
 ## Explorer les possibilités de configuration

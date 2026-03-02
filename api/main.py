@@ -1,10 +1,10 @@
-from typing import Optional
+import pickle
 
-from fastapi import FastAPI
 import numpy as np
 import pandas as pd
-import pickle
+from fastapi import FastAPI
 from sklearn.ensemble._forest import RandomForestClassifier
+
 from src.feature_engineering import Preprocessor
 
 app = FastAPI()
@@ -48,13 +48,13 @@ async def predict(
     pclass: int,
     name: str,
     sex: str,
-    age: Optional[float] = None,
-    sib_sp: Optional[int] = None,
-    parch: Optional[int] = None,
-    ticket: Optional[str] = None,
-    fare: Optional[float] = None,
-    cabin: Optional[str] = None,
-    embarked: Optional[str] = None,
+    age: float | None = None,
+    sib_sp: int | None = None,
+    parch: int | None = None,
+    ticket: str | None = None,
+    fare: float | None = None,
+    cabin: str | None = None,
+    embarked: str | None = None,
 ):
 
     input = pd.DataFrame(
