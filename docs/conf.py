@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Configuration file for the Sphinx documentation builder.
 #
@@ -14,6 +13,7 @@
 #
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath('..'))
 
 
@@ -61,7 +61,7 @@ master_doc = 'index'
 # Usually you set "language" from the command line for these cases.
 language = None
 
-# List of patterns, relative to source directory, that match files and
+# list of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
@@ -125,7 +125,7 @@ latex_elements = {
     # 'figure_align': 'htbp',
 }
 
-# Grouping the document tree into LaTeX files. List of tuples
+# Grouping the document tree into LaTeX files. list of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
@@ -136,7 +136,7 @@ latex_documents = [
 
 # -- Options for manual page output ------------------------------------------
 
-# One entry per manual page. List of tuples
+# One entry per manual page. list of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
     (master_doc, 'formationindustrialisationdeladatascience', 'Formation industrialisation de la Data Science Documentation',
@@ -146,7 +146,7 @@ man_pages = [
 
 # -- Options for Texinfo output ----------------------------------------------
 
-# Grouping the document tree into Texinfo files. List of tuples
+# Grouping the document tree into Texinfo files. list of tuples
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [

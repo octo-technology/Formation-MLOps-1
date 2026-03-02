@@ -1,0 +1,12 @@
+LICENSE
+README.md
+pyproject.toml
+src/__init__.py
+src/feature_engineering.py
+src/Formation_MLOps_1.egg-info/PKG-INFO
+src/Formation_MLOps_1.egg-info/SOURCES.txt
+src/Formation_MLOps_1.egg-info/dependency_links.txt
+src/Formation_MLOps_1.egg-info/requires.txt
+src/Formation_MLOps_1.egg-info/top_level.txt
+tests/test_api.py
+tests/test_feature_engineering.py

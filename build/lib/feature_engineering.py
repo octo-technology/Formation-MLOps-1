@@ -1,3 +1,5 @@
+from typing import list
+
 import numpy as np
 import pandas as pd
 
@@ -22,10 +24,10 @@ class Preprocessor:
 
     def __init__(
         self,
-        dummy_columns: list[str] | None = None,
-        drop_columns: list[str] | None = None,
-        letter_group_1: list[str] | None = None,
-        letter_group_2: list[str] | None = None,
+        dummy_columns: list[str] = None,
+        drop_columns: list[str] = None,
+        letter_group_1: list[str] = None,
+        letter_group_2: list[str] = None,
     ):
         """
         Instanciate preprocessor instances.
@@ -242,7 +244,8 @@ class Preprocessor:
 
         """
         df_new = df.copy()
-        return df_new.drop(self.drop_columns, axis=1)
+        df_new = df_new.drop(self.drop_columns, axis=1)
+        return df_new
 
     def fit_transform(self, df: pd.DataFrame):
         """
@@ -279,7 +282,9 @@ class Preprocessor:
         ).columns
 
         df_new = self.dummy_cols(df=df_new)
-        return self.drop_cols(df=df_new)
+        df_new = self.drop_cols(df=df_new)
+
+        return df_new
 
     def transform(self, df: pd.DataFrame) -> pd.DataFrame:
         """
@@ -302,7 +307,9 @@ class Preprocessor:
         df_new = self.get_cabin_number(df=df_new)
         df_new = self.get_dummy_cabin_number(df=df_new)
         df_new = self.dummy_cols(df=df_new)
-        return self.drop_cols(df=df_new)
+        df_new = self.drop_cols(df=df_new)
+
+        return df_new
 
 
 def process_data(train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list, drop_columns: list) -> tuple[

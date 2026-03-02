@@ -42,33 +42,47 @@ Si vous êtes sous Windows, configurez votre terminal dans PyCharm afin de pouvo
 - Testez-le en tapant `git` dans le terminal
 
 
-## Créer un environment conda
+## Créer un environment uv
 Duration: 0:10:00
 Assurez vous d'avoir miniconda or anaconda installé. Si non, installez le.
 
+### Installer uv
+Source : https://docs.astral.sh/uv/getting-started/installation/#__tabbed_1_1
+
+Sur ubuntu / mac : 
+```
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+ou
+```
+pipx install uv
+```
+
+Sur windows 
+```
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+Si votre .venv n'est activé par défaut : 
+- Sur pycharm vous pouvez essayer d'ouvrir un autre terminal
+- Sinon, vous pouvez activer votre .venv avec la commande suivante : `source .venv/bin/activate`
+
+### Installer l'environnement uv et les packages
 Positionnez-vous dans le dossier de la formation
 
 ```sh
 cd Formation-MLOps-1
 ```
 
-Créer un environnement conda avec la commande suivante
+Créer un environnement uv et installer toutes les dépendances avec 
 
 ```sh
-conda create -n formation_mlops_1 python=3.10
+uv sync
 ```
 
-Une fois créé, vous pouvez l'activer : 
+NB : Si vous êtes dans un environnement de production, et ne souhaitez pas installer les dépendances de dev, il convient d'utiliser la commande `uv sync --no-dev`
 
-```sh
-conda activate formation_mlops_1
-```
-
-Puis installer les dépendances requises
-
-```sh
-pip install -r requirements.txt
-```
 
 ## Ouvrir un notebook
 Duration: 0:03:00
@@ -76,7 +90,7 @@ Duration: 0:03:00
 Dans le terminal taper la commande : 
 
 ```sh
-jupyter-notebook
+uv run --with jupyter jupyter lab
 ```
 
 Si l'environnement `formation_mlops_1` n'est pas disponible dans l'interface `jupyter` :
@@ -89,8 +103,7 @@ Si l'environnement `formation_mlops_1` n'est pas disponible dans l'interface `ju
 
 Duration: 0:03:00
 
-
-Elle est fortement liée à la présentation de la formation.
+Il est fortement lié à la présentation de la formation.
 
 Pour naviguer entre les étapes, changez de branche.
 

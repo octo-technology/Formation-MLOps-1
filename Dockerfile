@@ -1,15 +1,14 @@
 # set base image
-FROM python:3.11
+FROM python:3.14
 
 COPY ./src /src
-COPY ./setup.py /setup.py
-COPY ./requirements.txt /requirements.txt
-
+COPY pyproject.toml /pyproject.toml
+COPY uv.lock /uv.lock
 COPY ./models /models
 
 COPY ./api /api
 
-RUN pip install --no-cache-dir .
+RUN uv sync
 
 EXPOSE 80:80
 

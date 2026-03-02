@@ -21,7 +21,6 @@ git checkout 6_start_docker
 
 Nouveauté sur cette branche :
 
-- Le fichier `setup.py` est créé.
 - Une API est mise à disposition
 
 L'objectif de ce TP est de créer une application avec une image docker.
