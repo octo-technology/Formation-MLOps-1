@@ -2,7 +2,7 @@
 name = "Formation-MLOps-1"
 version = "0.1.0"
 description = "Add your description here"
-requires-python = ">=3.14"
+requires-python = ">=3.14.0"
 dependencies = [
     "fastapi>=0.135.1",
     "matplotlib>=3.10.8",

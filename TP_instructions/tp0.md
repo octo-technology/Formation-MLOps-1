@@ -28,23 +28,11 @@ git clone git@github.com:octo-technology/Formation-MLOps-1.git
 
 NB : Si vous êtes sur Windows, vous aurez besoin de l'utilitaire [Git for windows](https://gitforwindows.org/)
 
-## Ouvrir PyCharm et le configurer
+## Ouvrir pycharm et le configurer
 
 Duration: 0:03:00
 
 Ouvrir le projet sur PyCharm
-
-Si vous êtes sous Windows, configurez votre terminal dans PyCharm afin de pouvoir exécuter toutes les commandes :
-
-- Allez dans Paramètres > Outils > Terminal
-- Modifiez le "Shell path" par : `cmd.exe "/K" "C:\Users\>>me<<Miniconda3\Scripts\activate.bat"`
-- Redémarrer Pycharm
-- Testez-le en tapant `git` dans le terminal
-
-
-## Créer un environment uv
-Duration: 0:10:00
-Assurez vous d'avoir miniconda or anaconda installé. Si non, installez le.
 
 ### Installer uv
 Source : https://docs.astral.sh/uv/getting-started/installation/#__tabbed_1_1
@@ -64,9 +52,19 @@ Sur windows
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
 
-Si votre .venv n'est activé par défaut : 
-- Sur pycharm vous pouvez essayer d'ouvrir un autre terminal
-- Sinon, vous pouvez activer votre .venv avec la commande suivante : `source .venv/bin/activate`
+### Installer la bonne version de Python
+
+```sh
+uv python install 3.14
+```
+
+Assurez vous que la version de Python 3.14 est bien la dernière (>= 3.14.0). 
+```sh
+uv run python --version
+```
+
+Si ce n'est pas le cas (version du type `Python 3.14.0b2`), assurez vous qu'uv est à jour en relancer le script d'installation puis vous pouvez relancer `uv python install 3.14` qui devrait alors donner une version stable.
+
 
 ### Installer l'environnement uv et les packages
 Positionnez-vous dans le dossier de la formation
