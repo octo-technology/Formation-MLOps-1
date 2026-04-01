@@ -18,6 +18,10 @@ lint:
 	uv run bandit -r src
 	uv run vulture src --min-confidence 80
 
+.PHONY: test  ## 🧪 Lance les tests unitaires
+test:
+	uv run pytest tests
+
 .PHONY: test-tps  ## lance les tests
 test-tps:
 	bats test.bats
