@@ -12,6 +12,13 @@ help:
 install:
 	uv sync
 
+.PHONY: install-hooks  ## Installe les git hooks (pre-commit)
+install-hooks:
+	chmod +x .githooks/pre-commit  # ok pour windows s'ils utilisent git bash
+	git config core.hooksPath .githooks
+.PHONY: pre-commit  ## 🔄 Lance le pre-commit manuellement
+pre-commit:
+	.githooks/pre-commit
 .PHONY: lint  ## 🔍 Lance le linting (ruff, safety, bandit, vulture)
 lint:
 	uv run ruff check src tests
