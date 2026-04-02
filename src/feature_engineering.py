@@ -120,7 +120,7 @@ class Preprocessor:
 
         """
         df_new = df.copy()
-        df_new.fillna({'Fare': self.fare_mean}, inplace=True)
+        df_new['Fare'].fillna(self.fare_mean, inplace=True)
         return df_new
 
     def group_ticket(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -218,7 +218,6 @@ class Preprocessor:
         present in both the training and test datasets.
         """
         df_new = df.copy()
-
         # Convert categorical columns to string using map (applymap is deprecated)
         for col in self.dummy_columns:
             df_new[col] = df_new[col].map(str)
@@ -251,8 +250,7 @@ class Preprocessor:
             df: The train or test set
 
         """
-        df_new = df.copy()
-        return df_new.drop(columns=self.drop_columns, errors='ignore')
+        return df.copy().drop(columns=self.drop_columns, errors='ignore')
 
     def fit_transform(self, df: pd.DataFrame):
         """

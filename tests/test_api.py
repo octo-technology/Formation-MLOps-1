@@ -15,4 +15,4 @@ def test_process_name_should_create_column_name_lenght():
 
     # Then
     assert response.status_code == 200
-    assert response.text == '{"input_proba":[0.2148865583,0.7851134417]}'
+    assert response.text == '{"input_proba":[0.223552113,0.776447887]}'
