@@ -1,4 +1,3 @@
-from typing import Tuple, List
 
 import numpy as np
 import pandas as pd
@@ -187,7 +186,7 @@ def impute_embarked(df: pd.DataFrame) -> pd.DataFrame:
     return df_new
 
 
-def dummy_cols(df: pd.DataFrame, dummy_columns: List[str], dummy_columns_values: List[str]) -> pd.DataFrame:
+def dummy_cols(df: pd.DataFrame, dummy_columns: list[str], dummy_columns_values: list[str]) -> pd.DataFrame:
     """
     Converts our categorical columns into dummy variables, and then drops the
     original categorical columns. It also makes sure that each category is
@@ -226,7 +225,7 @@ def dummy_cols(df: pd.DataFrame, dummy_columns: List[str], dummy_columns_values:
     return df_new.drop(dummy_columns, axis=1)
 
 
-def drop_cols(df: pd.DataFrame, drop_columns: List[str]) -> pd.DataFrame:
+def drop_cols(df: pd.DataFrame, drop_columns: list[str]) -> pd.DataFrame:
     """
     Drops columns in the given list.
 
@@ -238,7 +237,7 @@ def drop_cols(df: pd.DataFrame, drop_columns: List[str]) -> pd.DataFrame:
     return df.copy().drop(columns=drop_columns, errors='ignore')
 
 
-def process_data(train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list, drop_columns: list) -> Tuple[
+def process_data(train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list, drop_columns: list) -> tuple[
         pd.DataFrame, pd.DataFrame]:
     """
     Apply all neccessary transformations to clean train and test data
