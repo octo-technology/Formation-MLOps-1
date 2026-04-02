@@ -24,12 +24,15 @@ install:
 
 .PHONY: notebook-validation  ## 🔭 Lance le notebook titanic.ipynb pour s'assurer qu'il peut être exécuté de bout en bout
 notebook-validation:
-	uv run jupyter nbconvert --to notebook --execute notebook/titanic.ipynb
+	uv run jupyter nbconvert --to script notebook/titanic.ipynb
+	cd notebook
+	uv run python titanic.py
 
 .PHONY: tp-validation  ## 1️⃣ Valide que le TP1 est fonctionnel. L'import de pandas dans le notebook doit échouer.
 tp-validation:
 	$(MAKE) notebook-validation 2>execution_output.log || true
 	execution_output=$$(cat execution_output.log && rm -f execution_output.log)
+	rm notebook/titanic.py
 	echo "Le notebook a été exécuté de bout en bout:"
 	echo "-----------------------"
 	echo "$$execution_output"
