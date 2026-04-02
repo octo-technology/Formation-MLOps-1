@@ -54,17 +54,19 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 
 ### Installer la bonne version de Python
 
+UV permet de gérer plusieurs versions de Python en parallèle sur la même machine. On peut installer une nouvelle version de Python avec la commande:
 ```sh
 uv python install 3.14
 ```
 
-Assurez vous que la version de Python 3.14 est bien la dernière (>= 3.14.0). 
+Assurez vous que la version de Python 3.14 est bien stable (>= 3.14.0). 
 ```sh
 uv run python --version
 ```
 
 Si ce n'est pas le cas (version du type `Python 3.14.0b2`), assurez vous qu'uv est à jour en relancer le script d'installation puis vous pouvez relancer `uv python install 3.14` qui devrait alors donner une version stable.
 
+De manière alternative, vous pouvez utiliser `pyenv`: `pyenv install` pour installer une nouvelle version de python puis `pyenv local` pour préciser quelle version de Python utiliser dans le dossier où vous vous trouvez.
 
 ### Installer l'environnement uv et les packages
 Positionnez-vous dans le dossier de la formation
@@ -91,12 +93,6 @@ Dans le terminal taper la commande :
 uv run --with jupyter jupyter lab
 ```
 
-Si l'environnement `formation_mlops_1` n'est pas disponible dans l'interface `jupyter` :
-
-- Quittez jupyter-notebook avec un <kbd>ctrl</kbd>+<kbd>c</kbd> dans le terminal
-- Lancer `ipython kernel install --name "PythonIndus" --user`
-- Relancer `jupyter-notebook`
-
 ## Comment suivre ce TP
 
 Duration: 0:03:00
@@ -112,5 +108,7 @@ git branch -a
 ## Lien vers le TP suivant
 
 Duration: 0:01:00
+
+Bravo, vous avez maintenant configuré votre environnement et vous êtes prêt à passer à la suite !
 
 Les instructions du TP suivant sont [ici](https://octo-technology.github.io/Formation-MLOps-1/tp1#0)
