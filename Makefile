@@ -22,14 +22,13 @@ tp-validation:
 	echo "-----------------------"
 	echo "$$execution_output"
 	echo "-----------------------"
-	rm notebook/y_test_predictions.csv
 	rm notebook/titanic.py
-	if [ $$status -eq 0 ];
+	if echo "$$execution_output" | grep -q "TypeError.*subscriptable.*";
 	then
-		echo "✅ Le notebook a réussi a run de bout en bout";
+		echo "✅ Le notebook a bien une erreur : la classe preprocessor est a completer";
 		exit 0
 	else
-		echo "❌ Le notebook a échoué a run de bout en bout"
+		echo "❌ Le notebook n'a pas eu d'erreur"
 		exit 1
 	fi
 

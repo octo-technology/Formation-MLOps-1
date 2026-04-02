@@ -19,9 +19,9 @@ class Preprocessor:
     grouped_age_means: pd.Series
 
     # What we used to pass to our functions as argument, such as dummy_columns must be set during the instantiation.
-    # Eventually we will only call "my_instance = Preprocessor(dummy_columns, drop_column)" and
+    # Eventually we will only call "my_instance = Preprocessor(dummy_columns, drop_columns)" and
     # "my_instance.fit_transform(train)" or "my_instance.transform(test)"
-    def __init__(self, dummy_columns: list[str], drop_column: list[str]):
+    def __init__(self, dummy_columns: list[str], drop_columns: list[str]):
         """
         Instanciate preprocessor instances.
 
@@ -33,7 +33,7 @@ class Preprocessor:
 
         # We store these values as class arguments.
         self.dummy_columns = dummy_columns
-        self.drop_column = drop_column
+        self.drop_columns = drop_columns
 
     # We can copy our functions we need to midify two things:
     # First add self to the arguments, this refers to the instance of the class.
