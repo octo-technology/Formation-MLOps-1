@@ -5,10 +5,10 @@ SHELL := /bin/bash
 
 .PHONY: help
 help:
-	echo "❓ Utiliser \`make <target>' où <target> peut être"
-	grep -E '^\.PHONY: [a-zA-Z0-9_-]+ .*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = "(: |##)"}; {printf "\033[36m%-30s\033[0m %s\n", $$2, $$3}'
+	@echo "Please use \`make <target>' where <target> is one of"
+	@grep -E '^\.PHONY: [a-zA-Z_-]+ .*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = "(: |##)"}; {printf "\033[36m%-30s\033[0m %s\n", $$2, $$3}'
 
-.PHONY: ls-supports  ## 🗄️ liste les supports de formation dispo sur gslide et en pdf selon la VERSION={v1.3, ...}
+.PHONY: ls-supports  ## liste les supports de formation dispo sur gslide et en pdf selon la VERSION={v1.3, ...}
 ls-supports:
 	if [ -z "${VERSION}" ]
 	then
@@ -17,13 +17,14 @@ ls-supports:
 		git config -f manifest.ini --get-regexp ${VERSION}
 	fi
 
-.PHONY: conda-env  ## 🐍 Créé l'environnement conda python_indus, et le récréé s'il existe déjà
-conda-env:
-	conda create --name python_indus python==3.10 --force --quiet; pip install -r requirements.txt
+.PHONY: install  ## 📦 Installe les dépendances avec uv
+install:
+	uv sync
+
 
 .PHONY: notebook-validation  ## 🔭 Lance le notebook titanic.ipynb pour s'assurer qu'il peut être exécuté de bout en bout
 notebook-validation:
-	jupyter nbconvert --to notebook --execute notebook/titanic.ipynb
+	uv run jupyter nbconvert --to notebook --execute notebook/titanic.ipynb
 
 .PHONY: tp-validation  ## 1️⃣ Valide que le TP1 est fonctionnel. L'import de pandas dans le notebook doit échouer.
 tp-validation:
@@ -33,8 +34,7 @@ tp-validation:
 	echo "-----------------------"
 	echo "$$execution_output"
 	echo "-----------------------"
-	## Si l'output contient...
-	if [[ $$execution_output =~ "NameError: name 'pd' is not defined" ]];
+	if echo "$$execution_output" | grep -q "NameError.*pd.*";
 	then
 		echo "✅ L'import de Pandas a échoué comme prévu, le notebook du TP1 fonctionne comme prévu";
 		exit 0
