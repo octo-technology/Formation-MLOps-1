@@ -120,7 +120,7 @@ class Preprocessor:
 
         """
         df_new = df.copy()
-        df_new['Fare'].fillna(self.fare_mean, inplace=True)
+        df_new['Fare'] = df_new['Fare'].fillna(self.fare_mean)
         return df_new
 
     def group_ticket(self, df: pd.DataFrame) -> pd.DataFrame:
