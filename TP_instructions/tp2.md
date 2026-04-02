@@ -168,14 +168,18 @@ Quelques exemples :
 - `make install` — installe les dépendances
 - `make lint` — lance le linting (ruff, bandit, vulture)
 - `make test` — lance les tests unitaires
-- `make sphinx` — génère la documentation
-- `make distribution` — construit le package
 
-L'avantage : tout le monde utilise les mêmes commandes, et la CI peut aussi s'appuyer dessus. Pas besoin de se souvenir des options de chaque outil.
+L'avantage : tout le monde utilise les mêmes commandes, et la CI (cf section suivante) peut aussi s'appuyer dessus. Pas besoin de se souvenir des options de chaque outil.
+
+## La CI
+
+Duration: 0:05:00
+
+La CI permet de valider les tests et linting selon un événement sur le repos. Regardez `.github/workflows/ci.yml` pour un exemple de configuration.
 
 ## Automatiser avec un pre-commit hook
 
-Duration: 0:10:00
+Duration: 0:05:00
 
 C'est bien de lancer le linting et les tests à la main, mais on oublie vite. L'idée du **pre-commit hook**, c'est de les lancer **automatiquement** à chaque `git commit`. Si ça échoue, le commit est bloqué — impossible de pousser du code qui ne passe pas les vérifications.
 
@@ -214,7 +218,7 @@ make install-hooks
 
 3. Testez ! Faites un changement quelconque et tentez un `git commit`. Vous devriez voir le lint et les tests se lancer automatiquement. Si l'un des deux échoue, le commit sera refusé.
 
-> **Astuce** : en cas d'urgence, vous pouvez contourner le hook avec `git commit --no-verify`, mais c'est à utiliser avec parcimonie 😉
+> **Astuce** : en cas d'urgence, vous pouvez contourner le hook avec `git commit --no-verify`, mais c'est à utiliser avec parcimonie
 
 ## Lien vers le TP suivant
 
