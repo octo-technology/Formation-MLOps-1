@@ -16,3 +16,5 @@ jobs:
         run: make install
       - name: Run Safety
         run: uv run safety check
+      - name: Run tp-validation
+        run: make tp-validation
