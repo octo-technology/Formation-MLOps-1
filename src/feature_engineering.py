@@ -1,14 +1,12 @@
-from typing import Tuple, List
-
+# ruff: noqa: PIE790
 import numpy as np
 import pandas as pd
-
 
 ##############################
 
 # Preprocessing class template
 
-class Preprocessor():
+class Preprocessor:
     """General class used for preprocessing."""
 
     # Values you want to store when fitting data.
@@ -17,13 +15,13 @@ class Preprocessor():
     # the impute_age() method.
 
     # Age means
-    age_mean: np.float64
+    age_mean: float
     grouped_age_means: pd.Series
 
     # What we used to pass to our functions as argument, such as dummy_columns must be set during the instantiation.
     # Eventually we will only call "my_instance = Preprocessor(dummy_columns, drop_column)" and
     # "my_instance.fit_transform(train)" or "my_instance.transform(test)"
-    def __init__(self, dummy_columns: List[str], drop_column: List[str]):
+    def __init__(self, dummy_columns: list[str], drop_column: list[str]):
         """
         Instanciate preprocessor instances.
 
@@ -55,8 +53,7 @@ class Preprocessor():
         """
         if (name_title, p_class) in self.grouped_age_means.index:
             return self.grouped_age_means[name_title, p_class]
-        else:
-            return self.age_mean
+        return self.age_mean
 
     def impute_age(self, df: pd.DataFrame) -> pd.DataFrame:
         """
@@ -150,8 +147,7 @@ def _get_mean_age_if_exist(name_title: str, p_class: int, age_mean: float, group
     """
     if (name_title, p_class) in grouped_age_means.index:
         return grouped_age_means[name_title, p_class]
-    else:
-        return age_mean
+    return age_mean
 
 
 def impute_age(df: pd.DataFrame, age_mean: float, grouped_age_means: pd.Series) -> pd.DataFrame:
@@ -204,7 +200,7 @@ def fill_fare_na(df: pd.DataFrame, fare_mean: float) -> pd.DataFrame:
 
     """
     df_new = df.copy()
-    df_new['Fare'].fillna(fare_mean, inplace=True)
+    df_new['Fare'] = df_new['Fare'].fillna(fare_mean)
     return df_new
 
 
@@ -259,10 +255,7 @@ def get_cabin_number(df: pd.DataFrame) -> pd.DataFrame:
     """
     df_new = df.copy()
     df_new['Cabin_Number'] = df_new['Cabin'].apply(lambda x: str(x).split(' ')[-1][1:])
-    df_new['Cabin_Number'].replace('an', np.NaN, inplace=True)
-    df_new['Cabin_Number'] = df_new['Cabin_Number'].apply(
-        lambda x: int(x) if not pd.isnull(x) and x != '' else np.NaN
-    )
+    df_new['Cabin_Number'] = pd.to_numeric(df_new['Cabin_Number'], errors='coerce')
     return df_new
 
 
@@ -278,7 +271,7 @@ def get_dummy_cabin_number(df: pd.DataFrame, cabin_number_bins: np.ndarray) -> p
     df_new = df.copy()
     dummies_cols = [f"Cabin_Number_{i}" for i in range(3)]
 
-    df_new.loc[:, dummies_cols] = 0
+    df_new.loc[:, dummies_cols] = False
 
     concerned_index = df_new['Cabin_Number'].dropna().index
 
@@ -308,7 +301,7 @@ def impute_embarked(df: pd.DataFrame) -> pd.DataFrame:
     return df_new
 
 
-def dummy_cols(df: pd.DataFrame, dummy_columns: List[str], dummy_columns_values: List[str]) -> pd.DataFrame:
+def dummy_cols(df: pd.DataFrame, dummy_columns: list[str], dummy_columns_values: list[str]) -> pd.DataFrame:
     """
     Converts our categorical columns into dummy variables, and then drops the
     original categorical columns. It also makes sure that each category is
@@ -322,20 +315,32 @@ def dummy_cols(df: pd.DataFrame, dummy_columns: List[str], dummy_columns_values:
 
     """
     df_new = df.copy()
-    df_new.loc[:, dummy_columns_values] = 0
-    df_new.loc[:, dummy_columns] = df_new.loc[:, dummy_columns].applymap(str)
+    # Convert categorical columns to string using map (applymap is deprecated)
+    for col in dummy_columns:
+        df_new[col] = df_new[col].map(str)
 
+    # Create dummy variables
     dummies = pd.get_dummies(
-        df_new[dummy_columns], columns=dummy_columns, prefix=dummy_columns
+        df_new[dummy_columns], columns=dummy_columns, prefix=dummy_columns, dtype='uint8'
     )
 
-    dummies = dummies.drop([col for col in dummies.columns if col not in dummy_columns_values], axis=1)
+    # Keep only the expected columns
+    dummies = dummies[[col for col in dummies.columns if col in dummy_columns_values]]
 
-    df_new.loc[:, dummies.columns] = dummies
-    return df_new
+    # Ensure all expected columns are present
+    for col in dummy_columns_values:
+        if col not in dummies.columns:
+            dummies[col] = 0
+
+    # Add dummy columns to the dataframe
+    for col in dummy_columns_values:
+        df_new[col] = dummies[col].astype('uint8')
+
+    # Drop original categorical columns
+    return df_new.drop(dummy_columns, axis=1)
 
 
-def drop_cols(df: pd.DataFrame, drop_columns: List[str]) -> pd.DataFrame:
+def drop_cols(df: pd.DataFrame, drop_columns: list[str]) -> pd.DataFrame:
     """
     Drops columns in the given list.
 
@@ -344,12 +349,10 @@ def drop_cols(df: pd.DataFrame, drop_columns: List[str]) -> pd.DataFrame:
         drop_columns: The columns to be dropped.
 
     """
-    df_new = df.copy()
-    df_new = df_new.drop(drop_columns, axis=1)
-    return df_new
+    return df.copy().drop(columns=drop_columns, errors='ignore')
 
 
-def process_data(train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list, drop_columns: list) -> Tuple[
+def process_data(train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list, drop_columns: list) -> tuple[
         pd.DataFrame, pd.DataFrame]:
     """
     Apply all neccessary transformations to clean train and test data
@@ -409,8 +412,10 @@ def process_data(train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list, d
 
     # Compute dummy column values from train
     dummy_columns_values = pd.get_dummies(
-        train_processed.loc[:, dummy_columns].applymap(str), prefix=dummy_columns
-    ).columns
+        test_processed[dummy_columns].astype(str),
+        prefix=dummy_columns,
+        dtype='uint8'
+    ).columns.tolist()
 
     train_processed = dummy_cols(train_processed, dummy_columns, dummy_columns_values)
     test_processed = dummy_cols(test_processed, dummy_columns, dummy_columns_values)

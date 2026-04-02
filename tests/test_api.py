@@ -1,6 +1,6 @@
 # uncomment this code.
 
-"""
+""""
 from fastapi.responses import Response
 from fastapi.testclient import TestClient
 
@@ -16,7 +16,7 @@ def test_process_name_should_create_column_name_lenght():
     test_url = "/predict/..."
 
     # When
-    response: Response = client.get(test_url)  # noqa
+    response: Response = client.get(test_url) # type: ignore
 
     # Then
 
