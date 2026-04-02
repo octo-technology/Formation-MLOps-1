@@ -139,6 +139,6 @@ Créez vous un nouvel environnement virtuel et installez le package.
 
 NB : Ici, nous avons utilisé le .whl en local, en pratique, le whl serait sauvegardé dans un registre d'artefact puis serait téléchargé.
 
-## Lien vers le TP suivant
+## Fin
 
-Les instructions du TP suivant sont [ici](https://octo-technology.github.io/Formation-MLOps-1/tp6#0)
+C'était le dernier TP de cette formation, merci de l'avoir suivie avec nous.
