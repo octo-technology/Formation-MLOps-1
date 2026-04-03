@@ -59,12 +59,6 @@ UV permet de gérer plusieurs versions de Python en parallèle sur la même mach
 uv python install 3.14
 ```
 
-Assurez vous que la version de Python 3.14 est bien stable (>= 3.14.0). 
-```sh
-uv run python --version
-```
-
-Si ce n'est pas le cas (version du type `Python 3.14.0b2`), assurez vous qu'uv est à jour en relancer le script d'installation puis vous pouvez relancer `uv python install 3.14` qui devrait alors donner une version stable.
 
 De manière alternative, vous pouvez utiliser `pyenv`: `pyenv install` pour installer une nouvelle version de python puis `pyenv local` pour préciser quelle version de Python utiliser dans le dossier où vous vous trouvez.
 
@@ -83,6 +77,12 @@ uv sync
 
 NB : Si vous êtes dans un environnement de production, et ne souhaitez pas installer les dépendances de dev, il convient d'utiliser la commande `uv sync --no-dev`
 
+Si vous avez une erreur qui semble lié à la version de Python : assurez vous que la version de Python 3.14 est bien stable (>= 3.14.0). 
+```sh
+uv run python --version
+```
+
+Si ce n'est pas le cas (version du type `Python 3.14.0b2`), **assurez vous qu'uv est à jour** en relancer le script d'installation puis vous pouvez relancer `uv python install 3.14` qui devrait alors donner une version stable.
 
 ## Ouvrir un notebook
 Duration: 0:03:00
@@ -92,6 +92,8 @@ Dans le terminal taper la commande :
 ```sh
 uv run --with jupyter jupyter lab
 ```
+
+*Si vous avez l'erreur "error: Failed to update Windows PE resources" sur windows, essayez simplement de relancer la commande.*
 
 ## Comment suivre ce TP
 
