@@ -8,9 +8,26 @@ help:
 	echo "❓ Utiliser \`make <target>' où <target> peut être"
 	grep -E '^\.PHONY: [a-zA-Z0-9_-]+ .*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = "(: |##)"}; {printf "\033[36m%-30s\033[0m %s\n", $$2, $$3}'
 
-.PHONY: conda-env  ## 🐍 Créé l'environnement conda python_indus, et le récréé s'il existe déjà
-conda-env:
-	conda create --name python_indus python==3.10 --force --quiet; pip install -r requirements.txt
+.PHONY: install  ## 📦 Installe les dépendances avec uv
+install:
+	uv sync
+
+.PHONY: install-hooks  ## Installe les git hooks (pre-commit)
+install-hooks:
+	chmod +x .githooks/pre-commit  # ok pour windows s'ils utilisent git bash
+	git config core.hooksPath .githooks
+.PHONY: pre-commit  ## 🔄 Lance le pre-commit manuellement
+pre-commit:
+	.githooks/pre-commit
+.PHONY: lint  ## 🔍 Lance le linting (ruff, safety, bandit, vulture)
+lint:
+	uv run ruff check src tests
+	uv run bandit -r src
+	uv run vulture src --min-confidence 80
+
+.PHONY: test  ## 🧪 Lance les tests unitaires
+test:
+	uv run pytest tests
 
 .PHONY: test-tps  ## lance les tests
 test-tps:
@@ -18,9 +35,9 @@ test-tps:
 
 .PHONY: sphinx  ## crée la documentation
 sphinx:
-	sphinx-build -b html docs docs/_build
+	uv run sphinx-build -b html docs docs/_build
 
 
 .PHONY: distribution  ## crée le package
 distribution:
-	python3 setup.py sdist bdist_wheel
+	uv build

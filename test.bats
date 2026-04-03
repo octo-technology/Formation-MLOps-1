@@ -1,35 +1,34 @@
 @test "titanic notebook run without problem" {
-    conda source python_indus
-	mkdir models
-	jupyter nbconvert --to script notebook/titanic.ipynb
+	mkdir -p models
+	uv run jupyter nbconvert --to script notebook/titanic.ipynb
 	cd notebook
-	run python titanic.py
+	run uv run python titanic.py
 	[ "$status" -eq 0 ]
 }
 
 
 @test "unit tests are green" {
-        run pytest tests
+        run uv run pytest tests
         [ "$status" -eq 0 ]
 }
 
 
 @test "we are able to build the python package" {
-        run python3 setup.py sdist bdist_wheel
+        run uv build
 	[ "$status" -eq 0 ]
 }
 
 
 @test "build the documentation" {
-        run sphinx-build -b html docs docs/_build
+        run uv run sphinx-build -b html docs docs/_build
 	[ "$status" -eq 0 ]
 }
 
 
 
 teardown() {
-	rm -r -r models/
-	rm -r -f build/
+	rm -rf models/
+	rm -rf build/
 	rm -r -f dist/
 	rm -r -f docs/_build/.buildinfo
 	rm -r -f docs/_build/.doctrees/

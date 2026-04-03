@@ -1,16 +1,15 @@
 # set base image
-FROM python:3.11
+FROM ghcr.io/astral-sh/uv:python3.14-bookworm-slim
 
 COPY ./src /src
-COPY ./setup.py /setup.py
-COPY ./requirements.txt /requirements.txt
-
+COPY pyproject.toml /pyproject.toml
+COPY uv.lock /uv.lock
 COPY ./models /models
 
 COPY ./api /api
 
-RUN pip install --no-cache-dir .
+RUN uv sync
 
 EXPOSE 80:80
 
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uv", "run", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "80"]

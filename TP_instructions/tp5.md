@@ -91,7 +91,7 @@ Dans le fichier `api/main.py` nous proposons une api écrite avec fastapi qui pe
 Vous pouvez la lancer localement avec la commande :
 
 ```shell
-uvicorn api.main:app
+uv run uvicorn api.main:app
 ```
 
 Puis dans votre navigateur requetez l'url : `http://127.0.0.1:8000/predict/0/Braund,%20Mr.%20Owen%20Harris/23/`
@@ -119,8 +119,26 @@ L'API est exposée et peut être atteinte à 0.0.0.0:80 La documentation est dis
 
 Sinon, vous pouvez faire appel à la même route d'exemple.
 
-## Fin
+## Créer un package python
 
-Duration: 0:01:00
+Duration: 0:05:00
+
+Pour créer un package python, il suffit de lancer la commande suivante :
+```
+uv build
+```
+La commande va se sourcer dans le pyproject.toml pour construire le package.
+
+Vous pouvez constater le résultat dans le dossier `dist`.
+
+## Installer le package. 
+
+Créez vous un nouvel environnement virtuel et installez le package.
+1. Initialisez le projet : `cd ..; uv init formation_test` dans votre terminal, en dehors du dossier de tp. Un dossier est créé à côté
+2. Ajouter la dépendance : ` uv add ../Formation-MLOps-1/dist/formation_mlops_1-0.1.0-py3-none-any.whl`
+
+NB : Ici, nous avons utilisé le .whl en local, en pratique, le whl serait sauvegardé dans un registre d'artefact puis serait téléchargé.
+
+## Fin
 
 C'était le dernier TP de cette formation, merci de l'avoir suivie avec nous.

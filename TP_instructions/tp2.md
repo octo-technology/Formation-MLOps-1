@@ -27,6 +27,13 @@ Nouveauté sur cette branche :
 
 L'objectif de ce TP est d'écrire quelques tests unitaires.
 
+## Installer pytest 
+Duration: 0:05:00
+
+```
+uv add pytest --dev
+```
+
 ## Écrire mon premier test unitaire
 
 Duration: 0:10:00
@@ -108,13 +115,110 @@ def test_process_name():
 ```
 Pour écrire les données de tests, nous recommandons (si ce ne sont pas des données personnelles ou confidentielles) d'utiliser des données de la production.
 
-Exécuter les tests en cliquant sur la petite flèche verte à côté du nom de la fonction
+Exécuter les tests en cliquant sur la petite flèche verte à côté du nom de la fonction ou lancer la commande `uv run pytest` ou `pytest`
 
 ## Écrire d'autres tests
 
 Duration: 0:15:00
 
 Pour vous exercer, écrivez 3 autres tests automatisés sur d'autres fonctions.
+
+## Ajouter du linting
+
+Duration: 0:10:00
+
+Les tests c'est bien, mais autant s'assurer aussi que le code est propre **avant** de le tester. C'est le rôle du linting : vérifier automatiquement le style et les erreurs courantes.
+
+On va utiliser `ruff`, un linter Python ultra-rapide, déjà configuré dans le `pyproject.toml`.
+
+1. Installer ruff en dépendance de développement :
+
+```shell
+uv add ruff --dev
+```
+
+2. Lancer le linting :
+
+```shell
+uv run ruff check src tests
+```
+
+Si tout va bien, aucune sortie. Sinon, ruff vous indique les lignes à corriger.
+
+3. Pour corriger automatiquement ce qui peut l'être :
+
+```shell
+uv run ruff check src tests --fix
+```
+
+Jetez un œil à la section `[tool.ruff]` dans `pyproject.toml` pour voir les règles activées. On y retrouve entre autres les vérifications de style (pycodestyle), les imports (isort), et les bugs courants (flake8-bugbear).
+
+## Le Makefile, votre couteau suisse
+
+Duration: 0:05:00
+
+Plutôt que de retenir toutes les commandes `uv run ...`, un `Makefile` à la racine du projet centralise les tâches courantes. Pour voir les commandes disponibles :
+
+```shell
+make help
+```
+
+Quelques exemples :
+
+- `make install` — installe les dépendances
+- `make lint` — lance le linting (ruff, bandit, vulture)
+- `make test` — lance les tests unitaires
+
+L'avantage : tout le monde utilise les mêmes commandes, et la CI (cf section suivante) peut aussi s'appuyer dessus. Pas besoin de se souvenir des options de chaque outil.
+
+## La CI
+
+Duration: 0:05:00
+
+La CI permet de valider les tests et linting selon un événement sur le repos. Regardez `.github/workflows/ci.yml` pour un exemple de configuration.
+
+## Automatiser avec un pre-commit hook
+
+Duration: 0:05:00
+
+C'est bien de lancer le linting et les tests à la main, mais on oublie vite. L'idée du **pre-commit hook**, c'est de les lancer **automatiquement** à chaque `git commit`. Si ça échoue, le commit est bloqué — impossible de pousser du code qui ne passe pas les vérifications.
+
+1. Créer le dossier `.githooks` à la racine du projet et y ajouter un fichier `pre-commit` :
+
+```bash
+mkdir -p .githooks
+```
+
+```bash
+# .githooks/pre-commit
+#!/bin/bash
+set -e
+
+echo "🔍 Running lint..."
+make lint
+
+echo "🧪 Running tests..."
+make test
+
+echo "✅ All checks passed!"
+```
+
+2. Rendre le script exécutable et configurer git pour utiliser ce dossier de hooks :
+
+```shell
+chmod +x .githooks/pre-commit
+git config core.hooksPath .githooks
+```
+
+Ou plus simplement, si la target existe dans le Makefile :
+
+```shell
+make install-hooks
+```
+
+3. Testez ! Faites un changement quelconque et tentez un `git commit`. Vous devriez voir le lint et les tests se lancer automatiquement. Si l'un des deux échoue, le commit sera refusé.
+
+> **Astuce** : en cas d'urgence, vous pouvez contourner le hook avec `git commit --no-verify`, mais c'est à utiliser avec parcimonie
 
 ## Lien vers le TP suivant
 

@@ -14,5 +14,5 @@ def test_process_name_should_create_column_name_lenght():
     response: Response = client.get(test_url)
 
     # Then
-    assert 200 == response.status_code
-    assert '{"input_proba":[0.2148865583,0.7851134417]}' == response.text
+    assert response.status_code == 200
+    assert response.text == '{"input_proba":[0.2148865583,0.7851134417]}'

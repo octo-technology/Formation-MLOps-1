@@ -1,10 +1,8 @@
-from typing import Tuple, List
-
 import numpy as np
 import pandas as pd
 
 
-class Preprocessor():
+class Preprocessor:
     """General class used for preprocessing."""
 
     # Mean values to fill missing data
@@ -20,14 +18,14 @@ class Preprocessor():
     # Cabin numbers
     cabin_number_bins: np.ndarray
     # All dummies
-    dummy_columns_values: List[str]
+    dummy_columns_values: list[str]
 
     def __init__(
         self,
-        dummy_columns: List[str] = None,
-        drop_columns: List[str] = None,
-        letter_group_1: List[str] = None,
-        letter_group_2: List[str] = None,
+        dummy_columns: list[str] | None = None,
+        drop_columns: list[str] | None = None,
+        letter_group_1: list[str] | None = None,
+        letter_group_2: list[str] | None = None,
     ):
         """
         Instanciate preprocessor instances.
@@ -75,8 +73,7 @@ class Preprocessor():
         """
         if (name_title, p_class) in self.grouped_age_means.index:
             return self.grouped_age_means[name_title, p_class]
-        else:
-            return self.age_mean
+        return self.age_mean
 
     def impute_age(self, df: pd.DataFrame) -> pd.DataFrame:
         """
@@ -123,7 +120,7 @@ class Preprocessor():
 
         """
         df_new = df.copy()
-        df_new['Fare'].fillna(self.fare_mean, inplace=True)
+        df_new['Fare'] = df_new['Fare'].fillna(self.fare_mean)
         return df_new
 
     def group_ticket(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -172,10 +169,7 @@ class Preprocessor():
         """
         df_new = df.copy()
         df_new['Cabin_Number'] = df_new['Cabin'].apply(lambda x: str(x).split(' ')[-1][1:])
-        df_new['Cabin_Number'].replace('an', np.NaN, inplace=True)
-        df_new['Cabin_Number'] = df_new['Cabin_Number'].apply(
-            lambda x: int(x) if not pd.isnull(x) and x != '' else np.NaN
-        )
+        df_new['Cabin_Number'] = pd.to_numeric(df_new['Cabin_Number'], errors='coerce')
         return df_new
 
     def get_dummy_cabin_number(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -189,7 +183,7 @@ class Preprocessor():
         df_new = df.copy()
         dummies_cols = [f"Cabin_Number_{i}" for i in range(3)]
 
-        df_new.loc[:, dummies_cols] = 0
+        df_new.loc[:, dummies_cols] = False
 
         concerned_index = df_new['Cabin_Number'].dropna().index
 
@@ -224,17 +218,29 @@ class Preprocessor():
         present in both the training and test datasets.
         """
         df_new = df.copy()
-        df_new.loc[:, self.dummy_columns_values] = 0
-        df_new.loc[:, self.dummy_columns] = df_new.loc[:, self.dummy_columns].applymap(str)
+        # Convert categorical columns to string using map (applymap is deprecated)
+        for col in self.dummy_columns:
+            df_new[col] = df_new[col].map(str)
 
+        # Create dummy variables
         dummies = pd.get_dummies(
-            df_new[self.dummy_columns], columns=self.dummy_columns, prefix=self.dummy_columns
+            df_new[self.dummy_columns], columns=self.dummy_columns, prefix=self.dummy_columns, dtype='uint8'
         )
 
-        dummies = dummies.drop([col for col in dummies.columns if col not in self.dummy_columns_values], axis=1)
+        # Keep only the expected columns
+        dummies = dummies[[col for col in dummies.columns if col in self.dummy_columns_values]]
 
-        df_new.loc[:, dummies.columns] = dummies
-        return df_new
+        # Ensure all expected columns are present
+        for col in self.dummy_columns_values:
+            if col not in dummies.columns:
+                dummies[col] = 0
+
+        # Add dummy columns to the dataframe
+        for col in self.dummy_columns_values:
+            df_new[col] = dummies[col].astype('uint8')
+
+        # Drop original categorical columns
+        return df_new.drop(self.dummy_columns, axis=1)
 
     def drop_cols(self, df: pd.DataFrame) -> pd.DataFrame:
         """
@@ -244,9 +250,7 @@ class Preprocessor():
             df: The train or test set
 
         """
-        df_new = df.copy()
-        df_new = df_new.drop(self.drop_columns, axis=1)
-        return df_new
+        return df.copy().drop(columns=self.drop_columns, errors='ignore')
 
     def fit_transform(self, df: pd.DataFrame):
         """
@@ -279,13 +283,13 @@ class Preprocessor():
         df_new = self.get_cabin_number(df=df_new)
 
         self.dummy_columns_values = pd.get_dummies(
-            df_new.loc[:, self.dummy_columns].applymap(str), prefix=self.dummy_columns
-        ).columns
+            df_new[self.dummy_columns].astype(str),
+            prefix=self.dummy_columns,
+            dtype='uint8'
+        ).columns.tolist()
 
         df_new = self.dummy_cols(df=df_new)
-        df_new = self.drop_cols(df=df_new)
-
-        return df_new
+        return self.drop_cols(df=df_new)
 
     def transform(self, df: pd.DataFrame) -> pd.DataFrame:
         """
@@ -308,12 +312,10 @@ class Preprocessor():
         df_new = self.get_cabin_number(df=df_new)
         df_new = self.get_dummy_cabin_number(df=df_new)
         df_new = self.dummy_cols(df=df_new)
-        df_new = self.drop_cols(df=df_new)
-
-        return df_new
+        return self.drop_cols(df=df_new)
 
 
-def process_data(train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list, drop_columns: list) -> Tuple[
+def process_data(train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list, drop_columns: list) -> tuple[
         pd.DataFrame, pd.DataFrame]:
     """
     Apply all neccessary transformations to clean train and test data
