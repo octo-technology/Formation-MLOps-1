@@ -16,3 +16,7 @@ ls-supports:
 	else
 		git config -f manifest.ini --get-regexp ${VERSION}
 	fi
+
+.PHONY: install  ## 📦 Installe les dépendances avec uv
+install:
+	uv sync
