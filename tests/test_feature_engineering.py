@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.feature_engineering import process_name, impute_age
+from src.feature_engineering import impute_age, process_name
 
 
 def test_process_name_should_create_column_name_length():
