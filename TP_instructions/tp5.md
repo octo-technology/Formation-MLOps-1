@@ -91,7 +91,7 @@ Dans le fichier `api/main.py` nous proposons une api écrite avec fastapi qui pe
 Vous pouvez la lancer localement avec la commande :
 
 ```shell
-uvicorn api.main:app
+uv run uvicorn api.main:app
 ```
 
 Puis dans votre navigateur requetez l'url : `http://127.0.0.1:8000/predict/0/Braund,%20Mr.%20Owen%20Harris/23/`
