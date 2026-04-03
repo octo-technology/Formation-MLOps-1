@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.feature_engineering import process_name, impute_age
+from src.feature_engineering import impute_age, process_name
 
 
 def test_process_name_should_create_column_name_length():
@@ -25,7 +25,7 @@ def test_process_name_should_create_column_name_length():
     assert test["Name_Len"].tolist() == expected_test_length
 
 
-def test_process_name_should_create_column_name_title():
+def test_names_should_create_column_name_title():
     # Given
     test = pd.DataFrame(
         {
@@ -46,7 +46,7 @@ def test_process_name_should_create_column_name_title():
     assert test["Name_Title"].tolist() == expected_test_titles
 
 
-def test_impute_age_should_create_2_columns_age_and_age_null_flag():
+def test_age_impute_should_create_2_columns_age_and_age_null_flag():
     # Given
     test = pd.DataFrame(
         {
@@ -67,7 +67,7 @@ def test_impute_age_should_create_2_columns_age_and_age_null_flag():
     assert "Age_Null_Flag" in test.columns
 
 
-def test_impute_age_should_set_age_column_without_missing_value():
+def test_age_impute_should_set_age_column_without_missing_value():
     # Given
     # note : at least one pair Title-Pclass covering the null case should exist
     # in the train set
@@ -89,7 +89,7 @@ def test_impute_age_should_set_age_column_without_missing_value():
     assert test["Age"].notnull().all()
 
 
-def test_age_impute_should_return_dataframe_binary_age_null_flag():
+def test_age_impute_should_set_age_null_flag_column_with_binary_value():
     # Given
     test = pd.DataFrame(
         {
@@ -109,7 +109,7 @@ def test_age_impute_should_return_dataframe_binary_age_null_flag():
     assert set(test["Age_Null_Flag"].unique()) == {0, 1}
 
 
-def test_impute_age_should_flag_null_values_in_age_column():
+def test_age_impute_should_flag_null_values_in_age_column():
     # Given
     test = pd.DataFrame(
         {

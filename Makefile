@@ -10,20 +10,21 @@ help:
 
 .PHONY: notebook-validation  ## 🔭 Lance le notebook titanic.ipynb pour s'assurer qu'il peut être exécuté de bout en bout
 notebook-validation:
-	jupyter nbconvert --to notebook --execute notebook/titanic.ipynb
+	uv run jupyter nbconvert --to script notebook/titanic.ipynb
+	cd notebook
+	uv run python titanic.py
 
 .PHONY: tp-validation  ## 1️⃣ Valide que le notebook est bien clean
 tp-validation:
 	$(MAKE) notebook-validation 2>execution_output.log || true
+	status=$$?
 	execution_output=$$(cat execution_output.log && rm -f execution_output.log)
-	rm -f notebook/titanic.nbconvert.ipynb
-	rm -f notebook/y_test_predictions.csv
-	echo "Le notebook a été exécuté de bout en bout:"
 	echo "-----------------------"
 	echo "$$execution_output"
 	echo "-----------------------"
-	## Si l'output contient...
-	if [[ $$execution_output =~ "bytes to notebook/titanic.nbconvert.ipynb" ]];
+	rm notebook/y_test_predictions.csv
+	rm notebook/titanic.py
+	if [ $$status -eq 0 ];
 	then
 		echo "✅ Le notebook a réussi a run de bout en bout";
 		exit 0
@@ -31,3 +32,34 @@ tp-validation:
 		echo "❌ Le notebook a échoué a run de bout en bout"
 		exit 1
 	fi
+
+.PHONY: install  ## 📦 Installe les dépendances avec uv
+install:
+	uv sync
+
+.PHONY: install-hooks  ## Installe les git hooks (pre-commit)
+install-hooks:
+	chmod +x .githooks/pre-commit  # ok pour windows s'ils utilisent git bash
+	git config core.hooksPath .githooks
+
+.PHONY: pre-commit  ## 🔄 Lance le pre-commit manuellement
+pre-commit:
+	.githooks/pre-commit
+
+.PHONY: lint  ## 🔍 Lance le linting (ruff, safety, bandit, vulture)
+lint:
+	uv run ruff check src tests
+	uv run bandit -r src
+	uv run vulture src --min-confidence 80
+
+.PHONY: test  ## 🧪 Lance les tests unitaires
+test:
+	uv run pytest tests
+
+.PHONY: sphinx  ## crée la documentation
+sphinx:
+	uv run sphinx-build -b html docs docs/_build
+
+.PHONY: distribution  ## crée le package
+distribution:
+	uv build
