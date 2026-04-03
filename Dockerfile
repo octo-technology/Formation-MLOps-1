@@ -11,4 +11,4 @@ RUN ...
 EXPOSE 80:80
 
 # Execute your API
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uv", "run", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "80"]
