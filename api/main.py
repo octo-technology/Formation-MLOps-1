@@ -47,16 +47,16 @@ def fillna(df: pd.DataFrame) -> pd.DataFrame:
 
 @app.get("/predict/{pclass}/{name}/{sex}/")
 async def predict(
-        pclass: int,
-        name: str,
-        sex: str,
-        age: Optional[float] = None,
-        sib_sp: Optional[int] = None,
-        parch: Optional[int] = None,
-        ticket: Optional[str] = None,
-        fare: Optional[float] = None,
-        cabin: Optional[str] = None,
-        embarked: Optional[str] = None,
+    pclass: int,
+    name: str,
+    sex: str,
+    age: Optional[float] = None,
+    sib_sp: Optional[int] = None,
+    parch: Optional[int] = None,
+    ticket: Optional[str] = None,
+    fare: Optional[float] = None,
+    cabin: Optional[str] = None,
+    embarked: Optional[str] = None,
 ):
     input = pd.DataFrame(
         {

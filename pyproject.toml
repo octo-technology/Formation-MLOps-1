@@ -1,0 +1,77 @@
+[project]
+name = "Formation-MLOps-1"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.14.0"
+dependencies = [
+    "fastapi>=0.135.1",
+    "matplotlib>=3.10.8",
+    "notebook>=7.5.4",
+    "pandas>=3.0.1",
+    "scikit-learn>=1.8.0",
+    "seaborn>=0.13.2",
+    "uvicorn>=0.41.0",
+]
+
+[tool.uv.workspace]
+members = [
+    "Formation-MLOps-1",
+]
+
+[dependency-groups]
+dev = [
+    "bandit>=1.9.4",
+    "pytest>=9.0.2",
+    "ruff>=0.15.4",
+    "safety>=3.7.0",
+    "sphinx>=9.1.0",
+    "vulture>=2.14",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+exclude = [
+    ".git",
+    "__pycache__",
+    ".venv",
+    "venv",
+    ".eggs",
+    "*.egg",
+    "build",
+    "dist",
+    ".pytest_cache",
+    ".vscode",
+    ".idea",
+    "docs/_build",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # Pyflakes
+    "I",      # isort
+    "N",      # pep8-naming
+    "UP",     # pyupgrade
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "ISC",    # flake8-implicit-str-concat
+    "PIE",    # flake8-pie
+    "RET",    # flake8-return
+    "SIM",    # flake8-simplify
+    "RUF",    # Ruff-specific rules
+]
+
+ignore = [
+    "E501",   # Line too long (géré par line-length)
+    "ISC001", # Conflits avec la formatage
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]
+force-single-line = false
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+"tests/**" = ["F841"]
