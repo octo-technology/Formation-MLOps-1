@@ -8,13 +8,15 @@ def test_process_name_should_create_column_name_length():
     # Given
     test = pd.DataFrame(
         {
-            "Name":
-                ['Kelly, Mr. James',
-                 'Wilkes, Mrs. James (Ellen Needs)',
-                 'Myles, Mr. Thomas Francis',
-                 'Wirz, Mr. Albert',
-                 'Hirvonen, Mrs. Alexander (Helga E Lindqvist)']
-        })
+            "Name": [
+                "Kelly, Mr. James",
+                "Wilkes, Mrs. James (Ellen Needs)",
+                "Myles, Mr. Thomas Francis",
+                "Wirz, Mr. Albert",
+                "Hirvonen, Mrs. Alexander (Helga E Lindqvist)",
+            ]
+        }
+    )
     expected_test_length = [16, 32, 25, 16, 44]
 
     # When
@@ -30,13 +32,15 @@ def test_process_name_should_create_column_name_title():
     # Given
     test = pd.DataFrame(
         {
-            "Name":
-                ['Kelly, Mr. James',
-                 'Wilkes, Mrs. James (Ellen Needs)',
-                 'Myles, Mr. Thomas Francis',
-                 'Wirz, Mr. Albert',
-                 'Hirvonen, Mrs. Alexander (Helga E Lindqvist)']
-        })
+            "Name": [
+                "Kelly, Mr. James",
+                "Wilkes, Mrs. James (Ellen Needs)",
+                "Myles, Mr. Thomas Francis",
+                "Wirz, Mr. Albert",
+                "Hirvonen, Mrs. Alexander (Helga E Lindqvist)",
+            ]
+        }
+    )
     expected_test_titles = ["Mr.", "Mrs.", "Mr.", "Mr.", "Mrs."]
 
     # When
@@ -54,13 +58,14 @@ def test_impute_age_should_create_2_columns_age_and_age_null_flag():
         {
             "Age": [7, 14, 120, 31, np.nan],
             "Name_Title": ["Mr.", "Mrs.", "Miss.", "Mrs.", "Mr."],
-            "Pclass": [2, 0, 2, 1, 0]
-        })
+            "Pclass": [2, 0, 2, 1, 0],
+        }
+    )
 
     preprocessor = Preprocessor()
 
-    # impute age reffers to fitted parameters.
-    preprocessor.grouped_age_means = pd.Series(dtype='object')
+    # Age imputation refers to fitted parameters.
+    preprocessor.grouped_age_means = pd.Series(dtype="object")
     preprocessor.age_mean = 0
 
     # When
@@ -77,13 +82,14 @@ def test_impute_age_should_set_age_column_without_missing_value():
         {
             "Age": [7, 14, 120, 31, np.nan],
             "Name_Title": ["Mr.", "Mrs.", "Miss.", "Mrs.", "Mr."],
-            "Pclass": [2, 0, 2, 1, 0]
-        })
+            "Pclass": [2, 0, 2, 1, 0],
+        }
+    )
 
     preprocessor = Preprocessor()
 
-    # impute age reffers to fitted parameters.
-    preprocessor.grouped_age_means = pd.Series(dtype='object')
+    # Age imputation refers to fitted parameters.
+    preprocessor.grouped_age_means = pd.Series(dtype="object")
     preprocessor.age_mean = 0
 
     # When
@@ -99,13 +105,14 @@ def test_age_impute_should_return_dataframe_binary_age_null_flag():
         {
             "Age": [7, 14, 120, 31, np.nan],
             "Name_Title": ["Mr.", "Mrs.", "Miss.", "Mrs.", "Mr."],
-            "Pclass": [2, 0, 2, 1, 0]
-        })
+            "Pclass": [2, 0, 2, 1, 0],
+        }
+    )
 
     preprocessor = Preprocessor()
 
-    # impute age reffers to fitted parameters.
-    preprocessor.grouped_age_means = pd.Series(dtype='object')
+    # Age imputation refers to fitted parameters.
+    preprocessor.grouped_age_means = pd.Series(dtype="object")
     preprocessor.age_mean = 0
 
     # When
@@ -121,13 +128,14 @@ def test_impute_age_should_flag_null_values_in_age_column():
         {
             "Age": [7, 14, 120, 31, np.nan],
             "Name_Title": ["Mr.", "Mrs.", "Miss.", "Mrs.", "Mr."],
-            "Pclass": [2, 0, 2, 1, 0]
-        })
+            "Pclass": [2, 0, 2, 1, 0],
+        }
+    )
 
     preprocessor = Preprocessor()
 
-    # impute age reffers to fitted parameters.
-    preprocessor.grouped_age_means = pd.Series(dtype='object')
+    # Age imputation refers to fitted parameters.
+    preprocessor.grouped_age_means = pd.Series(dtype="object")
     preprocessor.age_mean = 0
 
     # When

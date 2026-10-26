@@ -1,52 +1,29 @@
-@test "titanic notebook run without problem" {
-    conda source python_indus
-	mkdir models
-	jupyter nbconvert --to script notebook/titanic.ipynb
-	cd notebook
-	run python titanic.py
-	[ "$status" -eq 0 ]
+setup() {
+    cd "$BATS_TEST_DIRNAME"
 }
 
+@test "titanic notebook runs without errors" {
+    # Execute a copy so that training does not overwrite the repository's models.
+    mkdir -p "$BATS_TEST_TMPDIR/notebook" "$BATS_TEST_TMPDIR/models"
+    cp notebook/titanic.ipynb "$BATS_TEST_TMPDIR/notebook/"
+    ln -s "$BATS_TEST_DIRNAME/input" "$BATS_TEST_TMPDIR/input"
+    run uv run jupyter nbconvert --to notebook --execute \
+        "$BATS_TEST_TMPDIR/notebook/titanic.ipynb" \
+        --output executed --output-dir "$BATS_TEST_TMPDIR"
+    [ "$status" -eq 0 ]
+}
 
 @test "unit tests are green" {
-        run pytest tests
-        [ "$status" -eq 0 ]
+    run uv run python -m pytest
+    [ "$status" -eq 0 ]
 }
-
 
 @test "we are able to build the python package" {
-        run python3 setup.py sdist bdist_wheel
-	[ "$status" -eq 0 ]
+    run uv build --out-dir "$BATS_TEST_TMPDIR/dist"
+    [ "$status" -eq 0 ]
 }
-
 
 @test "build the documentation" {
-        run sphinx-build -b html docs docs/_build
-	[ "$status" -eq 0 ]
+    run uv run sphinx-build -W -b html docs "$BATS_TEST_TMPDIR/html"
+    [ "$status" -eq 0 ]
 }
-
-
-
-teardown() {
-	rm -r -r models/
-	rm -r -f build/
-	rm -r -f dist/
-	rm -r -f docs/_build/.buildinfo
-	rm -r -f docs/_build/.doctrees/
-	rm -r -f docs/_build/_sources/
-	rm -r -f docs/_build/_static/
-	rm -f docs/_build/genindex.html
-	rm -f docs/_build/index.html
-	rm -f docs/_build/objects.inv
-	rm -f docs/_build/search.html
-	rm -f docs/_build/searchindex.js
-	rm -r -f formation_indus_ds.egg-info/
-	rm -f notebook/Predict notebook.py
-	rm -f notebook/titanic.py
-	rm -f notebook/y_test15.csv
-	rm -r -f src/__pycache__/
-	rm -r -f tests/__pycache__/
-	rm -r -f docs/_build/_sources/
-	rm -r -f notebook/Predict\ notebook.py
-}
-

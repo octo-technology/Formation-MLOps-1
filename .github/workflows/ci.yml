@@ -3,26 +3,44 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7.0.1
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v7.1.0
         with:
-          python-version: "3.14"
+          python-version: "3.15"
+          check-latest: true
       - name: Install uv
-        uses: astral-sh/setup-uv@v2
+        uses: astral-sh/setup-uv@v10.3.2
+        with:
+          version: "0.13.5"
+          enable-cache: true
       - name: Install dependencies
-        run: uv sync --all-groups
+        run: uv sync --locked
       - name: Run Linter
-        run: uv run ruff check src tests
-      - name: Run Safety
-        run: uv run safety check
+        run: uv run ruff check src api tests docs
+      - name: Check formatting
+        run: uv run ruff format --check src api tests docs
+      - name: Scan dependencies with Trivy
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          version: "v0.76.1"
+          scan-type: fs
+          scan-ref: .
+          trivy-config: trivy.yaml
       - name: Run Bandit
         run: uv run bandit -r src
       - name: Run Vulture
         run: uv run vulture src --min-confidence 80
       - name: Run tests
-        run: uv run pytest tests
+        run: uv run python -m pytest
+      - name: Build documentation
+        run: uv run sphinx-build -W -b html docs docs/_build/html
+      - name: Build package
+        run: uv build
