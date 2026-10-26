@@ -1,36 +1,42 @@
 [project]
 name = "Formation-MLOps-1"
 version = "0.1.0"
-description = "Add your description here"
-requires-python = ">=3.14"
+description = "Travaux pratiques d'industrialisation de la science des données"
+readme = "README.md"
+requires-python = ">=3.15"
 dependencies = [
-    "fastapi>=0.135.1",
-    "matplotlib>=3.10.8",
-    "notebook>=7.5.4",
-    "pandas>=3.0.1",
-    "scikit-learn>=1.8.0",
+    "fastapi>=0.162.0",
+    "jupyterlab>=4.6.4",
+    "matplotlib>=3.11.2",
+    "notebook>=7.6.3",
+    "numpy>=2.5.4",
+    "pandas>=3.1.0",
+    "scikit-learn>=1.9.1",
     "seaborn>=0.13.2",
-    "uvicorn>=0.41.0",
+    "uvicorn>=0.54.0",
 ]
 
-[tool.uv.workspace]
-members = [
-    "Formation-MLOps-1",
-]
+[build-system]
+requires = ["setuptools>=84.2.1"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["src"]
 
 [dependency-groups]
 dev = [
     "bandit>=1.9.4",
-    "pytest>=9.0.2",
-    "ruff>=0.15.4",
-    "safety>=3.7.0",
-    "sphinx>=9.1.0",
-    "vulture>=2.14",
+    "httpx2>=2.16.0",
+    "nbconvert>=7.17.2",
+    "pytest>=9.1.1",
+    "ruff>=0.17.2",
+    "sphinx>=9.2.0",
+    "vulture>=2.16",
 ]
 
 [tool.ruff]
 line-length = 100
-target-version = "py314"
+target-version = "py315"
 exclude = [
     ".git",
     "__pycache__",
@@ -64,8 +70,8 @@ select = [
 ]
 
 ignore = [
-    "E501",   # Line too long (géré par line-length)
-    "ISC001", # Conflits avec la formatage
+    "E501",   # Le formateur utilise line-length sans garantir une limite stricte
+    "ISC001", # Conflit avec le formatage
 ]
 
 [tool.ruff.lint.isort]

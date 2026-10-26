@@ -28,7 +28,7 @@ class Preprocessor:
         letter_group_2: list[str] | None = None,
     ):
         """
-        Instanciate preprocessor instances.
+        Instantiate preprocessor instances.
 
         Args:
             drop_columns: The columns to be dropped.
@@ -41,8 +41,12 @@ class Preprocessor:
         """
 
         # Ticket letter groups
-        self.letter_group_1 = letter_group_1 if letter_group_1 is not None else ['1', '2', '3', 'S', 'P', 'C', 'A']
-        self.letter_group_2 = letter_group_2 if letter_group_2 is not None else ['W', '4', '7', '6', 'L', '5', '8']
+        self.letter_group_1 = (
+            letter_group_1 if letter_group_1 is not None else ["1", "2", "3", "S", "P", "C", "A"]
+        )
+        self.letter_group_2 = (
+            letter_group_2 if letter_group_2 is not None else ["W", "4", "7", "6", "L", "5", "8"]
+        )
 
         self.dummy_columns = dummy_columns if dummy_columns is not None else []
         self.drop_columns = drop_columns if drop_columns is not None else []
@@ -58,8 +62,10 @@ class Preprocessor:
 
         """
         df_new = df.copy()
-        df_new['Name_Len'] = df_new['Name'].apply(len)
-        df_new['Name_Title'] = df_new['Name'].apply(lambda x: x.split(',')[1]).apply(lambda x: x.split()[0])
+        df_new["Name_Len"] = df_new["Name"].apply(len)
+        df_new["Name_Title"] = (
+            df_new["Name"].apply(lambda x: x.split(",")[1]).apply(lambda x: x.split()[0])
+        )
         return df_new
 
     def _get_mean_age_if_exist(self, name_title: str, p_class: int):
@@ -85,11 +91,12 @@ class Preprocessor:
 
         """
         df_new = df.copy()
-        df_new['Age_Null_Flag'] = df_new['Age'].isnull().apply(int)
-        df_new.loc[df_new['Age'].isnull(), "Age"] = df_new.loc[df_new['Age'].isnull()].apply(
-            lambda x: self._get_mean_age_if_exist(x["Name_Title"], x["Pclass"]),
-            axis=1
-        ).copy()
+        df_new["Age_Null_Flag"] = df_new["Age"].isnull().apply(int)
+        df_new.loc[df_new["Age"].isnull(), "Age"] = (
+            df_new.loc[df_new["Age"].isnull()]
+            .apply(lambda x: self._get_mean_age_if_exist(x["Name_Title"], x["Pclass"]), axis=1)
+            .copy()
+        )
         return df_new
 
     def size_family(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -102,12 +109,10 @@ class Preprocessor:
 
         """
         df_new = df.copy()
-        df_new['Family_Size'] = np.where(
-            (df_new['SibSp'] + df_new['Parch']) == 0, 'Solo',
-            np.where(
-                (df_new['SibSp'] + df_new['Parch']) <= 3, 'Nuclear',
-                'Big'
-            )
+        df_new["Family_Size"] = np.where(
+            (df_new["SibSp"] + df_new["Parch"]) == 0,
+            "Solo",
+            np.where((df_new["SibSp"] + df_new["Parch"]) <= 3, "Nuclear", "Big"),
         )
         return df_new
 
@@ -120,7 +125,7 @@ class Preprocessor:
 
         """
         df_new = df.copy()
-        df_new.fillna({'Fare': self.fare_mean}, inplace=True)
+        df_new.fillna({"Fare": self.fare_mean}, inplace=True)
         return df_new
 
     def group_ticket(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -135,16 +140,16 @@ class Preprocessor:
 
         """
         df_new = df.copy()
-        df_new['Ticket_Letter'] = df_new['Ticket'].apply(lambda x: str(x)[0])
-        df_new['Ticket_Letter'] = df_new['Ticket_Letter'].apply(str)
-        df_new['Ticket_Category'] = np.where(
-                                    (df_new['Ticket_Letter']).isin(self.letter_group_1), df_new['Ticket_Letter'],
-                                    np.where(
-                                        (df_new['Ticket_Letter']).isin(self.letter_group_2), 'Low_ticket',
-                                        'Other_ticket'
-                                    )
-                                )
-        df_new['Ticket_Length'] = df_new['Ticket'].apply(len)
+        df_new["Ticket_Letter"] = df_new["Ticket"].apply(lambda x: str(x)[0])
+        df_new["Ticket_Letter"] = df_new["Ticket_Letter"].apply(str)
+        df_new["Ticket_Category"] = np.where(
+            (df_new["Ticket_Letter"]).isin(self.letter_group_1),
+            df_new["Ticket_Letter"],
+            np.where(
+                (df_new["Ticket_Letter"]).isin(self.letter_group_2), "Low_ticket", "Other_ticket"
+            ),
+        )
+        df_new["Ticket_Length"] = df_new["Ticket"].apply(len)
         return df_new
 
     def get_cabin_first_letter(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -156,7 +161,7 @@ class Preprocessor:
 
         """
         df_new = df.copy()
-        df_new['Cabin_Letter'] = df_new['Cabin'].apply(lambda x: str(x)[0])
+        df_new["Cabin_Letter"] = df_new["Cabin"].apply(lambda x: str(x)[0])
         return df_new
 
     def get_cabin_number(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -168,8 +173,8 @@ class Preprocessor:
 
         """
         df_new = df.copy()
-        df_new['Cabin_Number'] = df_new['Cabin'].apply(lambda x: str(x).split(' ')[-1][1:])
-        df_new['Cabin_Number'] = pd.to_numeric(df_new['Cabin_Number'], errors='coerce')
+        df_new["Cabin_Number"] = df_new["Cabin"].apply(lambda x: str(x).split(" ")[-1][1:])
+        df_new["Cabin_Number"] = pd.to_numeric(df_new["Cabin_Number"], errors="coerce")
         return df_new
 
     def get_dummy_cabin_number(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -185,16 +190,18 @@ class Preprocessor:
 
         df_new.loc[:, dummies_cols] = False
 
-        concerned_index = df_new['Cabin_Number'].dropna().index
+        concerned_index = df_new["Cabin_Number"].dropna().index
 
         if df_new.loc[~df_new["Cabin_Number"].isna()].shape[0] > 0:
             categories = pd.cut(
-                df_new.loc[concerned_index, 'Cabin_Number'],
+                df_new.loc[concerned_index, "Cabin_Number"],
                 bins=self.cabin_number_bins,
                 labels=False,
-                include_lowest=True
+                include_lowest=True,
             )
-            df_new.loc[concerned_index, dummies_cols] = pd.get_dummies(categories, prefix="Cabin_Number")
+            df_new.loc[concerned_index, dummies_cols] = pd.get_dummies(
+                categories, prefix="Cabin_Number"
+            )
 
         return df_new
 
@@ -208,7 +215,7 @@ class Preprocessor:
 
         """
         df_new = df.copy()
-        df_new['Embarked'] = df_new['Embarked'].fillna('S')
+        df_new["Embarked"] = df_new["Embarked"].fillna("S")
         return df_new
 
     def dummy_cols(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -225,7 +232,10 @@ class Preprocessor:
 
         # Create dummy variables
         dummies = pd.get_dummies(
-            df_new[self.dummy_columns], columns=self.dummy_columns, prefix=self.dummy_columns, dtype='uint8'
+            df_new[self.dummy_columns],
+            columns=self.dummy_columns,
+            prefix=self.dummy_columns,
+            dtype="uint8",
         )
 
         # Keep only the expected columns
@@ -238,7 +248,7 @@ class Preprocessor:
 
         # Add dummy columns to the dataframe
         for col in self.dummy_columns_values:
-            df_new[col] = dummies[col].astype('uint8')
+            df_new[col] = dummies[col].astype("uint8")
 
         # Drop original categorical columns
         return df_new.drop(self.dummy_columns, axis=1)
@@ -252,11 +262,11 @@ class Preprocessor:
 
         """
         df_new = df.copy()
-        return df_new.drop(columns=self.drop_columns, errors='ignore')
+        return df_new.drop(columns=self.drop_columns, errors="ignore")
 
     def fit_transform(self, df: pd.DataFrame):
         """
-        Fits the proprocessing steps on train data and transform it.
+        Fit the preprocessing steps on training data and transform it.
 
         Args:
             df: The train set
@@ -267,10 +277,10 @@ class Preprocessor:
         df_new = self.process_name(df=df_new)
 
         self.age_mean = df_new["Age"].mean()
-        self.grouped_age_means = df_new.groupby(['Name_Title', 'Pclass'])['Age'].mean()
+        self.grouped_age_means = df_new.groupby(["Name_Title", "Pclass"])["Age"].mean()
         df_new = self.impute_age(df=df_new)
 
-        self.fare_mean = df_new['Fare'].mean()
+        self.fare_mean = df_new["Fare"].mean()
         df_new = self.fill_fare_na(df=df_new)
 
         df_new = self.impute_embarked(df=df_new)
@@ -278,16 +288,14 @@ class Preprocessor:
         df_new = self.group_ticket(df=df_new)
 
         df_new = self.get_cabin_number(df=df_new)
-        _, self.cabin_number_bins = pd.qcut(df_new['Cabin_Number'], 3, retbins=True, labels=False)
+        _, self.cabin_number_bins = pd.qcut(df_new["Cabin_Number"], 3, retbins=True, labels=False)
         df_new = self.get_dummy_cabin_number(df=df_new)
 
         df_new = self.get_cabin_first_letter(df=df_new)
         df_new = self.get_cabin_number(df=df_new)
 
         self.dummy_columns_values = pd.get_dummies(
-            df_new[self.dummy_columns].astype(str),
-            prefix=self.dummy_columns,
-            dtype='uint8'
+            df_new[self.dummy_columns].astype(str), prefix=self.dummy_columns, dtype="uint8"
         ).columns.tolist()
 
         df_new = self.dummy_cols(df=df_new)
@@ -317,10 +325,11 @@ class Preprocessor:
         return self.drop_cols(df=df_new)
 
 
-def process_data(train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list, drop_columns: list) -> tuple[
-        pd.DataFrame, pd.DataFrame]:
+def process_data(
+    train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list, drop_columns: list
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
-    Apply all neccessary transformations to clean train and test data
+    Apply all necessary transformations to clean train and test data.
 
     Args:
         train: The train set

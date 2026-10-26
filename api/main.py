@@ -78,6 +78,4 @@ async def predict(
     processed_input: pd.DataFrame = preprocessor.transform(input)
     input_proba: np.ndarray = model.predict_proba(processed_input)
 
-    return {
-        "input_proba": (round(input_proba[0, 0], 10), round(input_proba[0, 1], 10))
-    }
+    return {"input_proba": (round(input_proba[0, 0], 10), round(input_proba[0, 1], 10))}

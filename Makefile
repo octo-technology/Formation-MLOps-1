@@ -3,24 +3,64 @@ SHELL := /bin/bash
 .ONESHELL:
 .SILENT:
 
+SPHINX_OUTPUT_DIR ?= docs/_build/html
+DIST_OUTPUT_DIR ?= dist
+
 .PHONY: help
 help:
 	echo "❓ Utiliser \`make <target>' où <target> peut être"
 	grep -E '^\.PHONY: [a-zA-Z0-9_-]+ .*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = "(: |##)"}; {printf "\033[36m%-30s\033[0m %s\n", $$2, $$3}'
 
-.PHONY: conda-env  ## 🐍 Créé l'environnement conda python_indus, et le récréé s'il existe déjà
-conda-env:
-	conda create --name python_indus python==3.10 --force --quiet; pip install -r requirements.txt
+.PHONY: sync  ## installe l'environnement et les dépendances verrouillées
+sync:
+	uv sync --locked
 
-.PHONY: test-tps  ## lance les tests
+.PHONY: lint  ## vérifie le code avec Ruff
+lint:
+	uv run ruff check src api tests docs
+
+.PHONY: format  ## formate le code avec Ruff
+format:
+	uv run ruff format src api tests docs
+
+.PHONY: static-validation  ## vérifie le lint et la mise en forme sans modifier le code
+static-validation:
+	uv run ruff check src api tests docs
+	uv run ruff format --check src api tests docs
+
+.PHONY: test  ## lance les tests Python
+test:
+	uv run python -m pytest
+
+.PHONY: dependency-scan  ## analyse uv.lock avec Trivy (à installer séparément)
+dependency-scan:
+	trivy fs --config trivy.yaml .
+
+.PHONY: test-notebook  ## exécute le notebook Titanic dans un répertoire temporaire
+test-notebook:
+	tmp_dir=$$(mktemp -d "$${TMPDIR:-/tmp}/mlops-notebook.XXXXXX")
+	trap 'status=$$?; rm -rf -- "$$tmp_dir" || true; exit "$$status"' EXIT
+	mkdir -p "$$tmp_dir/notebook" "$$tmp_dir/models"
+	cp "notebook/titanic.ipynb" "$$tmp_dir/notebook/"
+	ln -s "$(CURDIR)/input" "$$tmp_dir/input"
+	# nbconvert démarre le kernel dans le dossier du notebook copié.
+	uv run jupyter nbconvert --to notebook --execute "$$tmp_dir/notebook/titanic.ipynb" \
+		--output executed --output-dir "$$tmp_dir"
+
+.PHONY: test-tps  ## valide le notebook, les tests Python, le package et la documentation
 test-tps:
-	bats test.bats
+	tmp_dir=$$(mktemp -d "$${TMPDIR:-/tmp}/mlops-tps.XXXXXX")
+	trap 'status=$$?; rm -rf -- "$$tmp_dir" || true; exit "$$status"' EXIT
+	$(MAKE) test-notebook
+	$(MAKE) test
+	$(MAKE) distribution DIST_OUTPUT_DIR="$$tmp_dir/dist"
+	$(MAKE) sphinx SPHINX_OUTPUT_DIR="$$tmp_dir/html"
 
 .PHONY: sphinx  ## crée la documentation
 sphinx:
-	sphinx-build -b html docs docs/_build
+	uv run sphinx-build -W -b html "docs" "$(SPHINX_OUTPUT_DIR)"
 
 
 .PHONY: distribution  ## crée le package
 distribution:
-	python3 setup.py sdist bdist_wheel
+	uv build --out-dir "$(DIST_OUTPUT_DIR)"
