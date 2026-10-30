@@ -35,4 +35,8 @@ uv run sphinx-build -W -b html docs docs/_build/html
 uv build
 ```
 
-Les mêmes tâches sont disponibles via le `Makefile`. Pour exécuter les validations de TP de `test.bats`, installez [Bats](https://bats-core.readthedocs.io/en/stable/installation.html), puis lancez `make test-tps`. Elles utilisent des répertoires temporaires pour préserver les modèles et les fichiers du dépôt.
+Les mêmes tâches sont disponibles via le `Makefile` : `make static-validation`, `make test`, `make sphinx` et `make distribution`.
+
+Avec GNU Make et Bash disponibles, lancez `make test-tps` pour vérifier successivement l'exécution du notebook, les tests Python, la construction du package et la documentation. La validation s'arrête au premier échec. Le notebook est exécuté sur une copie et les sorties sont placées dans des répertoires temporaires, nettoyés même en cas d'échec, pour préserver les notebooks et modèles du dépôt. `make test-notebook` permet de vérifier uniquement le notebook.
+
+Pour les constructions autonomes, les sorties restent dans `dist/` et `docs/_build/html/`. Vous pouvez choisir d'autres répertoires avec `make distribution DIST_OUTPUT_DIR="chemin/dist"` et `make sphinx SPHINX_OUTPUT_DIR="chemin/html"`.
