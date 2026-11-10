@@ -41,7 +41,7 @@ dependency-scan:
 
 .PHONY: test-notebook  ## exécute une copie du notebook sans modifier les modèles
 test-notebook:
-	uv run python scripts/run_notebook.py notebook/titanic.ipynb
+	uv run python scripts/run_notebook.py notebook/titanic_train_model.ipynb
 
 .PHONY: test-tps  ## valide le notebook, les tests, le package et la documentation
 test-tps: test-notebook test

@@ -63,7 +63,7 @@ with open("../models/preprocessor.pkl", "wb") as file_out:
 
 Duration: 0:10:00
 
-Pour vérifier que l'entraînement et l'inférence sont bien découplés, créez un notebook `notebook/inference.ipynb`. Son répertoire de travail doit être `notebook/`.
+Pour vérifier que l'entraînement et l'inférence sont bien découplés, créez un notebook `notebook/titanic_predict.ipynb`. Son répertoire de travail doit être `notebook/`.
 
 Chargez les objets entraînés :
 

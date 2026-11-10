@@ -6,7 +6,7 @@ du notebook fonctionnent et que les modèles du dépôt ne soient pas écrasés.
 Le répertoire temporaire est supprimé à la fin, y compris en cas d'échec.
 
 Usage :
-    uv run python scripts/run_notebook.py notebook/titanic.ipynb
+    uv run python scripts/run_notebook.py notebook/titanic_train_model.ipynb
 """
 
 import argparse
