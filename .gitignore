@@ -10,3 +10,6 @@ build/
 dist/
 docs/_build/
 .DS_Store
+
+# Sorties générées par les notebooks
+notebook/y_test_predictions.csv
