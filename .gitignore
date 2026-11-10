@@ -13,3 +13,10 @@ docs/_build/
 
 # Sorties générées par les notebooks
 notebook/y_test_predictions.csv
+
+# Secrets et fichiers produits par les outils
+.env
+*.log
+.coverage
+htmlcov/
+.mypy_cache/
