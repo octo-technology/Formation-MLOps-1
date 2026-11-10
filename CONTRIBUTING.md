@@ -72,7 +72,7 @@ git switch -c <type>/<description-courte>   # ex. fix/chemin-modeles, docs/guide
 1. Fais des commits petits et cohérents : **un commit = un changement logique**, avec un message qui respecte les [conventions de commit](#pencil2-conventions-de-commit).
 2. Avant de pousser, vérifie que tout passe :
    ```sh
-   make static-validation   # lint et mise en forme (Ruff)
+   make static-validation   # lint, mise en forme, sécurité et code mort (Ruff, Bandit, Vulture)
    make test                # tests unitaires
    make test-tps            # notebook, tests, package et documentation
    ```
@@ -145,7 +145,7 @@ Si le titre ne suffit pas, ajoute un corps qui explique **pourquoi** le changeme
 
 ## :straight_ruler: Règles de code
 
-- Le code est vérifié et mis en forme par Ruff (`make static-validation`, `make format`). La configuration se trouve dans `pyproject.toml`.
+- Le code est vérifié par Ruff (lint et mise en forme), Bandit (sécurité) et Vulture (code mort) via `make static-validation`, avec les mêmes options que la CI. `make format` corrige la mise en forme. La configuration de Ruff se trouve dans `pyproject.toml`.
 - Les noms (variables, fonctions, classes) sont en anglais. La documentation, les consignes, les messages de commit et les messages affichés aux utilisateurs sont en français.
 - Tout nouveau dossier Python doit être ajouté à `PYTHON_DIRS` dans le `Makefile` et aux étapes Ruff de `.github/workflows/ci.yml` pour être vérifié par le lint.
 

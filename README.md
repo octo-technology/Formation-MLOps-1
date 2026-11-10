@@ -39,6 +39,8 @@ Le guide de contribution ([CONTRIBUTING.md](CONTRIBUTING.md)) décrit l'organisa
 # make static-validation
 uv run ruff check src api tests docs scripts
 uv run ruff format --check src api tests docs scripts
+uv run bandit -q -r src
+uv run vulture src --min-confidence 80
 
 # make test
 uv run python -m pytest

@@ -26,10 +26,12 @@ lint:
 format:
 	uv run ruff format $(PYTHON_DIRS)
 
-.PHONY: static-validation  ## vérifie le lint et la mise en forme sans modifier le code
+.PHONY: static-validation  ## vérifie le code sans le modifier : Ruff, Bandit et Vulture (comme la CI)
 static-validation:
 	uv run ruff check $(PYTHON_DIRS)
 	uv run ruff format --check $(PYTHON_DIRS)
+	uv run bandit -q -r src
+	uv run vulture src --min-confidence 80
 
 .PHONY: test  ## lance les tests Python
 test:
