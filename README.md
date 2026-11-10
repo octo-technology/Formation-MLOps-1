@@ -9,6 +9,10 @@ uv sync --locked
 uv run jupyter lab
 ```
 
+### Les slides de la formation
+**Version courante : v1.13** :arrow_right: [Google Slides](https://docs.google.com/presentation/d/1Gqgs0yIp0Fq2Vr_496sL3EuBiLaXJQtVqciYcu2q7OQ/edit?usp=sharing)
+
+
 Les instructions des TP sont publiées sur les pages GitHub suivantes :
 
 [TP 0 Installation de l'environnement](https://octo-technology.github.io/Formation-MLOps-1/tp0#0)
