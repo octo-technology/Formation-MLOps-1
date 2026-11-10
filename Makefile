@@ -1,8 +1,11 @@
+# Compatible avec les versions de GNU Make installées par défaut (3.81 sur macOS, 4.x sous Linux) :
+# Chaque ligne de recette s'exécute dans un shell séparé. logique sur plusieurs lignes -> scripts/
+# Voir docs/adr/0001.
+
 SHELL := /bin/bash
-.SHELLFLAGS = -ec
-.ONESHELL:
 .SILENT:
 
+PYTHON_DIRS := src api tests docs scripts
 SPHINX_OUTPUT_DIR ?= docs/_build/html
 DIST_OUTPUT_DIR ?= dist
 
@@ -17,16 +20,16 @@ sync:
 
 .PHONY: lint  ## vérifie le code avec Ruff
 lint:
-	uv run ruff check src api tests docs
+	uv run ruff check $(PYTHON_DIRS)
 
 .PHONY: format  ## formate le code avec Ruff
 format:
-	uv run ruff format src api tests docs
+	uv run ruff format $(PYTHON_DIRS)
 
 .PHONY: static-validation  ## vérifie le lint et la mise en forme sans modifier le code
 static-validation:
-	uv run ruff check src api tests docs
-	uv run ruff format --check src api tests docs
+	uv run ruff check $(PYTHON_DIRS)
+	uv run ruff format --check $(PYTHON_DIRS)
 
 .PHONY: test  ## lance les tests Python
 test:
@@ -38,26 +41,12 @@ dependency-scan:
 
 .PHONY: test-notebook  ## exécute une copie du notebook sans modifier les modèles
 test-notebook:
-	tmp_dir=$$(mktemp -d)
-	trap 'rm -rf "$$tmp_dir"' EXIT
-	trap 'exit 130' INT
-	trap 'exit 143' TERM
-	mkdir -p "$$tmp_dir/notebook" "$$tmp_dir/models"
-	cp notebook/titanic.ipynb "$$tmp_dir/notebook/"
-	ln -s "$$PWD/input" "$$tmp_dir/input"
-	uv run jupyter nbconvert --to notebook --execute \
-		"$$tmp_dir/notebook/titanic.ipynb" \
-		--output executed --output-dir "$$tmp_dir"
+	uv run python scripts/run_notebook.py notebook/titanic.ipynb
 
 .PHONY: test-tps  ## valide le notebook, les tests, le package et la documentation
-test-tps:
-	tmp_dir=$$(mktemp -d)
-	trap 'rm -rf "$$tmp_dir"' EXIT
-	trap 'exit 130' INT
-	trap 'exit 143' TERM
-	$(MAKE) test-notebook
-	$(MAKE) test
-	$(MAKE) distribution DIST_OUTPUT_DIR="$$tmp_dir/dist"
+test-tps: test-notebook test
+	tmp_dir=$$(mktemp -d) && trap 'rm -rf "$$tmp_dir"' EXIT && \
+	$(MAKE) distribution DIST_OUTPUT_DIR="$$tmp_dir/dist" && \
 	$(MAKE) sphinx SPHINX_OUTPUT_DIR="$$tmp_dir/html"
 
 .PHONY: sphinx  ## crée la documentation

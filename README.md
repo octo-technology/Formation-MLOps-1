@@ -28,8 +28,8 @@ Les instructions des TP sont publiées sur les pages GitHub suivantes :
 ## Vérifier la branche de développement
 
 ```sh
-uv run ruff check src api tests docs
-uv run ruff format --check src api tests docs
+uv run ruff check src api tests docs scripts
+uv run ruff format --check src api tests docs scripts
 uv run python -m pytest
 uv run sphinx-build -W -b html docs docs/_build/html
 uv build
