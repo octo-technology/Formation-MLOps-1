@@ -35,6 +35,12 @@ uv sync --locked
 make help
 ```
 
+Puis installe le hook git qui lance `make static-validation` et `make test` avant chaque commit :
+
+```sh
+make install-hooks
+```
+
 ## :evergreen_tree: Organisation des branches
 
 - **`dev` est la source de vérité.** Il contient la solution complète de la formation (code final, notebooks, documentation, CI, Docker) ainsi que les consignes des TP (`TP_instructions/`).

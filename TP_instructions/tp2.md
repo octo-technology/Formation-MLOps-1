@@ -141,6 +141,40 @@ Duration: 0:15:00
 
 Pour vous exercer, écrivez trois autres tests automatisés sur d'autres fonctions.
 
+## Vérifier automatiquement avant chaque commit
+
+Duration: 0:10:00
+
+Les tests n'ont de valeur que s'ils sont lancés. Un hook git `pre-commit` est un script exécuté automatiquement par git avant chaque commit : si le script échoue, le commit est refusé.
+
+1. Créez un fichier `.githooks/pre-commit` à la racine du dépôt :
+
+```bash
+#!/bin/bash
+# Hook git exécuté avant chaque commit : le commit est refusé si une vérification échoue.
+set -e
+
+echo "Vérification statique (Ruff)"
+uv run ruff check src
+uv run ruff format --check src
+
+echo "Tests unitaires..."
+uv run python -m pytest
+
+echo "✅ Toutes les vérifications sont passées, commit autorisé."
+```
+
+2. Rendez-le exécutable, puis indiquez à git d'utiliser ce dossier de hooks :
+
+```sh
+chmod +x .githooks/pre-commit
+git config core.hooksPath .githooks
+```
+
+Le dossier `.githooks/` est versionné : toute l'équipe partage le même hook, contrairement au dossier `.git/hooks/`, qui reste local.
+
+3. Vérifiez que le hook fonctionne : introduisez volontairement une erreur dans un test, puis essayez de commiter. Le commit doit être refusé. Corrigez l'erreur, et le commit passe.
+
 ## Lien vers le TP suivant
 
 Duration: 0:01:00

@@ -18,6 +18,10 @@ help:
 sync:
 	uv sync --locked
 
+.PHONY: install-hooks  ## installe le hook git pre-commit (vérification statique et tests avant chaque commit)
+install-hooks:
+	git config core.hooksPath .githooks && echo "✅ Hook pre-commit installé (.githooks/pre-commit)"
+
 .PHONY: lint  ## vérifie le code avec Ruff
 lint:
 	uv run ruff check $(PYTHON_DIRS)
