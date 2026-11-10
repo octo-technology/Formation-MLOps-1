@@ -25,18 +25,27 @@ Les instructions des TP sont publiées sur les pages GitHub suivantes :
 
 [TP 6 Créer une API et la conteneuriser](https://octo-technology.github.io/Formation-MLOps-1/tp6#0)
 
+## Contribuer
+
+Le guide de contribution ([CONTRIBUTING.md](CONTRIBUTING.md)) décrit l'organisation des branches, les conventions de commit et le déroulé d'une contribution.
+
 ## Vérifier la branche de développement
 
 ```sh
+# make static-validation
 uv run ruff check src api tests docs scripts
 uv run ruff format --check src api tests docs scripts
+
+# make test
 uv run python -m pytest
+
+# make sphinx
 uv run sphinx-build -W -b html docs docs/_build/html
+
+# make distribution
 uv build
 ```
-
-Les mêmes tâches sont disponibles via le `Makefile` : `make static-validation`, `make test`, `make sphinx` et `make distribution`.
-
+`# make test-tps` / `# make test-notebook`  
 Avec GNU Make et Bash disponibles, lancez `make test-tps` pour vérifier successivement l'exécution du notebook, les tests Python, la construction du package et la documentation. La validation s'arrête au premier échec. Le notebook est exécuté sur une copie et les sorties sont placées dans des répertoires temporaires, nettoyés même en cas d'échec, pour préserver les notebooks et modèles du dépôt. `make test-notebook` permet de vérifier uniquement le notebook.
 
 Pour les constructions autonomes, les sorties restent dans `dist/` et `docs/_build/html/`. Vous pouvez choisir d'autres répertoires avec `make distribution DIST_OUTPUT_DIR="chemin/dist"` et `make sphinx SPHINX_OUTPUT_DIR="chemin/html"`.
