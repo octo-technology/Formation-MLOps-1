@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from fastapi import FastAPI
-from sklearn.ensemble._forest import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier
 
 from src.feature_engineering import Preprocessor
 
