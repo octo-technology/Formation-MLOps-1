@@ -77,7 +77,7 @@ Après l'installation, ouvrez un nouveau terminal dans votre éditeur et vérifi
 
 ### Installer l'environnement et les dépendances
 
-Le projet utilise Python 3.15 ou une version ultérieure. uv peut télécharger une version compatible si nécessaire.
+Le projet utilise Python 3.15, fixé dans le fichier `.python-version` (créé avec `uv python pin 3.15`). Si cette version n'est pas installée sur votre machine, uv la télécharge automatiquement.
 
 Depuis la racine du dépôt (`cd Formation-MLOps-1`), créez l'environnement `.venv` et installez les dépendances déclarées dans `pyproject.toml`, aux versions de `uv.lock` :
 
@@ -113,7 +113,7 @@ Les TP sont étroitement liés à la présentation de la formation.
 Chaque TP commence sur une branche dédiée. Pour consulter l'état initial :
 
 ```sh
-git checkout 0_initial_state
+git switch 0_initial_state
 ```
 
 Pour naviguer entre les étapes, suivez les changements de branche indiqués au début de chaque TP, puis exécutez `uv sync --locked` pour synchroniser l'environnement.

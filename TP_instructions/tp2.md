@@ -16,7 +16,7 @@ Pour réaliser ce TP, allez sur la branche `2_start_unit_test` depuis la racine 
 
 ```shell
 git stash --include-untracked
-git checkout 2_start_unit_test
+git switch 2_start_unit_test
 uv sync --locked
 ```
 

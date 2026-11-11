@@ -16,7 +16,7 @@ Pour réaliser ce TP, allez sur la branche `4_start_ci` depuis la racine du dép
 
 ```shell
 git stash --include-untracked
-git checkout 4_start_ci
+git switch 4_start_ci
 uv sync --locked
 ```
 
@@ -42,16 +42,28 @@ Si vous êtes déjà à l'aise avec Git, passez directement à l'étape suivante
 
 Duration: 0:10:00
 
-Vous avez besoin de votre propre compte GitHub pour pouvoir pousser du code et exécuter la CI.
+Vous avez besoin de votre propre compte GitHub pour pouvoir pousser du code et exécuter la CI. Vous poussez sur votre dépôt, jamais sur celui de la formation.
 
 1. Créez un compte GitHub si vous n'en avez pas déjà un.
 2. Créez un dépôt vide, sans README ni fichier `.gitignore`.
-3. Modifiez l'URL du dépôt distant `origin` en local.
-    - Affichez les URL actuelles avec `git remote -v` et conservez l'URL d'origine pour la fin du TP.
-    - Exécutez `git remote set-url origin URL_DE_VOTRE_DEPOT`, en remplaçant `URL_DE_VOTRE_DEPOT` par l'URL SSH ou HTTPS de votre dépôt GitHub.
-4. Poussez la branche actuelle vers votre dépôt : `git push --set-upstream origin 4_start_ci`.
+3. Remplacez l'URL du dépôt distant `origin` par l'URL SSH ou HTTPS de votre dépôt, puis vérifiez que `git remote -v` l'affiche :
 
-Vous pouvez aussi créer un fork du dépôt en incluant toutes les branches, puis le cloner et vous placer sur `4_start_ci`. Exécutez alors `uv sync --locked` dans ce clone.
+```shell
+git remote set-url origin URL_DE_VOTRE_DEPOT
+git remote -v
+```
+
+4. Poussez la branche actuelle vers votre dépôt :
+
+```shell
+git push --set-upstream origin 4_start_ci
+```
+
+En HTTPS, GitHub refuse votre mot de passe au moment du push : utilisez un [token d'accès personnel](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) à la place, ou passez par SSH.
+
+Gardez cette URL jusqu'à la fin de la formation : vos push partiront toujours vers votre dépôt. Les branches des TP suivants restent accessibles avec `git switch`, car elles ont été récupérées lors du clonage.
+
+Alternative : Vous pouvez aussi créer un fork du dépôt en incluant toutes les branches, puis le cloner et vous placer sur `4_start_ci`. Exécutez alors `uv sync --locked` dans ce clone.
 
 Dans l'interface GitHub, ouvrez l'onglet « Actions ». Après un push, vous devriez y trouver une exécution de la CI en échec.
 
@@ -70,7 +82,15 @@ Votre but est de compléter le fichier pour que votre CI fonctionne et soit vert
 Procédez étape par étape :
 1. Testez la commande localement dans votre terminal.
 2. Placez-la dans le fichier `ci.yml`.
-3. Poussez votre code pour valider qu'il fonctionne.
+3. Commitez et poussez votre code, puis vérifiez le résultat dans l'onglet « Actions » :
+
+```shell
+git add .github/workflows/ci.yml
+git commit -m "Compléter la CI"
+git push
+```
+
+Si vous avez activé le hook `pre-commit` au TP2, il se lance à chaque commit : il vérifie le code avec Ruff, lance les tests et refuse le commit si une vérification échoue.
 
 Le workflow doit récupérer le code, installer uv et une version de Python compatible avec `pyproject.toml`, puis exécuter les vérifications depuis la racine du dépôt :
 
@@ -99,15 +119,6 @@ En CI, l'action `aquasecurity/trivy-action@v0.36.0` installe Trivy et exécute c
 ## Si vous avez fini en avance
 
 Vous pouvez explorer les possibilités avec la [documentation GitHub Actions](https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python).
-
-## Avant de changer de TP
-
-Duration: 0:02:00
-
-Si vous avez modifié `origin` dans le clone de la formation, restaurez l'URL conservée au début du TP :
-```shell
-git remote set-url origin https://github.com/octo-technology/Formation-MLOps-1.git
-```
 
 ## Lien vers le TP suivant
 

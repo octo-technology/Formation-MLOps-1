@@ -16,7 +16,7 @@ Pour réaliser ce TP, allez sur la branche `6_start_docker` depuis la racine du 
 
 ```shell
 git stash --include-untracked
-git checkout 6_start_docker
+git switch 6_start_docker
 uv sync --locked
 ```
 

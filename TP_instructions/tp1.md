@@ -15,7 +15,7 @@ Duration: 0:01:00
 Pour réaliser ce TP, allez sur la branche `1_start_clean_notebook` depuis la racine du dépôt :
 ```shell
 git stash --include-untracked
-git checkout 1_start_clean_notebook
+git switch 1_start_clean_notebook
 uv sync --locked
 ```
 

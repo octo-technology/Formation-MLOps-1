@@ -16,7 +16,7 @@ Pour réaliser ce TP, allez sur la branche `3_start_sphinx_doc` depuis la racine
 
 ```shell
 git stash --include-untracked
-git checkout 3_start_sphinx_doc
+git switch 3_start_sphinx_doc
 uv sync --locked
 ```
 

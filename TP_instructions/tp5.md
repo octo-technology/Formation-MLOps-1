@@ -16,7 +16,7 @@ Pour réaliser ce TP, allez sur la branche `5_start_packaging` depuis la racine 
 
 ```shell
 git stash --include-untracked
-git checkout 5_start_packaging
+git switch 5_start_packaging
 uv sync --locked
 ```
 
