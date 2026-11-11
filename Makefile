@@ -63,3 +63,7 @@ sphinx:
 .PHONY: distribution  ## crée le package
 distribution:
 	uv build --out-dir "$(DIST_OUTPUT_DIR)"
+
+.PHONY: clean  ## supprime les fichiers générés (caches, build, doc) ; ne touche ni à .venv ni aux modèles
+clean:
+	rm -rf build dist docs/_build *.egg-info .pytest_cache .ruff_cache */__pycache__ */*/__pycache__ */.ipynb_checkpoints
