@@ -1,0 +1,20 @@
+# Configuration commune à la CI et au scan local de uv.lock.
+scan:
+  scanners:
+    - vuln
+  skip-dirs:
+    - .venv
+    - .cache
+    - build
+    - dist
+    - docs/_build
+
+pkg:
+  types:
+    - library
+  include-dev-deps: true
+
+severity:
+  - HIGH
+  - CRITICAL
+exit-code: 1

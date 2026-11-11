@@ -3,16 +3,17 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Formation industrialisation de la Data Science's documentation!
-==========================================================================
+Formation MLOps 1 : industrialisation de la science des données
+======================================================================
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Référence du code :
 
+   api/modules
 
-Indices and tables
-==================
+Index et tables
+===============
 
 * :ref:`genindex`
 * :ref:`modindex`
