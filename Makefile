@@ -26,6 +26,10 @@ format:
 test:
 	uv run python -m pytest
 
+.PHONY: coverage  ## lance les tests et mesure la couverture de src (rapport dans htmlcov/index.html)
+coverage:
+	uv run python -m pytest --cov=src --cov-report=term-missing --cov-report=html
+
 .PHONY: install-hooks  ## installe le hook git pre-commit (vérification statique et tests avant chaque commit)
 install-hooks:
 	git config core.hooksPath .githooks && echo "✅ Hook pre-commit installé (.githooks/pre-commit)"
@@ -54,7 +58,7 @@ test-notebook:
 
 .PHONY: clean  ## supprime les fichiers générés (caches, build, doc) ; ne touche ni à .venv ni aux modèles
 clean:
-	rm -rf build dist docs/_build *.egg-info .pytest_cache .ruff_cache */__pycache__ */*/__pycache__ */.ipynb_checkpoints
+	rm -rf build dist docs/_build *.egg-info .pytest_cache .ruff_cache htmlcov .coverage */__pycache__ */*/__pycache__ */.ipynb_checkpoints
 
 .PHONY: test-tps  ## valide les notebooks, les tests, le package et la documentation
 test-tps: test-notebook test
