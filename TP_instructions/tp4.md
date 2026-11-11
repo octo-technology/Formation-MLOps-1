@@ -23,6 +23,8 @@ uv sync --locked
 Nouveautés sur cette branche :
 - La documentation Sphinx est créée.
 - Nouvelle commande : `make sphinx` (construit la documentation).
+- Un fichier `.github/workflows/ci.yml` à compléter : la CI échoue tant qu'il n'est pas complété.
+- Le fichier `trivy.yaml`, qui configure l'analyse des dépendances.
 
 L'objectif de ce TP est de créer une CI qui valide automatiquement notre code.
 
