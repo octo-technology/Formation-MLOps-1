@@ -29,6 +29,7 @@ dev = [
     "httpx2>=2.16.0",
     "nbconvert>=7.17.2",
     "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
     "ruff>=0.17.2",
     "sphinx>=9.2.0",
     "vulture>=2.16",

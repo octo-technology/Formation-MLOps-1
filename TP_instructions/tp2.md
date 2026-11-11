@@ -140,6 +140,32 @@ Duration: 0:15:00
 
 Pour vous exercer, écrivez trois autres tests automatisés sur d'autres fonctions.
 
+## Mesurer la couverture de code
+
+Duration: 0:10:00
+
+La couverture de code indique la part des lignes de `src` exécutées par vos tests. Elle aide à repérer le code qui n'est pas testé.
+
+Installez `pytest-cov`, qui mesure la couverture pendant l'exécution de pytest (il s'appuie sur coverage.py) :
+
+```sh
+uv add pytest-cov --dev
+```
+
+Depuis la racine du dépôt, lancez les tests en mesurant la couverture :
+
+```sh
+uv run python -m pytest --cov=src --cov-report=term-missing --cov-report=html
+```
+
+Le terminal affiche le taux de couverture de chaque fichier et, dans la colonne `Missing`, les lignes qu'aucun test n'a exécutées. Le rapport HTML surligne ces lignes : ouvrez `htmlcov/index.html` dans votre navigateur.
+
+Choisissez une fonction mal couverte et ajoutez un test pour elle, puis relancez la mesure.
+
+Une couverture de 100 % ne garantit pas que le code fonctionne : elle indique seulement que chaque ligne a été exécutée par au moins un test, pas que le résultat a été vérifié. Servez-vous-en pour trouver le code oublié, pas comme un objectif en soi.
+
+Les fichiers générés (`.coverage` et `htmlcov/`) sont déjà ignorés par git.
+
 ## Vérifier automatiquement avant chaque commit
 
 Duration: 0:10:00

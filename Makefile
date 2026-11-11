@@ -40,6 +40,10 @@ static-validation: lint
 test:
 	uv run python -m pytest
 
+.PHONY: coverage  ## lance les tests et mesure la couverture de src (rapport dans htmlcov/index.html)
+coverage:
+	uv run python -m pytest --cov=src --cov-report=term-missing --cov-report=html
+
 .PHONY: dependency-scan  ## analyse uv.lock avec Trivy (à installer séparément)
 dependency-scan:
 	trivy fs --config trivy.yaml .
@@ -65,4 +69,4 @@ distribution:
 
 .PHONY: clean  ## supprime les fichiers générés (caches, build, doc) ; ne touche ni à .venv ni aux modèles
 clean:
-	rm -rf build dist docs/_build *.egg-info .pytest_cache .ruff_cache */__pycache__ */*/__pycache__ */.ipynb_checkpoints
+	rm -rf build dist docs/_build *.egg-info .pytest_cache .ruff_cache htmlcov .coverage */__pycache__ */*/__pycache__ */.ipynb_checkpoints

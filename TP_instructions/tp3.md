@@ -23,7 +23,7 @@ uv sync --locked
 Nouveautés sur cette branche :
 - Des tests unitaires ont été rédigés.
 - Le hook `.githooks/pre-commit` est en place. Si vous avez recloné le dépôt, réactivez-le avec `git config core.hooksPath .githooks`.
-- Nouvelles commandes : `make test` (pytest) et `make install-hooks` (active le hook).
+- Nouvelles commandes : `make test` (pytest), `make coverage` (tests avec mesure de la couverture, rapport dans `htmlcov/index.html`) et `make install-hooks` (active le hook).
 
 L'objectif de ce TP est de créer une documentation HTML avec Sphinx à partir des docstrings.
 
