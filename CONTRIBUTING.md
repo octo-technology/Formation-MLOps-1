@@ -6,6 +6,7 @@ Les contributeurs changent souvent et il n'y a pas de passation : tout ce qu'il 
 
 - [CONTRIBUTING](#contributing)
   - [:mortar_board: Je donne la formation](#mortar_board-je-donne-la-formation)
+  - [:bar_chart: Slides](#bar_chart-slides)
   - [:evergreen_tree: Organisation des branches](#evergreen_tree-organisation-des-branches)
   - [:card_index_dividers: Où modifier quoi](#card_index_dividers-où-modifier-quoi)
   - [:wrench: Pré-requis](#wrench-pré-requis)
@@ -24,7 +25,11 @@ Les contributeurs changent souvent et il n'y a pas de passation : tout ce qu'il 
 - Les apprenants clonent le dépôt : ils arrivent sur `0_initial_state`, la branche par défaut.
 - Chaque TP indique sa branche de départ ; la solution complète est sur `final_state`.
 - Avant une session, vérifie chaque branche : `git switch <branche> && uv sync --locked`, puis `make tpN-validation` (branches 1 à 6) ou `make test-tps` (`final_state`).
-- Les consignes sont publiées sur GitHub Pages à chaque push sur `dev`. Les slides sont dans le [README](README.md#slides).
+- Les consignes sont publiées sur GitHub Pages à chaque push sur `dev`. La version courante des slides est dans la section [Slides](#bar_chart-slides).
+
+## :bar_chart: Slides
+
+**Version courante : v1.13** :arrow_right: [Google Slides](https://docs.google.com/presentation/d/1Gqgs0yIp0Fq2Vr_496sL3EuBiLaXJQtVqciYcu2q7OQ/edit?usp=sharing)
 
 ## :evergreen_tree: Organisation des branches
 
@@ -128,7 +133,7 @@ Règles des branches de TP :
 
 ### :page_with_curl: Quand ça touche aux slides
 
-Les slides sont sur Google Slides. La version à utiliser en formation est la **version courante** (README.md).
+Les slides sont sur Google Slides. La version à utiliser en formation est la **version courante** (section [Slides](#bar_chart-slides)).
 
 Pour publier une nouvelle version :
 

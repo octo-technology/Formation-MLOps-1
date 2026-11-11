@@ -37,10 +37,6 @@ uv sync --locked
 
 `make help` liste les commandes disponibles sur la branche.
 
-## Slides
-
-**Version courante : v1.13** :arrow_right: [Google Slides](https://docs.google.com/presentation/d/1Gqgs0yIp0Fq2Vr_496sL3EuBiLaXJQtVqciYcu2q7OQ/edit?usp=sharing)
-
 ---
 
 Vous donnez la formation ou vous voulez contribuer : lisez le [guide de contribution](CONTRIBUTING.md).
