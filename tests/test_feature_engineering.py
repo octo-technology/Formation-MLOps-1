@@ -4,17 +4,37 @@ import pandas as pd
 from src.feature_engineering import impute_age, process_name
 
 
+def test_process_name():
+    # Given
+    df = pd.DataFrame({"Name": ["Braund, Mr. Owen Harris"]})
+    expected_df = pd.DataFrame(
+        {
+            "Name": ["Braund, Mr. Owen Harris"],
+            "Name_Len": [23],
+            "Name_Title": ["Mr."],
+        }
+    )
+
+    # When
+    result_df = process_name(df)
+
+    # Then
+    pd.testing.assert_frame_equal(expected_df, result_df)
+
+
 def test_process_name_should_create_column_name_length():
     # Given
     test = pd.DataFrame(
         {
-            "Name":
-                ['Kelly, Mr. James',
-                 'Wilkes, Mrs. James (Ellen Needs)',
-                 'Myles, Mr. Thomas Francis',
-                 'Wirz, Mr. Albert',
-                 'Hirvonen, Mrs. Alexander (Helga E Lindqvist)']
-        })
+            "Name": [
+                "Kelly, Mr. James",
+                "Wilkes, Mrs. James (Ellen Needs)",
+                "Myles, Mr. Thomas Francis",
+                "Wirz, Mr. Albert",
+                "Hirvonen, Mrs. Alexander (Helga E Lindqvist)",
+            ]
+        }
+    )
     expected_test_length = [16, 32, 25, 16, 44]
 
     # When
@@ -25,17 +45,19 @@ def test_process_name_should_create_column_name_length():
     assert test["Name_Len"].tolist() == expected_test_length
 
 
-def test_names_should_create_column_name_title():
+def test_process_name_should_create_column_name_title():
     # Given
     test = pd.DataFrame(
         {
-            "Name":
-                ['Kelly, Mr. James',
-                 'Wilkes, Mrs. James (Ellen Needs)',
-                 'Myles, Mr. Thomas Francis',
-                 'Wirz, Mr. Albert',
-                 'Hirvonen, Mrs. Alexander (Helga E Lindqvist)']
-        })
+            "Name": [
+                "Kelly, Mr. James",
+                "Wilkes, Mrs. James (Ellen Needs)",
+                "Myles, Mr. Thomas Francis",
+                "Wirz, Mr. Albert",
+                "Hirvonen, Mrs. Alexander (Helga E Lindqvist)",
+            ]
+        }
+    )
     expected_test_titles = ["Mr.", "Mrs.", "Mr.", "Mr.", "Mrs."]
 
     # When
@@ -46,17 +68,18 @@ def test_names_should_create_column_name_title():
     assert test["Name_Title"].tolist() == expected_test_titles
 
 
-def test_age_impute_should_create_2_columns_age_and_age_null_flag():
+def test_impute_age_should_create_2_columns_age_and_age_null_flag():
     # Given
     test = pd.DataFrame(
         {
             "Age": [7, 14, 120, 31, np.nan],
             "Name_Title": ["Mr.", "Mrs.", "Miss.", "Mrs.", "Mr."],
-            "Pclass": [2, 0, 2, 1, 0]
-        })
+            "Pclass": [2, 0, 2, 1, 0],
+        }
+    )
 
     # impute age reffers to fitted parameters.
-    grouped_age_means = pd.Series(dtype='object')
+    grouped_age_means = pd.Series(dtype="object")
     age_mean = 0
 
     # When
@@ -67,7 +90,7 @@ def test_age_impute_should_create_2_columns_age_and_age_null_flag():
     assert "Age_Null_Flag" in test.columns
 
 
-def test_age_impute_should_set_age_column_without_missing_value():
+def test_impute_age_should_set_age_column_without_missing_value():
     # Given
     # note : at least one pair Title-Pclass covering the null case should exist
     # in the train set
@@ -75,11 +98,12 @@ def test_age_impute_should_set_age_column_without_missing_value():
         {
             "Age": [7, 14, 120, 31, np.nan],
             "Name_Title": ["Mr.", "Mrs.", "Miss.", "Mrs.", "Mr."],
-            "Pclass": [2, 0, 2, 1, 0]
-        })
+            "Pclass": [2, 0, 2, 1, 0],
+        }
+    )
 
     # impute age reffers to fitted parameters.
-    grouped_age_means = pd.Series(dtype='object')
+    grouped_age_means = pd.Series(dtype="object")
     age_mean = 0
 
     # When
@@ -89,17 +113,18 @@ def test_age_impute_should_set_age_column_without_missing_value():
     assert test["Age"].notnull().all()
 
 
-def test_age_impute_should_set_age_null_flag_column_with_binary_value():
+def test_impute_age_should_set_age_null_flag_column_with_binary_value():
     # Given
     test = pd.DataFrame(
         {
             "Age": [7, 14, 120, 31, np.nan],
             "Name_Title": ["Mr.", "Mrs.", "Miss.", "Mrs.", "Mr."],
-            "Pclass": [2, 0, 2, 1, 0]
-        })
+            "Pclass": [2, 0, 2, 1, 0],
+        }
+    )
 
     # impute age reffers to fitted parameters.
-    grouped_age_means = pd.Series(dtype='object')
+    grouped_age_means = pd.Series(dtype="object")
     age_mean = 0
 
     # When
@@ -109,17 +134,18 @@ def test_age_impute_should_set_age_null_flag_column_with_binary_value():
     assert set(test["Age_Null_Flag"].unique()) == {0, 1}
 
 
-def test_age_impute_should_flag_null_values_in_age_column():
+def test_impute_age_should_flag_null_values_in_age_column():
     # Given
     test = pd.DataFrame(
         {
             "Age": [7, 14, 120, 31, np.nan],
             "Name_Title": ["Mr.", "Mrs.", "Miss.", "Mrs.", "Mr."],
-            "Pclass": [2, 0, 2, 1, 0]
-        })
+            "Pclass": [2, 0, 2, 1, 0],
+        }
+    )
 
     # impute age reffers to fitted parameters.
-    grouped_age_means = pd.Series(dtype='object')
+    grouped_age_means = pd.Series(dtype="object")
     age_mean = 0
 
     # When

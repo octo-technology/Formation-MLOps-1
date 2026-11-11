@@ -1,10 +1,12 @@
 #!/bin/bash
+# Hook git exécuté avant chaque commit : le commit est refusé si une vérification échoue.
 set -e
 
-echo "🔍 Running lint..."
-make lint
+echo "Vérification statique (Ruff)"
+uv run ruff check src
+uv run ruff format --check src
 
-echo "🧪 Running tests..."
-make test
+echo "Tests unitaires..."
+uv run python -m pytest
 
-echo "✅ All checks passed!"
+echo "✅ Toutes les vérifications sont passées, commit autorisé."
