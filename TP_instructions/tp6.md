@@ -1,7 +1,7 @@
 summary: TP6 - Conteneuriser
 id: tp6
-categories: setup
-tags: setup
+categories: tp
+tags: tp
 status: Published
 authors: OCTO Technology
 Feedback Link: https://github.com/octo-technology/Formation-MLOps-1/issues/new/choose
@@ -20,9 +20,14 @@ git checkout 6_start_docker
 uv sync --locked
 ```
 
-Nouveauté sur cette branche :
+Nouveautés sur cette branche :
 
-- Une API est mise à disposition.
+- Le projet est packagé : `from src.feature_engineering import …` fonctionne sans `sys.path.append`.
+- Un squelette de la classe `Preprocessor` est proposé dans `src/feature_engineering.py`, avec ses tests dans `tests/test_preprocessor.py`.
+- Une API est mise à disposition dans `api/main.py`.
+- Un `Dockerfile` à compléter est fourni.
+
+Au départ, le notebook `notebook/titanic_train_model.ipynb` échoue sur une erreur `TypeError … subscriptable` : c'est normal, la classe `Preprocessor` est à compléter.
 
 L'objectif de ce TP est de conteneuriser une application de prédiction dans une image Docker.
 
@@ -39,6 +44,8 @@ Pour cela, il faut sauvegarder le modèle ainsi que les paramètres appris lors 
 Pour sauvegarder les informations apprises lors du prétraitement, implémentez une classe `Preprocessor` qui possède deux méthodes inspirées de l'API scikit-learn : `fit_transform` et `transform`.
 
 Un début d'implémentation est proposé dans `src/feature_engineering.py`. Complétez cette classe en y ajoutant les traitements nécessaires. Les paramètres sont appris dans `fit_transform`, puis réutilisés sans nouvel apprentissage dans `transform`.
+
+Les tests de la classe sont fournis dans `tests/test_preprocessor.py`. Lancez `uv run python -m pytest` pour suivre votre progression. Tant que la classe n'est pas complétée, les tests échouent et le hook refuse les commits.
 
 ### Sauvegarder le modèle et le préprocesseur
 

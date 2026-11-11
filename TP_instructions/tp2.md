@@ -1,7 +1,7 @@
 summary: TP2 - Écrire des tests unitaires
 id: tp2
-categories: setup
-tags: setup
+categories: tp
+tags: tp
 status: Published
 authors: OCTO Technology
 Feedback Link: https://github.com/octo-technology/Formation-MLOps-1/issues/new/choose

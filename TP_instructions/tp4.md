@@ -1,7 +1,7 @@
 summary: TP4 - Créer une CI GitHub
 id: tp4
-categories: setup
-tags: setup
+categories: tp
+tags: tp
 status: Published
 authors: OCTO Technology
 Feedback Link: https://github.com/octo-technology/Formation-MLOps-1/issues/new/choose

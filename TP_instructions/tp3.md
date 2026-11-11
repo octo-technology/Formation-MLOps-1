@@ -1,7 +1,7 @@
 summary: TP3 - Ajouter de la documentation avec Sphinx
 id: tp3
-categories: setup
-tags: setup
+categories: tp
+tags: tp
 status: Published
 authors: OCTO Technology
 Feedback Link: https://github.com/octo-technology/Formation-MLOps-1/issues/new/choose
@@ -20,8 +20,9 @@ git checkout 3_start_sphinx_doc
 uv sync --locked
 ```
 
-Nouveauté sur cette branche :
+Nouveautés sur cette branche :
 - Des tests unitaires ont été rédigés.
+- Le hook `.githooks/pre-commit` est en place. Si vous avez recloné le dépôt, réactivez-le avec `git config core.hooksPath .githooks`.
 
 L'objectif de ce TP est de créer une documentation HTML avec Sphinx à partir des docstrings.
 

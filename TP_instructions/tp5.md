@@ -1,7 +1,7 @@
 summary: TP5 - Créer un package Python
 id: tp5
-categories: setup
-tags: setup
+categories: tp
+tags: tp
 status: Published
 authors: OCTO Technology
 Feedback Link: https://github.com/octo-technology/Formation-MLOps-1/issues/new/choose
@@ -56,6 +56,8 @@ Vous pouvez constater le résultat dans le dossier `dist`, notamment `formation_
 Dans les notebooks, supprimez désormais les `sys.path.append` : l'import `from src.feature_engineering import process_name` fonctionne grâce au package installé.
 
 ## Installer le package dans un autre projet
+
+Duration: 0:10:00
 
 Créez-vous un nouvel environnement virtuel et installez le package. Depuis la racine du dépôt :
 
