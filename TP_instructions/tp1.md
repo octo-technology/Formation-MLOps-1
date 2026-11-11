@@ -51,6 +51,7 @@ découvrir :
 - Respectez les conventions de code.
 - Respectez l'ordre des cellules.
 - Limitez les affichages aux informations utiles.
+- Videz les sorties des cellules avant de commiter : elles alourdissent le dépôt, rendent les diffs illisibles et peuvent contenir des données. Le brouillon que vous recevez en contient, c'est une mauvaise pratique.
 - Supprimez le code inutile.
 - Écrivez des fonctions courtes.
 - Respectez l'immutabilité.

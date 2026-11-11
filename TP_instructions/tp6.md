@@ -46,11 +46,11 @@ Pour sauvegarder les informations apprises lors du prétraitement, implémentez 
 
 Un début d'implémentation est proposé dans `src/feature_engineering.py`. Complétez cette classe en y ajoutant les traitements nécessaires. Les paramètres sont appris dans `fit_transform`, puis réutilisés sans nouvel apprentissage dans `transform`.
 
-Les tests de la classe sont fournis dans `tests/test_preprocessor.py`. Lancez `uv run python -m pytest` pour suivre votre progression. Tant que la classe n'est pas complétée, les tests échouent et le hook refuse les commits.
+Les tests de la classe sont fournis dans `tests/test_preprocessor.py`. Le test de `process_name` est commenté : décommentez-le une fois la méthode complétée, puis lancez `uv run python -m pytest`.
 
 ### Sauvegarder le modèle et le préprocesseur
 
-Dans le notebook d'entraînement, importez `Preprocessor` depuis `src.feature_engineering`, instanciez-le sous le nom `preprocessor`, puis entraînez le modèle sous le nom `model`.
+Dans le notebook d'entraînement, importez `Preprocessor` depuis `src.feature_engineering`, instanciez-le sous le nom `processor`, puis entraînez le modèle sous le nom `rf`.
 
 Avec `pickle`, sauvegardez les deux objets. Le notebook s'exécute depuis le dossier `notebook/` : le dossier `models` se trouve donc dans son dossier parent.
 
@@ -62,10 +62,10 @@ MODELS_DIR = Path.cwd().parent / "models"
 MODELS_DIR.mkdir(exist_ok=True)
 
 with open(MODELS_DIR / "model_rf.pkl", "wb") as file_out:
-    pickle.dump(model, file_out)
+    pickle.dump(rf, file_out)
 
 with open(MODELS_DIR / "preprocessor.pkl", "wb") as file_out:
-    pickle.dump(preprocessor, file_out)
+    pickle.dump(processor, file_out)
 ```
 
 ## Créer un notebook d'inférence
