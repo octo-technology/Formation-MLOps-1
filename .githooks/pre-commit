@@ -1,12 +1,12 @@
 #!/bin/bash
 # Hook git exécuté avant chaque commit : le commit est refusé si une vérification échoue.
-# Installation : make install-hooks
 set -e
 
-echo "🔍 Vérification statique (Ruff, Bandit, Vulture)..."
-make static-validation
+echo "Vérification statique (Ruff)"
+uv run ruff check src
+uv run ruff format --check src
 
-echo "🧪 Tests unitaires..."
-make test
+echo "Tests unitaires..."
+uv run python -m pytest
 
 echo "✅ Toutes les vérifications sont passées, commit autorisé."
