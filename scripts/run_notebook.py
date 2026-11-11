@@ -1,6 +1,6 @@
 """Exécute des notebooks, chacun sur une copie isolée, sans modifier le dépôt.
 
-Chaque notebook tourne dans son propre dossier temporaire, avec une copie de input/ et models/.
+Chaque notebook tourne dans son propre dossier temporaire, avec une copie de input/, models/ et src/.
 Un dossier en argument exécute tous ses .ipynb ; un chemin absent est ignoré.
 Code de retour non nul si au moins un notebook échoue.
 
@@ -49,6 +49,10 @@ def run_notebook(notebook: Path) -> tuple[int, str]:
             shutil.copytree(models_dir, tmp_dir / "models")
         else:
             (tmp_dir / "models").mkdir()
+        # Sans packaging (branches de TP 2 à 5), le notebook importe src/ via sys.path.append("..").
+        src_dir = REPO_ROOT / "src"
+        if src_dir.is_dir():
+            shutil.copytree(src_dir, tmp_dir / "src", ignore=shutil.ignore_patterns("__pycache__"))
         notebook_copy = tmp_dir / "notebook" / notebook.name
         shutil.copy(notebook, notebook_copy)
 

@@ -25,6 +25,7 @@ Nouveautés sur cette branche :
 - Le notebook est propre et exécutable de bout en bout.
 - Quelques fonctions sont documentées.
 - Les fonctions sont extraites dans un fichier .py spécifique.
+- Nouvelles commandes : `make lint` et `make format` (Ruff), `make test-notebook` (exécute le notebook de bout en bout), `make clean`. La liste complète s'affiche avec `make help`.
 
 L'objectif de ce TP est d'écrire quelques tests unitaires.
 

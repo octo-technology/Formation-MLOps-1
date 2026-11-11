@@ -20,8 +20,9 @@ git checkout 4_start_ci
 uv sync --locked
 ```
 
-Nouveauté sur cette branche :
+Nouveautés sur cette branche :
 - La documentation Sphinx est créée.
+- Nouvelle commande : `make sphinx` (construit la documentation).
 
 L'objectif de ce TP est de créer une CI qui valide automatiquement notre code.
 

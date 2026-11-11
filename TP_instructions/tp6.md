@@ -26,6 +26,7 @@ Nouveautés sur cette branche :
 - Un squelette de la classe `Preprocessor` est proposé dans `src/feature_engineering.py`, avec ses tests dans `tests/test_preprocessor.py`.
 - Une API est mise à disposition dans `api/main.py`.
 - Un `Dockerfile` à compléter est fourni.
+- Nouvelle commande : `make distribution` (construit le package).
 
 Au départ, le notebook `notebook/titanic_train_model.ipynb` échoue sur une erreur `TypeError … subscriptable` : c'est normal, la classe `Preprocessor` est à compléter.
 

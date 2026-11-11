@@ -20,8 +20,9 @@ git checkout 5_start_packaging
 uv sync --locked
 ```
 
-Nouveauté sur cette branche :
+Nouveautés sur cette branche :
 - La CI est créée.
+- Nouvelles commandes : `make static-validation` (Ruff, Bandit et Vulture, comme la CI) et `make dependency-scan` (Trivy).
 
 L'objectif de ce TP est de créer un package Python installable dans un autre projet.
 
