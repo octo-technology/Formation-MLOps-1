@@ -51,7 +51,7 @@ Les contributeurs changent souvent et il n'y a pas de passation : tout ce qu'il 
 - Avoir installé sur ta machine :
   - git ;
   - [uv](https://docs.astral.sh/uv/getting-started/installation/) ;
-  - Python 3.15 ou plus récent (`uv python install 3.15` si besoin) ;
+  - Python 3.15, fixé dans `.python-version` (uv le télécharge si besoin) ;
 
 Pour les droits d'accès :arrow_right: contacte les [référents](#black_joker-référents) !
 

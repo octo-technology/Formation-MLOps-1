@@ -20,7 +20,7 @@ La solution complète est sur la branche `final_state`.
 
 ## Quickstart
 
-La formation utilise Python 3.15 ou plus récent, [uv](https://docs.astral.sh/uv/getting-started/installation/) 0.13.5 pour l'environnement et Ruff pour le code. Depuis la racine du dépôt :
+La formation utilise Python 3.15 (fixé dans `.python-version`), [uv](https://docs.astral.sh/uv/getting-started/installation/) 0.13.5 pour l'environnement et Ruff pour le code. Depuis la racine du dépôt :
 
 ```sh
 uv sync --locked      # crée .venv et installe les dépendances verrouillées
