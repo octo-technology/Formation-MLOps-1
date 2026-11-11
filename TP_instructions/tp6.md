@@ -1,4 +1,4 @@
-summary: TP6 - Conteneuriser
+summary: TP6 - Créer une API et la conteneuriser
 id: tp6
 categories: tp
 tags: tp
@@ -6,7 +6,7 @@ status: Published
 authors: OCTO Technology
 Feedback Link: https://github.com/octo-technology/Formation-MLOps-1/issues/new/choose
 
-# TP6 - Conteneuriser
+# TP6 - Créer une API et la conteneuriser
 
 ## Vue d'ensemble
 

@@ -1,4 +1,4 @@
-summary: TP0 - Préparation de l'environnement de travail
+summary: TP0 - Installer l'environnement
 id: tp0
 categories: setup
 tags: setup
@@ -6,7 +6,7 @@ status: Published
 authors: OCTO Technology
 Feedback Link: https://github.com/octo-technology/Formation-MLOps-1/issues/new/choose
 
-# TP0 - Préparation de l'environnement de travail
+# TP0 - Installer l'environnement
 
 ## Vue d'ensemble
 

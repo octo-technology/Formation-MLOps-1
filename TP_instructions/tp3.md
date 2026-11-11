@@ -1,4 +1,4 @@
-summary: TP3 - Ajouter de la documentation avec Sphinx
+summary: TP3 - Documenter avec Sphinx
 id: tp3
 categories: tp
 tags: tp
@@ -6,7 +6,7 @@ status: Published
 authors: OCTO Technology
 Feedback Link: https://github.com/octo-technology/Formation-MLOps-1/issues/new/choose
 
-# TP3 - Ajouter de la documentation avec Sphinx
+# TP3 - Documenter avec Sphinx
 
 ## Vue d'ensemble
 
