@@ -1,8 +1,11 @@
+# Compatible avec les versions de GNU Make installées par défaut (3.81 sur macOS, 4.x sous Linux) :
+# Chaque ligne de recette s'exécute dans un shell séparé. logique sur plusieurs lignes -> scripts/
+# Voir docs/adr/0001.
+
 SHELL := /bin/bash
-.SHELLFLAGS = -ec
-.ONESHELL:
 .SILENT:
 
+PYTHON_DIRS := src api tests docs scripts
 SPHINX_OUTPUT_DIR ?= docs/_build/html
 DIST_OUTPUT_DIR ?= dist
 
@@ -15,49 +18,44 @@ help:
 sync:
 	uv sync --locked
 
+.PHONY: install-hooks  ## installe le hook git pre-commit (vérification statique et tests avant chaque commit)
+install-hooks:
+	git config core.hooksPath .githooks && echo "✅ Hook pre-commit installé (.githooks/pre-commit)"
+
 .PHONY: lint  ## vérifie le code avec Ruff
 lint:
-	uv run ruff check src api tests docs
+	uv run ruff check $(PYTHON_DIRS)
 
 .PHONY: format  ## formate le code avec Ruff
 format:
-	uv run ruff format src api tests docs
+	uv run ruff format $(PYTHON_DIRS)
 
-.PHONY: static-validation  ## vérifie le lint et la mise en forme sans modifier le code
-static-validation:
-	uv run ruff check src api tests docs
-	uv run ruff format --check src api tests docs
+.PHONY: static-validation  ## vérifie le code sans le modifier (Ruff, Bandit et Vulture, comme la CI)
+static-validation: lint
+	uv run ruff format --check $(PYTHON_DIRS)
+	uv run bandit -q -r src
+	uv run vulture src --min-confidence 80
 
 .PHONY: test  ## lance les tests Python
 test:
 	uv run python -m pytest
 
+.PHONY: coverage  ## lance les tests et mesure la couverture de src (rapport dans htmlcov/index.html)
+coverage:
+	uv run python -m pytest --cov=src --cov-report=term-missing --cov-report=html
+
 .PHONY: dependency-scan  ## analyse uv.lock avec Trivy (à installer séparément)
 dependency-scan:
 	trivy fs --config trivy.yaml .
 
-.PHONY: test-notebook  ## exécute une copie du notebook sans modifier les modèles
+.PHONY: test-notebook  ## exécute chaque notebook de notebook/ sur une copie isolée, sans modifier les modèles
 test-notebook:
-	tmp_dir=$$(mktemp -d)
-	trap 'rm -rf "$$tmp_dir"' EXIT
-	trap 'exit 130' INT
-	trap 'exit 143' TERM
-	mkdir -p "$$tmp_dir/notebook" "$$tmp_dir/models"
-	cp notebook/titanic.ipynb "$$tmp_dir/notebook/"
-	ln -s "$$PWD/input" "$$tmp_dir/input"
-	uv run jupyter nbconvert --to notebook --execute \
-		"$$tmp_dir/notebook/titanic.ipynb" \
-		--output executed --output-dir "$$tmp_dir"
+	uv run python scripts/run_notebook.py notebook
 
-.PHONY: test-tps  ## valide le notebook, les tests, le package et la documentation
-test-tps:
-	tmp_dir=$$(mktemp -d)
-	trap 'rm -rf "$$tmp_dir"' EXIT
-	trap 'exit 130' INT
-	trap 'exit 143' TERM
-	$(MAKE) test-notebook
-	$(MAKE) test
-	$(MAKE) distribution DIST_OUTPUT_DIR="$$tmp_dir/dist"
+.PHONY: test-tps  ## valide les notebooks, les tests, le package et la documentation
+test-tps: test-notebook test
+	tmp_dir=$$(mktemp -d) && trap 'rm -rf "$$tmp_dir"' EXIT && \
+	$(MAKE) distribution DIST_OUTPUT_DIR="$$tmp_dir/dist" && \
 	$(MAKE) sphinx SPHINX_OUTPUT_DIR="$$tmp_dir/html"
 
 .PHONY: sphinx  ## crée la documentation
@@ -68,3 +66,7 @@ sphinx:
 .PHONY: distribution  ## crée le package
 distribution:
 	uv build --out-dir "$(DIST_OUTPUT_DIR)"
+
+.PHONY: clean  ## supprime les fichiers générés (caches, build, doc) ; ne touche ni à .venv ni aux modèles
+clean:
+	rm -rf build dist docs/_build *.egg-info .pytest_cache .ruff_cache htmlcov .coverage */__pycache__ */*/__pycache__ */.ipynb_checkpoints

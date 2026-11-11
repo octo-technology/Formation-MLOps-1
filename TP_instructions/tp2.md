@@ -1,7 +1,7 @@
 summary: TP2 - Écrire des tests unitaires
 id: tp2
-categories: setup
-tags: setup
+categories: tp
+tags: tp
 status: Published
 authors: OCTO Technology
 Feedback Link: https://github.com/octo-technology/Formation-MLOps-1/issues/new/choose
@@ -16,7 +16,7 @@ Pour réaliser ce TP, allez sur la branche `2_start_unit_test` depuis la racine 
 
 ```shell
 git stash --include-untracked
-git checkout 2_start_unit_test
+git switch 2_start_unit_test
 uv sync --locked
 ```
 
@@ -25,6 +25,7 @@ Nouveautés sur cette branche :
 - Le notebook est propre et exécutable de bout en bout.
 - Quelques fonctions sont documentées.
 - Les fonctions sont extraites dans un fichier .py spécifique.
+- Nouvelles commandes : `make lint` et `make format` (Ruff), `make test-notebook` (exécute le notebook de bout en bout), `make clean`. La liste complète s'affiche avec `make help`.
 
 L'objectif de ce TP est d'écrire quelques tests unitaires.
 
@@ -36,8 +37,6 @@ Pour ajouter pytest comme dépendance de développement, utilisez :
 ```sh
 uv add pytest --dev
 ```
-
-Si pytest est déjà déclaré dans le groupe `dev` de `pyproject.toml`, la synchronisation de l'environnement l'a déjà installé.
 
 ## Écrire mon premier test unitaire
 
@@ -133,13 +132,73 @@ Depuis la racine du dépôt, exécutez les tests :
 uv run python -m pytest
 ```
 
-Vous pouvez aussi cliquer sur la flèche verte à côté du nom de la fonction dans PyCharm, en utilisant l'interpréteur de `.venv`.
+Vous pouvez aussi cliquer sur la flèche verte à côté du nom de la fonction dans PyCharm, ou utiliser le panneau Testing de VS Code (configurez pytest à la première ouverture), en utilisant l'interpréteur de `.venv`.
 
 ## Écrire d'autres tests
 
 Duration: 0:15:00
 
 Pour vous exercer, écrivez trois autres tests automatisés sur d'autres fonctions.
+
+## Mesurer la couverture de code
+
+Duration: 0:10:00
+
+La couverture de code indique la part des lignes de `src` exécutées par vos tests. Elle aide à repérer le code qui n'est pas testé.
+
+Installez `pytest-cov`, qui mesure la couverture pendant l'exécution de pytest (il s'appuie sur coverage.py) :
+
+```sh
+uv add pytest-cov --dev
+```
+
+Depuis la racine du dépôt, lancez les tests en mesurant la couverture :
+
+```sh
+uv run python -m pytest --cov=src --cov-report=term-missing --cov-report=html
+```
+
+Le terminal affiche le taux de couverture de chaque fichier et, dans la colonne `Missing`, les lignes qu'aucun test n'a exécutées. Le rapport HTML surligne ces lignes : ouvrez `htmlcov/index.html` dans votre navigateur.
+
+Choisissez une fonction mal couverte et ajoutez un test pour elle, puis relancez la mesure.
+
+Une couverture de 100 % ne garantit pas que le code fonctionne : elle indique seulement que chaque ligne a été exécutée par au moins un test, pas que le résultat a été vérifié. Servez-vous-en pour trouver le code oublié, pas comme un objectif en soi.
+
+Les fichiers générés (`.coverage` et `htmlcov/`) sont déjà ignorés par git.
+
+## Vérifier automatiquement avant chaque commit
+
+Duration: 0:10:00
+
+Les tests n'ont de valeur que s'ils sont lancés. Un hook git `pre-commit` est un script exécuté automatiquement par git avant chaque commit : si le script échoue, le commit est refusé.
+
+1. Créez un fichier `.githooks/pre-commit` à la racine du dépôt :
+
+```bash
+#!/bin/bash
+# Hook git exécuté avant chaque commit : le commit est refusé si une vérification échoue.
+set -e
+
+echo "Vérification statique (Ruff)"
+uv run ruff check src
+uv run ruff format --check src
+
+echo "Tests unitaires..."
+uv run python -m pytest
+
+echo "✅ Toutes les vérifications sont passées, commit autorisé."
+```
+
+2. Rendez-le exécutable, puis indiquez à git d'utiliser ce dossier de hooks :
+
+```sh
+chmod +x .githooks/pre-commit
+git config core.hooksPath .githooks
+```
+
+Le dossier `.githooks/` est versionné : toute l'équipe partage le même hook, contrairement au dossier `.git/hooks/`, qui reste local.
+
+3. Vérifiez que le hook fonctionne : introduisez volontairement une erreur dans un test, puis essayez de commiter. Le commit doit être refusé. Corrigez l'erreur, et le commit passe.
 
 ## Lien vers le TP suivant
 

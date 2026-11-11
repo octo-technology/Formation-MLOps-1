@@ -1,18 +1,21 @@
 import pickle
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 from fastapi import FastAPI
-from sklearn.ensemble._forest import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier
 
 from src.feature_engineering import Preprocessor
 
 app = FastAPI()
 
-with open("./models/model_rf.pkl", "rb") as file_in:
+MODELS_DIR = Path(__file__).resolve().parent.parent / "models"
+
+with open(MODELS_DIR / "model_rf.pkl", "rb") as file_in:
     model: RandomForestClassifier = pickle.load(file_in)
 
-with open("./models/preprocessor.pkl", "rb") as file_in:
+with open(MODELS_DIR / "preprocessor.pkl", "rb") as file_in:
     preprocessor: Preprocessor = pickle.load(file_in)
 
 

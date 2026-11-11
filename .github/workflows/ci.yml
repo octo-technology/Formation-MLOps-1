@@ -24,9 +24,9 @@ jobs:
       - name: Install dependencies
         run: uv sync --locked
       - name: Run Linter
-        run: uv run ruff check src api tests docs
+        run: uv run ruff check src api tests docs scripts
       - name: Check formatting
-        run: uv run ruff format --check src api tests docs
+        run: uv run ruff format --check src api tests docs scripts
       - name: Scan dependencies with Trivy
         uses: aquasecurity/trivy-action@v0.36.0
         with:

@@ -1,12 +1,12 @@
-summary: TP3 - Ajouter de la documentation avec Sphinx
+summary: TP3 - Documenter avec Sphinx
 id: tp3
-categories: setup
-tags: setup
+categories: tp
+tags: tp
 status: Published
 authors: OCTO Technology
 Feedback Link: https://github.com/octo-technology/Formation-MLOps-1/issues/new/choose
 
-# TP3 - Ajouter de la documentation avec Sphinx
+# TP3 - Documenter avec Sphinx
 
 ## Vue d'ensemble
 
@@ -16,12 +16,14 @@ Pour réaliser ce TP, allez sur la branche `3_start_sphinx_doc` depuis la racine
 
 ```shell
 git stash --include-untracked
-git checkout 3_start_sphinx_doc
+git switch 3_start_sphinx_doc
 uv sync --locked
 ```
 
-Nouveauté sur cette branche :
+Nouveautés sur cette branche :
 - Des tests unitaires ont été rédigés.
+- Le hook `.githooks/pre-commit` est en place. Si vous avez recloné le dépôt, réactivez-le avec `git config core.hooksPath .githooks`.
+- Nouvelles commandes : `make test` (pytest), `make coverage` (tests avec mesure de la couverture, rapport dans `htmlcov/index.html`) et `make install-hooks` (active le hook).
 
 L'objectif de ce TP est de créer une documentation HTML avec Sphinx à partir des docstrings.
 
@@ -29,13 +31,10 @@ L'objectif de ce TP est de créer une documentation HTML avec Sphinx à partir d
 
 Duration: 0:15:00
 
-1. Vérifiez que les dépendances de développement sont installées : `uv sync --locked`.
-2. Créez un dossier pour héberger la documentation : `mkdir ./docs`.
-3. Allez dans ce dossier : `cd docs`.
-4. Lancez l'assistant de Sphinx : `uv run sphinx-quickstart`.
-5. Avec le formateur, complétez la configuration. Pour suivre les chemins ci-dessous, ne séparez pas les dossiers source et build.
-6. Dans `conf.py`, ajoutez `sphinx.ext.autodoc` et `sphinx.ext.napoleon` à la liste `extensions`. Napoleon permet de traiter les docstrings au format Google utilisées dans le projet.
-7. Rendez le code importable par Sphinx en ajoutant la racine du dépôt au début de `conf.py` :
+1. Depuis la racine du dépôt, lancez l'assistant de Sphinx, qui crée le dossier `docs` : `uv run sphinx-quickstart docs`.
+2. Avec le formateur, complétez la configuration. Pour suivre les chemins ci-dessous, ne séparez pas les dossiers source et build.
+3. Dans `docs/conf.py`, ajoutez `sphinx.ext.autodoc` et `sphinx.ext.napoleon` à la liste `extensions`. Napoleon permet de traiter les docstrings au format Google utilisées dans le projet.
+4. Rendez le code importable par Sphinx en ajoutant la racine du dépôt au début de `docs/conf.py` :
 
 ```python
 import sys
@@ -44,10 +43,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 ```
 
-Revenez à la racine du dépôt, puis générez les pages de référence des modules :
+Générez ensuite les pages de référence des modules :
 
 ```sh
-cd ..
 uv run sphinx-apidoc -o docs/api src
 ```
 
