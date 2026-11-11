@@ -6,11 +6,12 @@ import pandas as pd
 
 # Preprocessing class template
 
+
 class Preprocessor:
     """General class used for preprocessing."""
 
     # Values you want to store when fitting data.
-    # You will be abble to acces and modify them in your methods by calling "self.your_variable".
+    # You will be able to access and modify them in your methods by calling "self.your_variable".
     # In this example the age_mean and grouped_age_means will be updated in the fit function and used in
     # the impute_age() method.
 
@@ -21,9 +22,13 @@ class Preprocessor:
     # What we used to pass to our functions as argument, such as dummy_columns must be set during the instantiation.
     # Eventually we will only call "my_instance = Preprocessor(dummy_columns, drop_columns)" and
     # "my_instance.fit_transform(train)" or "my_instance.transform(test)"
-    def __init__(self, dummy_columns: list[str], drop_columns: list[str]):
+    def __init__(
+        self,
+        dummy_columns: list[str] | None = None,
+        drop_columns: list[str] | None = None,
+    ):
         """
-        Instanciate preprocessor instances.
+        Instantiate preprocessor instances.
 
         Args:
             drop_columns: The columns to be dropped.
@@ -32,15 +37,14 @@ class Preprocessor:
         """
 
         # We store these values as class arguments.
-        self.dummy_columns = dummy_columns
-        self.drop_columns = drop_columns
+        self.dummy_columns = dummy_columns if dummy_columns is not None else []
+        self.drop_columns = drop_columns if drop_columns is not None else []
 
-    # We can copy our functions we need to midify two things:
+    # We can copy our functions, we need to modify two things:
     # First add self to the arguments, this refers to the instance of the class.
     # Remove the others arguments we computed along the execution, they should be stored as class parameters and used
     # as presented in "_get_mean_age_if_exist()".
-    def process_name(self, df: pd.DataFrame) -> pd.DataFrame:
-        ...
+    def process_name(self, df: pd.DataFrame) -> pd.DataFrame: ...
 
     def _get_mean_age_if_exist(self, name_title: str, p_class: int):
         """
@@ -65,11 +69,12 @@ class Preprocessor:
 
         """
         df_new = df.copy()
-        df_new['Age_Null_Flag'] = df_new['Age'].isnull().apply(int)
-        df_new.loc[df_new['Age'].isnull(), "Age"] = df_new.loc[df_new['Age'].isnull()].apply(
-            lambda x: self._get_mean_age_if_exist(x["Name_Title"], x["Pclass"]),
-            axis=1
-        ).copy()
+        df_new["Age_Null_Flag"] = df_new["Age"].isnull().apply(int)
+        df_new.loc[df_new["Age"].isnull(), "Age"] = (
+            df_new.loc[df_new["Age"].isnull()]
+            .apply(lambda x: self._get_mean_age_if_exist(x["Name_Title"], x["Pclass"]), axis=1)
+            .copy()
+        )
         return df_new
 
     # Finally we add a fit_transform() and transform() function to fit our class and apply it on our data.
@@ -88,7 +93,7 @@ class Preprocessor:
 
         # Our instance arguments are updated here and can then be used by the function "_get_mean_age_if_exist()".
         self.age_mean = df_new["Age"].mean()
-        self.grouped_age_means = df_new.groupby(['Name_Title', 'Pclass'])['Age'].mean()
+        self.grouped_age_means = df_new.groupby(["Name_Title", "Pclass"])["Age"].mean()
 
         df_new = self.impute_age(df=df_new)
 
@@ -115,6 +120,7 @@ class Preprocessor:
 
         return df_new
 
+
 ##############################
 
 
@@ -129,12 +135,16 @@ def process_name(df: pd.DataFrame) -> pd.DataFrame:
 
     """
     df_new = df.copy()
-    df_new['Name_Len'] = df_new['Name'].apply(len)
-    df_new['Name_Title'] = df_new['Name'].apply(lambda x: x.split(',')[1]).apply(lambda x: x.split()[0])
+    df_new["Name_Len"] = df_new["Name"].apply(len)
+    df_new["Name_Title"] = (
+        df_new["Name"].apply(lambda x: x.split(",")[1]).apply(lambda x: x.split()[0])
+    )
     return df_new
 
 
-def _get_mean_age_if_exist(name_title: str, p_class: int, age_mean: float, grouped_age_means: pd.Series):
+def _get_mean_age_if_exist(
+    name_title: str, p_class: int, age_mean: float, grouped_age_means: pd.Series
+):
     """
     Given a title and class returns train set mean age if known, else global train set mean age.
 
@@ -162,11 +172,17 @@ def impute_age(df: pd.DataFrame, age_mean: float, grouped_age_means: pd.Series) 
 
     """
     df_new = df.copy()
-    df_new['Age_Null_Flag'] = df_new['Age'].isnull().apply(int)
-    df_new.loc[df_new['Age'].isnull(), "Age"] = df_new.loc[df_new['Age'].isnull()].apply(
-        lambda x: _get_mean_age_if_exist(x["Name_Title"], x["Pclass"], age_mean, grouped_age_means),
-        axis=1
-    ).copy()
+    df_new["Age_Null_Flag"] = df_new["Age"].isnull().apply(int)
+    df_new.loc[df_new["Age"].isnull(), "Age"] = (
+        df_new.loc[df_new["Age"].isnull()]
+        .apply(
+            lambda x: _get_mean_age_if_exist(
+                x["Name_Title"], x["Pclass"], age_mean, grouped_age_means
+            ),
+            axis=1,
+        )
+        .copy()
+    )
     return df_new
 
 
@@ -180,12 +196,10 @@ def size_family(df: pd.DataFrame) -> pd.DataFrame:
 
     """
     df_new = df.copy()
-    df_new['Family_Size'] = np.where(
-        (df_new['SibSp'] + df_new['Parch']) == 0, 'Solo',
-        np.where(
-            (df_new['SibSp'] + df_new['Parch']) <= 3, 'Nuclear',
-            'Big'
-        )
+    df_new["Family_Size"] = np.where(
+        (df_new["SibSp"] + df_new["Parch"]) == 0,
+        "Solo",
+        np.where((df_new["SibSp"] + df_new["Parch"]) <= 3, "Nuclear", "Big"),
     )
     return df_new
 
@@ -200,7 +214,7 @@ def fill_fare_na(df: pd.DataFrame, fare_mean: float) -> pd.DataFrame:
 
     """
     df_new = df.copy()
-    df_new['Fare'] = df_new['Fare'].fillna(fare_mean)
+    df_new["Fare"] = df_new["Fare"].fillna(fare_mean)
     return df_new
 
 
@@ -215,20 +229,18 @@ def group_ticket(df: pd.DataFrame) -> pd.DataFrame:
         df: The train or test set
 
     """
-    letter_group_1 = ['1', '2', '3', 'S', 'P', 'C', 'A']
-    letter_group_2 = ['W', '4', '7', '6', 'L', '5', '8']
+    letter_group_1 = ["1", "2", "3", "S", "P", "C", "A"]
+    letter_group_2 = ["W", "4", "7", "6", "L", "5", "8"]
 
     df_new = df.copy()
-    df_new['Ticket_Letter'] = df_new['Ticket'].apply(lambda x: str(x)[0])
-    df_new['Ticket_Letter'] = df_new['Ticket_Letter'].apply(str)
-    df_new['Ticket_Category'] = np.where(
-                                (df_new['Ticket_Letter']).isin(letter_group_1), df_new['Ticket_Letter'],
-                                np.where(
-                                    (df_new['Ticket_Letter']).isin(letter_group_2), 'Low_ticket',
-                                    'Other_ticket'
-                                )
-                            )
-    df_new['Ticket_Length'] = df_new['Ticket'].apply(len)
+    df_new["Ticket_Letter"] = df_new["Ticket"].apply(lambda x: str(x)[0])
+    df_new["Ticket_Letter"] = df_new["Ticket_Letter"].apply(str)
+    df_new["Ticket_Category"] = np.where(
+        (df_new["Ticket_Letter"]).isin(letter_group_1),
+        df_new["Ticket_Letter"],
+        np.where((df_new["Ticket_Letter"]).isin(letter_group_2), "Low_ticket", "Other_ticket"),
+    )
+    df_new["Ticket_Length"] = df_new["Ticket"].apply(len)
     return df_new
 
 
@@ -241,7 +253,7 @@ def get_cabin_first_letter(df: pd.DataFrame) -> pd.DataFrame:
 
     """
     df_new = df.copy()
-    df_new['Cabin_Letter'] = df_new['Cabin'].apply(lambda x: str(x)[0])
+    df_new["Cabin_Letter"] = df_new["Cabin"].apply(lambda x: str(x)[0])
     return df_new
 
 
@@ -254,8 +266,8 @@ def get_cabin_number(df: pd.DataFrame) -> pd.DataFrame:
 
     """
     df_new = df.copy()
-    df_new['Cabin_Number'] = df_new['Cabin'].apply(lambda x: str(x).split(' ')[-1][1:])
-    df_new['Cabin_Number'] = pd.to_numeric(df_new['Cabin_Number'], errors='coerce')
+    df_new["Cabin_Number"] = df_new["Cabin"].apply(lambda x: str(x).split(" ")[-1][1:])
+    df_new["Cabin_Number"] = pd.to_numeric(df_new["Cabin_Number"], errors="coerce")
     return df_new
 
 
@@ -273,16 +285,18 @@ def get_dummy_cabin_number(df: pd.DataFrame, cabin_number_bins: np.ndarray) -> p
 
     df_new.loc[:, dummies_cols] = False
 
-    concerned_index = df_new['Cabin_Number'].dropna().index
+    concerned_index = df_new["Cabin_Number"].dropna().index
 
     if df_new.loc[~df_new["Cabin_Number"].isna()].shape[0] > 0:
         categories = pd.cut(
-            df_new.loc[concerned_index, 'Cabin_Number'],
+            df_new.loc[concerned_index, "Cabin_Number"],
             bins=cabin_number_bins,
             labels=False,
-            include_lowest=True
+            include_lowest=True,
         )
-        df_new.loc[concerned_index, dummies_cols] = pd.get_dummies(categories, prefix="Cabin_Number")
+        df_new.loc[concerned_index, dummies_cols] = pd.get_dummies(
+            categories, prefix="Cabin_Number"
+        )
 
     return df_new
 
@@ -297,11 +311,13 @@ def impute_embarked(df: pd.DataFrame) -> pd.DataFrame:
 
     """
     df_new = df.copy()
-    df_new['Embarked'] = df_new['Embarked'].fillna('S')
+    df_new["Embarked"] = df_new["Embarked"].fillna("S")
     return df_new
 
 
-def dummy_cols(df: pd.DataFrame, dummy_columns: list[str], dummy_columns_values: list[str]) -> pd.DataFrame:
+def dummy_cols(
+    df: pd.DataFrame, dummy_columns: list[str], dummy_columns_values: list[str]
+) -> pd.DataFrame:
     """
     Converts our categorical columns into dummy variables, and then drops the
     original categorical columns. It also makes sure that each category is
@@ -321,7 +337,7 @@ def dummy_cols(df: pd.DataFrame, dummy_columns: list[str], dummy_columns_values:
 
     # Create dummy variables
     dummies = pd.get_dummies(
-        df_new[dummy_columns], columns=dummy_columns, prefix=dummy_columns, dtype='uint8'
+        df_new[dummy_columns], columns=dummy_columns, prefix=dummy_columns, dtype="uint8"
     )
 
     # Keep only the expected columns
@@ -334,7 +350,7 @@ def dummy_cols(df: pd.DataFrame, dummy_columns: list[str], dummy_columns_values:
 
     # Add dummy columns to the dataframe
     for col in dummy_columns_values:
-        df_new[col] = dummies[col].astype('uint8')
+        df_new[col] = dummies[col].astype("uint8")
 
     # Drop original categorical columns
     return df_new.drop(dummy_columns, axis=1)
@@ -349,11 +365,12 @@ def drop_cols(df: pd.DataFrame, drop_columns: list[str]) -> pd.DataFrame:
         drop_columns: The columns to be dropped.
 
     """
-    return df.copy().drop(columns=drop_columns, errors='ignore')
+    return df.copy().drop(columns=drop_columns, errors="ignore")
 
 
-def process_data(train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list, drop_columns: list) -> tuple[
-        pd.DataFrame, pd.DataFrame]:
+def process_data(
+    train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list, drop_columns: list
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
     Apply all neccessary transformations to clean train and test data
 
@@ -376,9 +393,9 @@ def process_data(train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list, d
 
     # Compute mean values from train
     age_mean = train_processed["Age"].mean()
-    grouped_age_means = train_processed.groupby(['Name_Title', 'Pclass'])['Age'].mean()
+    grouped_age_means = train_processed.groupby(["Name_Title", "Pclass"])["Age"].mean()
 
-    fare_mean = train_processed['Fare'].mean()
+    fare_mean = train_processed["Fare"].mean()
 
     train_processed = impute_age(train_processed, age_mean, grouped_age_means)
     test_processed = impute_age(test_processed, age_mean, grouped_age_means)
@@ -399,7 +416,7 @@ def process_data(train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list, d
     test_processed = get_cabin_number(test_processed)
 
     # Compute cabin number bins from train
-    _, cabin_number_bins = pd.qcut(train_processed['Cabin_Number'], 3, retbins=True, labels=False)
+    _, cabin_number_bins = pd.qcut(train_processed["Cabin_Number"], 3, retbins=True, labels=False)
 
     train_processed = get_dummy_cabin_number(train_processed, cabin_number_bins)
     test_processed = get_dummy_cabin_number(test_processed, cabin_number_bins)
@@ -412,9 +429,7 @@ def process_data(train: pd.DataFrame, test: pd.DataFrame, dummy_columns: list, d
 
     # Compute dummy column values from train
     dummy_columns_values = pd.get_dummies(
-        test_processed[dummy_columns].astype(str),
-        prefix=dummy_columns,
-        dtype='uint8'
+        test_processed[dummy_columns].astype(str), prefix=dummy_columns, dtype="uint8"
     ).columns.tolist()
 
     train_processed = dummy_cols(train_processed, dummy_columns, dummy_columns_values)

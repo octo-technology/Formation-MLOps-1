@@ -1,11 +1,10 @@
 import pickle
 from pathlib import Path
-from typing import Optional
 
 import numpy as np
 import pandas as pd
 from fastapi import FastAPI
-from sklearn.ensemble._forest import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier
 
 from src.feature_engineering import Preprocessor
 
@@ -18,6 +17,7 @@ with open(MODELS_DIR / "model_rf.pkl", "rb") as file_in:
 
 with open(MODELS_DIR / "preprocessor.pkl", "rb") as file_in:
     preprocessor: Preprocessor = pickle.load(file_in)
+
 
 column_dtypes = {
     "PassengerId": "int64",
@@ -51,14 +51,15 @@ async def predict(
     pclass: int,
     name: str,
     sex: str,
-    age: Optional[float] = None,
-    sib_sp: Optional[int] = None,
-    parch: Optional[int] = None,
-    ticket: Optional[str] = None,
-    fare: Optional[float] = None,
-    cabin: Optional[str] = None,
-    embarked: Optional[str] = None,
+    age: float | None = None,
+    sib_sp: int | None = None,
+    parch: int | None = None,
+    ticket: str | None = None,
+    fare: float | None = None,
+    cabin: str | None = None,
+    embarked: str | None = None,
 ):
+
     input = pd.DataFrame(
         {
             "PassengerId": [1],
@@ -80,6 +81,4 @@ async def predict(
     processed_input: pd.DataFrame = preprocessor.transform(input)
     input_proba: np.ndarray = model.predict_proba(processed_input)
 
-    return {
-        "input_proba": (round(input_proba[0, 0], 10), round(input_proba[0, 1], 10))
-    }
+    return {"input_proba": (round(input_proba[0, 0], 10), round(input_proba[0, 1], 10))}

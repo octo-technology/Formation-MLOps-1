@@ -1,14 +1,26 @@
-# Select the desired python image
+# Image de base : Python, dans une version compatible avec pyproject.toml
 FROM ...
 
-# Copy the required files
+# Installer uv 0.13.5 (binaires de l'image officielle ghcr.io/astral-sh/uv)
 COPY ...
 
-# Install your environment using pip - here your package
+WORKDIR /app
+
+# Placer l'environnement .venv en tête du PATH, pour lancer Uvicorn depuis cet environnement
+ENV ...
+
+# Copier les fichiers qui décrivent les dépendances, puis les installer sans les dépendances de développement
+COPY ...
 RUN ...
 
-# Expose a port to the api reachable
-EXPOSE 80:80
+# Copier le package src, puis installer le projet
+COPY ...
+RUN ...
 
-# Execute your API
-CMD ["uv", "run", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "80"]
+# Copier les modèles entraînés et l'API
+COPY ...
+COPY ...
+
+EXPOSE 80
+
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "80"]
