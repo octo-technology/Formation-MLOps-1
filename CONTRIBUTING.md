@@ -165,4 +165,3 @@ Avant de remettre en cause un choix existant, lis l'ADR correspondant. Pour chan
 Le suivi des tâches passe par les `issues` GitHub. En cas de doute, ou pour obtenir des droits d'accès, contacte un référent :
 
 - [toul@octo.com](https://askbob.octo.com/users/toul)
-<!-- TODO : compléter la liste des référents actuels (mho@octo.com, référent en 2020, est-il toujours actif ?) -->
