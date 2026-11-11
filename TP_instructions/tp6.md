@@ -44,18 +44,19 @@ Un début d'implémentation est proposé dans `src/feature_engineering.py`. Comp
 
 Dans le notebook d'entraînement, importez `Preprocessor` depuis `src.feature_engineering`, instanciez-le sous le nom `preprocessor`, puis entraînez le modèle sous le nom `model`.
 
-Avec `pickle`, sauvegardez les deux objets. Les chemins suivants supposent que le répertoire de travail du notebook est `notebook/` :
+Avec `pickle`, sauvegardez les deux objets. Le notebook s'exécute depuis le dossier `notebook/` : le dossier `models` se trouve donc dans son dossier parent.
 
 ```python
 import pickle
 from pathlib import Path
 
-Path("../models").mkdir(exist_ok=True)
+MODELS_DIR = Path.cwd().parent / "models"
+MODELS_DIR.mkdir(exist_ok=True)
 
-with open("../models/model_rf.pkl", "wb") as file_out:
+with open(MODELS_DIR / "model_rf.pkl", "wb") as file_out:
     pickle.dump(model, file_out)
 
-with open("../models/preprocessor.pkl", "wb") as file_out:
+with open(MODELS_DIR / "preprocessor.pkl", "wb") as file_out:
     pickle.dump(preprocessor, file_out)
 ```
 
@@ -69,16 +70,19 @@ Chargez les objets entraînés :
 
 ```python
 import pickle
+from pathlib import Path
 
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 
 from src.feature_engineering import Preprocessor
 
-with open("../models/model_rf.pkl", "rb") as file_in:
+MODELS_DIR = Path.cwd().parent / "models"
+
+with open(MODELS_DIR / "model_rf.pkl", "rb") as file_in:
     model: RandomForestClassifier = pickle.load(file_in)
 
-with open("../models/preprocessor.pkl", "rb") as file_in:
+with open(MODELS_DIR / "preprocessor.pkl", "rb") as file_in:
     preprocessor: Preprocessor = pickle.load(file_in)
 ```
 
@@ -109,6 +113,48 @@ uv run uvicorn api.main:app
 Puis, dans votre navigateur, consultez l'URL : `http://127.0.0.1:8000/predict/3/Braund,%20Mr.%20Owen%20Harris/male/?age=23`.
 
 La route reçoit la classe du passager, son nom et son sexe dans le chemin. L'âge est un paramètre de requête. Explorez `api/main.py` et la [documentation interactive](http://127.0.0.1:8000/docs) pour découvrir les autres paramètres.
+
+## Tester l'API (Lecture)
+
+Duration: 0:10:00
+
+Voici comment tester l'API, au format « Given / When / Then » vu au TP2.
+
+FastAPI fournit un client de test, `TestClient`, qui appelle l'API sans lancer de serveur. À l'import de `api.main`, l'API charge les objets entraînés : ils doivent avoir été sauvegardés.
+
+- `Then` : la réponse réussit (code HTTP 200) et contient deux probabilités dont la somme vaut 1. Les valeurs exactes dépendent du modèle entraîné : le test ne vérifie pas leur valeur.
+- `When` : un appel `GET` sur la route de prédiction avec `client.get(test_url)`.
+- `Given` : le client de test et l'URL d'un passager, celle utilisée plus haut.
+
+Copiez ce test dans `tests/test_api.py` :
+
+```python
+import pytest
+from fastapi.testclient import TestClient
+
+from api.main import app
+
+
+def test_predict_should_return_probabilities():
+    # Given
+    client = TestClient(app)
+    test_url = "/predict/3/Braund,%20Mr.%20Owen%20Harris/male/?age=23"
+
+    # When
+    response = client.get(test_url)
+
+    # Then
+    assert response.status_code == 200
+    probabilities = response.json()["input_proba"]
+    assert len(probabilities) == 2
+    assert sum(probabilities) == pytest.approx(1)
+```
+
+Depuis la racine du dépôt, lancez les tests :
+
+```sh
+uv run python -m pytest
+```
 
 ## Conteneuriser le tout
 

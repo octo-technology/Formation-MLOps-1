@@ -33,7 +33,7 @@ Le fichier `pyproject.toml` contient déjà les métadonnées du projet et ses d
 
 ```toml
 [build-system]
-requires = ["setuptools>=77.0.3"]
+requires = ["setuptools>=84.2.1"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
@@ -53,7 +53,7 @@ uv build
 
 Vous pouvez constater le résultat dans le dossier `dist`, notamment `formation_mlops_1-0.1.0-py3-none-any.whl`.
 
-Dans les notebooks, remplacez désormais les imports directs de `feature_engineering` et les modifications de `sys.path` par des imports depuis le package installé, par exemple `from src.feature_engineering import process_name`.
+Dans les notebooks, supprimez désormais les `sys.path.append` : l'import `from src.feature_engineering import process_name` fonctionne grâce au package installé.
 
 ## Installer le package dans un autre projet
 

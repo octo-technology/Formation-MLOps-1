@@ -37,8 +37,6 @@ Pour ajouter pytest comme dépendance de développement, utilisez :
 uv add pytest --dev
 ```
 
-Si pytest est déjà déclaré dans le groupe `dev` de `pyproject.toml`, la synchronisation de l'environnement l'a déjà installé.
-
 ## Écrire mon premier test unitaire
 
 Duration: 0:10:00
@@ -133,7 +131,7 @@ Depuis la racine du dépôt, exécutez les tests :
 uv run python -m pytest
 ```
 
-Vous pouvez aussi cliquer sur la flèche verte à côté du nom de la fonction dans PyCharm, en utilisant l'interpréteur de `.venv`.
+Vous pouvez aussi cliquer sur la flèche verte à côté du nom de la fonction dans PyCharm, ou utiliser le panneau Testing de VS Code (configurez pytest à la première ouverture), en utilisant l'interpréteur de `.venv`.
 
 ## Écrire d'autres tests
 

@@ -22,19 +22,23 @@ uv sync --locked
 Dans le projet, vous trouverez :
 
 ```text
-    .
-    └── Formation-MLOps-1
-        ├── input
-        | ├── test.csv
-        | ├── train.csv
-        ├── notebook
-        | ├── titanic.ipynb
-        ├── pyproject.toml
-        ├── uv.lock
-        └── README.md
+Formation-MLOps-1
+├── input
+│   ├── test.csv
+│   └── train.csv
+├── models
+├── notebook
+│   └── titanic.ipynb
+├── LICENSE
+├── Makefile
+├── pyproject.toml
+├── README.md
+└── uv.lock
 ```
 
 Voici l'état d'un prototype de science des données construit par l'un de vos collègues.
+
+Ouvrez `notebook/titanic.ipynb` dans JupyterLab (`uv run jupyter lab`), VS Code ou PyCharm, avec l'interpréteur `.venv` configuré au TP0.
 
 ## Nettoyer le notebook
 
@@ -87,16 +91,16 @@ Pour ce faire :
 - Créez un fichier `feature_engineering.py` dans ce dossier.
 - Déplacez le code de vos fonctions du notebook vers le fichier `.py`.
 - Assurez-vous d'avoir tous les `import` nécessaires.
-- Pour utiliser les fonctions dans le notebook, ajoutez :
+- Pour utiliser les fonctions dans le notebook, ajoutez en haut du notebook :
 
 ```python
 import sys
 
-sys.path.append("../src/")
-from feature_engineering import process_name
+sys.path.append("..")
+from src.feature_engineering import process_name
 ```
 
-Cet exemple suppose que le répertoire de travail du notebook est `notebook/`. Importez explicitement les autres fonctions dont vous avez besoin. Nous passerons à l'import `src.feature_engineering` lors du packaging pour disposer d'un nom de module commun au notebook, aux tests et à l'API.
+Le notebook s'exécute depuis le dossier `notebook/` : `sys.path.append("..")` rend la racine du dépôt importable, et donc le dossier `src`. Importez explicitement chaque fonction dont vous avez besoin. Au TP5, le packaging rendra `src` importable sans modifier `sys.path`.
 
 ### Vérifier et formater le code avec Ruff
 

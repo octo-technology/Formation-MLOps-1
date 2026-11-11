@@ -29,13 +29,10 @@ L'objectif de ce TP est de créer une documentation HTML avec Sphinx à partir d
 
 Duration: 0:15:00
 
-1. Vérifiez que les dépendances de développement sont installées : `uv sync --locked`.
-2. Créez un dossier pour héberger la documentation : `mkdir ./docs`.
-3. Allez dans ce dossier : `cd docs`.
-4. Lancez l'assistant de Sphinx : `uv run sphinx-quickstart`.
-5. Avec le formateur, complétez la configuration. Pour suivre les chemins ci-dessous, ne séparez pas les dossiers source et build.
-6. Dans `conf.py`, ajoutez `sphinx.ext.autodoc` et `sphinx.ext.napoleon` à la liste `extensions`. Napoleon permet de traiter les docstrings au format Google utilisées dans le projet.
-7. Rendez le code importable par Sphinx en ajoutant la racine du dépôt au début de `conf.py` :
+1. Depuis la racine du dépôt, lancez l'assistant de Sphinx, qui crée le dossier `docs` : `uv run sphinx-quickstart docs`.
+2. Avec le formateur, complétez la configuration. Pour suivre les chemins ci-dessous, ne séparez pas les dossiers source et build.
+3. Dans `docs/conf.py`, ajoutez `sphinx.ext.autodoc` et `sphinx.ext.napoleon` à la liste `extensions`. Napoleon permet de traiter les docstrings au format Google utilisées dans le projet.
+4. Rendez le code importable par Sphinx en ajoutant la racine du dépôt au début de `docs/conf.py` :
 
 ```python
 import sys
@@ -44,10 +41,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 ```
 
-Revenez à la racine du dépôt, puis générez les pages de référence des modules :
+Générez ensuite les pages de référence des modules :
 
 ```sh
-cd ..
 uv run sphinx-apidoc -o docs/api src
 ```
 

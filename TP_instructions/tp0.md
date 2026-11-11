@@ -34,24 +34,28 @@ Le clonage via SSH nécessite une clé associée à votre compte GitHub. Vous po
 git clone https://github.com/octo-technology/Formation-MLOps-1.git
 ```
 
-## Ouvrir PyCharm et le configurer
+
+## Ouvrir le projet dans votre éditeur
 
 Duration: 0:03:00
 
-Ouvrez le dossier du projet dans PyCharm.
+La formation peut se suivre avec PyCharm ou VS Code. Ouvrez le dossier du projet dans l'un des deux.
 
-Sous Windows, configurez le terminal de PyCharm pour utiliser Git Bash et suivre les commandes shell de cette formation :
+Avec VS Code, installez les extensions Python et Jupyter de Microsoft.
 
-- Allez dans Paramètres > Outils > Terminal.
-- Remplacez le chemin du shell par celui de Git Bash, généralement `"C:\Program Files\Git\bin\bash.exe" --login -i`.
-- Ouvrez un nouveau terminal.
-- Vérifiez l'installation avec `git --version`.
+Sous Windows, configurez le terminal de l'éditeur pour utiliser Git Bash et suivre les commandes shell de cette formation :
 
+- PyCharm : dans Paramètres > Outils > Terminal, remplacez le chemin du shell par celui de Git Bash, généralement `"C:\Program Files\Git\bin\bash.exe" --login -i`.
+- VS Code : ouvrez la palette de commandes (`Ctrl+Shift+P`), lancez « Terminal: Select Default Profile » et choisissez Git Bash.
+
+Ouvrez un nouveau terminal et vérifiez l'installation avec `git --version`.
 
 ## Créer un environnement avec uv
+
 Duration: 0:10:00
 
 ### Installer uv
+
 Source : [documentation d'installation de uv](https://docs.astral.sh/uv/getting-started/installation/).
 
 Sur Linux ou macOS :
@@ -69,24 +73,22 @@ Sous Windows, exécutez cette commande dans PowerShell :
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
 
-Après l'installation, ouvrez un nouveau terminal dans PyCharm et vérifiez que `uv --version` fonctionne.
+Après l'installation, ouvrez un nouveau terminal dans votre éditeur et vérifiez que `uv --version` fonctionne.
 
 ### Installer l'environnement et les dépendances
-Positionnez-vous à la racine du dépôt. Si votre terminal est encore dans son dossier parent :
-
-```sh
-cd Formation-MLOps-1
-```
 
 Le projet utilise Python 3.15 ou une version ultérieure. uv peut télécharger une version compatible si nécessaire.
 
-Créez l'environnement `.venv` et installez les dépendances déclarées dans `pyproject.toml`, aux versions de `uv.lock` :
+Depuis la racine du dépôt (`cd Formation-MLOps-1`), créez l'environnement `.venv` et installez les dépendances déclarées dans `pyproject.toml`, aux versions de `uv.lock` :
 
 ```sh
 uv sync --locked
 ```
 
-Dans PyCharm, sélectionnez l'interpréteur de ce nouvel environnement : `.venv/bin/python` sous Linux ou macOS, ou `.venv\Scripts\python.exe` sous Windows.
+Sélectionnez ensuite l'interpréteur de ce nouvel environnement, `.venv/bin/python` sous Linux ou macOS, ou `.venv\Scripts\python.exe` sous Windows :
+
+- PyCharm : dans Paramètres > Projet > Interpréteur Python, ajoutez un interpréteur existant.
+- VS Code : ouvrez la palette de commandes et lancez « Python: Select Interpreter ». Dans un notebook, choisissez le même environnement comme noyau (« Select Kernel »).
 
 Toutes les commandes Python de la formation seront lancées avec `uv run`, qui utilise cet environnement sans nécessiter son activation manuelle.
 
@@ -102,7 +104,7 @@ Depuis la racine du dépôt, lancez JupyterLab :
 uv run jupyter lab
 ```
 
-## Comment suivre ce TP
+## Comment suivre ces TP
 
 Duration: 0:03:00
 
