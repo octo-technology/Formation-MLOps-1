@@ -1,7 +1,7 @@
 [project]
 name = "Formation-MLOps-1"
 version = "0.1.0"
-description = "Travaux pratiques d'industrialisation de la science des données"
+description = "TP formation MLOps 1 OCTO Technology"
 readme = "README.md"
 requires-python = ">=3.15"
 dependencies = [
