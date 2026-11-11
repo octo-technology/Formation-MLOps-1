@@ -1,6 +1,6 @@
 # Formation MLOps 1 : Industrialisation de la Data Science
 
-Cette formation utilise Python 3.15 ou une version ultérieure, uv 0.13.5 pour gérer l'environnement et Ruff pour vérifier et formater le code.
+Cette formation utilise Python 3.15 (fixé dans `.python-version`), uv 0.13.5 pour gérer l'environnement et Ruff pour vérifier et formater le code.
 
 Après avoir installé [uv](https://docs.astral.sh/uv/getting-started/installation/), exécutez les commandes suivantes depuis la racine du dépôt :
 
