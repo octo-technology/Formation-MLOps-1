@@ -116,11 +116,12 @@ Il n'y a pas de fichier de changelog : l'historique git, écrit avec les convent
 
 1. Modifie `dev` (PR vers `dev`).
 2. Reporte le changement à la main dans chaque branche concernée, un commit par branche, par-dessus l'historique (jamais de force-push).
-3. Sur chaque branche touchée, lance `make tpN-validation` (branches 1 à 6, aussi lancé par la CI) ou `make test-tps` (`final_state`).
+3. Sur chaque branche touchée, lance `make tpN-validation` (branches 1 à 6) ou `make test-tps` (`final_state`).
 
 Règles des branches de TP :
 
 - Le `Makefile` est cumulatif : chaque branche ajoute les cibles des commandes apprises au TP précédent.
+- `make tpN-validation` vérifie l'état de départ du TP. Il tourne à chaque push dans `.github/workflows/tp-validation.yml`, uniquement sur ce dépôt (pas sur les forks des apprenants). `ci.yml` reste la CI de l'apprenant : sa solution du TP4 à partir de la branche 5.
 - Le hook `.githooks/pre-commit` (à partir de la branche 3) est celui écrit au TP2.
 - Les notebooks sont commités sans sorties, sauf le brouillon du TP1 (mauvaise pratique volontaire).
 - Jamais de fichiers réservés aux formateurs : `TP_instructions/`, `docs/adr/`, `CONTRIBUTING.md`, `.github/workflows/static.yml`.

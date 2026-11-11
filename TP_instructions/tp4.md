@@ -45,6 +45,8 @@ Vous pouvez aussi créer un fork du dépôt en incluant toutes les branches, pui
 
 Dans l'interface GitHub, ouvrez l'onglet « Actions ». Après un push, vous devriez y trouver une exécution de la CI en échec.
 
+L'onglet affiche aussi le workflow `TP starting state` (`.github/workflows/tp-validation.yml`). Il vérifie l'état de départ de la branche pour les formateurs et ne s'exécute pas sur votre dépôt : ne le modifiez pas.
+
 ![CI en échec](./images/failed_ci_github.png)
 
 ## Corriger le fichier de CI
