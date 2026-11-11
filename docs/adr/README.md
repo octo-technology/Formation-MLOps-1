@@ -14,3 +14,4 @@ Les contributeurs changent souvent : avant de remettre en cause un choix, lisez 
 | # | Décision | Statut |
 |---|---|---|
 | [0001](0001-scripts-pour-la-logique-du-makefile.md) | Le Makefile délègue toute logique sur plusieurs lignes à des scripts | Accepté |
+| [0002](0002-package-construit-avec-uv-build.md) | Le package est construit avec uv_build | Accepté |

@@ -28,6 +28,16 @@ Nouveautés sur cette branche :
 
 L'objectif de ce TP est de créer une CI qui valide automatiquement notre code.
 
+## Échauffement Git (facultatif)
+
+Duration: 0:15:00
+
+Dans ce TP, vous allez pousser votre code sur GitHub : branches, commits et dépôt distant. Pour revoir ces notions avant de commencer, entraînez-vous sur [Learn Git Branching](https://learngitbranching.js.org/), un tutoriel interactif qui dessine l'historique du dépôt à chaque commande.
+
+Faites 4 exercices au choix, par exemple les premiers niveaux de la séquence d'introduction (commit, branche, merge, rebase), puis ceux sur les dépôts distants (clone, fetch, pull, push), proches de ce que vous ferez ensuite.
+
+Si vous êtes déjà à l'aise avec Git, passez directement à l'étape suivante.
+
 ## Créer un compte GitHub
 
 Duration: 0:10:00
