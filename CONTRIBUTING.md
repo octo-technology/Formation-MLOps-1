@@ -1,21 +1,48 @@
 # CONTRIBUTING
 
-Quelques règles pour contribuer à ce repo de formation.
+Quelques règles pour donner la formation et contribuer à ce repo.
 
 Les contributeurs changent souvent et il n'y a pas de passation : tout ce qu'il faut savoir doit être écrit ici, dans le `README.md`, ou dans les décisions d'architecture de [`docs/adr/`](docs/adr/README.md).
 
 - [CONTRIBUTING](#contributing)
-  - [:wrench: Pré-requis](#wrench-pré-requis)
+  - [:mortar_board: Je donne la formation](#mortar_board-je-donne-la-formation)
   - [:evergreen_tree: Organisation des branches](#evergreen_tree-organisation-des-branches)
+  - [:card_index_dividers: Où modifier quoi](#card_index_dividers-où-modifier-quoi)
+  - [:wrench: Pré-requis](#wrench-pré-requis)
   - [:speech_balloon: Proposer des améliorations](#speech_balloon-proposer-des-améliorations)
   - [:raising_hand: Prendre une tâche](#raising_hand-prendre-une-tâche)
     - [:computer: Quand ça touche au code](#computer-quand-ça-touche-au-code)
+    - [:twisted_rightwards_arrows: Quand ça touche aux branches de TP](#twisted_rightwards_arrows-quand-ça-touche-aux-branches-de-tp)
     - [:page_with_curl: Quand ça touche aux slides](#page_with_curl-quand-ça-touche-aux-slides)
   - [:pencil2: Conventions de commit](#pencil2-conventions-de-commit)
-  - [:card_index_dividers: Où modifier quoi](#card_index_dividers-où-modifier-quoi)
   - [:straight_ruler: Règles de code](#straight_ruler-règles-de-code)
   - [:books: Documenter les décisions](#books-documenter-les-décisions)
   - [:black_joker: Référents](#black_joker-référents)
+
+## :mortar_board: Je donne la formation
+
+- Les apprenants clonent le dépôt : ils arrivent sur `0_initial_state`, la branche par défaut.
+- Chaque TP indique sa branche de départ ; la solution complète est sur `final_state`.
+- Avant une session, vérifie chaque branche : `git switch <branche> && uv sync --locked`, puis `make tpN-validation` (branches 1 à 6) ou `make test-tps` (`final_state`).
+- Les consignes sont publiées sur GitHub Pages à chaque push sur `dev`. Les slides sont dans le [README](README.md#slides).
+
+## :evergreen_tree: Organisation des branches
+
+- **`dev` est la source de vérité** : solution complète, consignes (`TP_instructions/`) et documentation formateur.
+- **`N_start_X` est l'état de départ du TP N** : la solution des TP précédents, plus ce qu'il faut pour faire le TP N. `git diff <N> <N+1>` montre la correction du TP N.
+- **`final_state`** : la solution complète, sans les fichiers réservés aux formateurs.
+- **Branches** : `0_initial_state`, `1_start_clean_notebook`, `2_start_unit_test`, `3_start_sphinx_doc`, `4_start_ci`, `5_start_packaging`, `6_start_docker`, `final_state`.
+
+## :card_index_dividers: Où modifier quoi
+
+| Je veux modifier… | J'édite… |
+|---|---|
+| La solution finale (code, tests, API, Docker, CI) | les fichiers à la racine de `dev` |
+| Le contenu d'une branche de TP | `dev`, puis chaque branche concernée : voir [Quand ça touche aux branches de TP](#twisted_rightwards_arrows-quand-ça-touche-aux-branches-de-tp) |
+| Les consignes d'un TP | `TP_instructions/tpN.md` (publiées sur GitHub Pages à chaque push sur `dev`) |
+| Une commande du `Makefile` | le `Makefile`. Une recette tient sur une ligne, toute logique plus complexe va dans `scripts/` ([ADR 0001](docs/adr/0001-scripts-pour-la-logique-du-makefile.md)) |
+| Une dépendance | `uv add <paquet>` ou `uv add --group dev <paquet>`, puis commite `pyproject.toml` et `uv.lock` ensemble |
+| Les slides | Google Slides, puis la section [Quand ça touche aux slides](#page_with_curl-quand-ça-touche-aux-slides) de ce fichier |
 
 ## :wrench: Pré-requis
 
@@ -40,12 +67,6 @@ Puis installe le hook git qui lance `make static-validation` et `make test` avan
 ```sh
 make install-hooks
 ```
-
-## :evergreen_tree: Organisation des branches
-
-- **`dev` est la source de vérité.** Il contient la solution complète de la formation (code final, notebooks, documentation, CI, Docker) ainsi que les consignes des TP (`TP_instructions/`).
-- **Les branches de TP** (`0_initial_state`, `1_start_clean_notebook`, …) contiennent l'état de départ de chaque TP pour les apprenants. Elles sont dérivées de `dev`.
-- **Tu ne commites jamais directement sur une branche de TP.** Toute modification se fait sur `dev`, puis les branches de TP sont mises à jour à partir de `dev`.
 
 ## :speech_balloon: Proposer des améliorations
 
@@ -80,8 +101,9 @@ git switch -c <type>/<description-courte>   # ex. fix/chemin-modeles, docs/guide
    ```sh
    make static-validation   # lint, mise en forme, sécurité et code mort (Ruff, Bandit, Vulture)
    make test                # tests unitaires
-   make test-tps            # notebook, tests, package et documentation
+   make test-tps            # notebooks, tests, package et documentation
    ```
+   `make test-tps` s'arrête au premier échec. Il exécute chaque notebook sur une copie isolée : les modèles versionnés ne sont pas modifiés et les sorties vont dans des dossiers temporaires.
 3. Ouvre une Pull Request **vers `dev`** :
    - une PR traite **un seul sujet** ;
    - la description indique ce qui change, pourquoi, et comment tu l'as vérifié (les commandes lancées) ;
@@ -89,6 +111,19 @@ git switch -c <type>/<description-courte>   # ex. fix/chemin-modeles, docs/guide
    - pour lier la PR à son `issue`, écris `Closes #<numéro>` dans la description : l'`issue` sera fermée automatiquement au merge.
 
 Il n'y a pas de fichier de changelog : l'historique git, écrit avec les conventions de commit, en tient lieu (`git log --oneline`).
+
+### :twisted_rightwards_arrows: Quand ça touche aux branches de TP
+
+1. Modifie `dev` (PR vers `dev`).
+2. Reporte le changement à la main dans chaque branche concernée, un commit par branche, par-dessus l'historique (jamais de force-push).
+3. Sur chaque branche touchée, lance `make tpN-validation` (branches 1 à 6, aussi lancé par la CI) ou `make test-tps` (`final_state`).
+
+Règles des branches de TP :
+
+- Le `Makefile` est cumulatif : chaque branche ajoute les cibles des commandes apprises au TP précédent.
+- Le hook `.githooks/pre-commit` (à partir de la branche 3) est celui écrit au TP2.
+- Les notebooks sont commités sans sorties, sauf le brouillon du TP1 (mauvaise pratique volontaire).
+- Jamais de fichiers réservés aux formateurs : `TP_instructions/`, `docs/adr/`, `CONTRIBUTING.md`, `.github/workflows/static.yml`.
 
 ### :page_with_curl: Quand ça touche aux slides
 
@@ -138,16 +173,6 @@ Les messages suivent [Conventional Commits](https://www.conventionalcommits.org/
 Scopes courants : `make`, `api`, `notebook`, `src`, `tests`, `docs`, `tp`, `deps`.
 
 Si le titre ne suffit pas, ajoute un corps qui explique **pourquoi** le changement est nécessaire : le diff montre déjà le quoi.
-
-## :card_index_dividers: Où modifier quoi
-
-| Je veux modifier… | J'édite… |
-|---|---|
-| La solution finale (code, tests, API, Docker, CI) | les fichiers à la racine de `dev` |
-| Les consignes d'un TP | `TP_instructions/tpN.md` (publiées sur GitHub Pages à chaque push sur `dev`) |
-| Une commande du `Makefile` | le `Makefile`. Une recette tient sur une ligne, toute logique plus complexe va dans `scripts/` ([ADR 0001](docs/adr/0001-scripts-pour-la-logique-du-makefile.md)) |
-| Une dépendance | `uv add <paquet>` ou `uv add --group dev <paquet>`, puis commite `pyproject.toml` et `uv.lock` ensemble |
-| Les slides | Google Slides, puis la section [Quand ça touche aux slides](#page_with_curl-quand-ça-touche-aux-slides) de ce fichier |
 
 ## :straight_ruler: Règles de code
 
