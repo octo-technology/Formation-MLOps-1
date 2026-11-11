@@ -45,11 +45,11 @@ test:
 dependency-scan:
 	trivy fs --config trivy.yaml .
 
-.PHONY: test-notebook  ## exécute une copie du notebook sans modifier les modèles
+.PHONY: test-notebook  ## exécute chaque notebook de notebook/ sur une copie isolée, sans modifier les modèles
 test-notebook:
-	uv run python scripts/run_notebook.py notebook/titanic_train_model.ipynb
+	uv run python scripts/run_notebook.py notebook
 
-.PHONY: test-tps  ## valide le notebook, les tests, le package et la documentation
+.PHONY: test-tps  ## valide les notebooks, les tests, le package et la documentation
 test-tps: test-notebook test
 	tmp_dir=$$(mktemp -d) && trap 'rm -rf "$$tmp_dir"' EXIT && \
 	$(MAKE) distribution DIST_OUTPUT_DIR="$$tmp_dir/dist" && \
