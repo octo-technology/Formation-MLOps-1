@@ -11,17 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
-      - name: Set up Python
-        uses: actions/setup-python@v7.1.0
-        with:
-          python-version: "3.15"
-          check-latest: true
-      - name: Install uv
-        uses: astral-sh/setup-uv@v10.3.2
-        with:
-          version: "0.13.5"
-          enable-cache: true
-      - name: Install dependencies
-        run: uv sync --locked
-      - name: Check TP3 starting state
-        run: make tp3-validation
+      # À compléter, dans cet ordre :
+      # 1. installer Python, dans une version compatible avec pyproject.toml ;
+      # 2. installer uv 0.13.5 ;
+      # 3. installer les dépendances verrouillées ;
+      # 4. vérifier le code avec Ruff (src, tests, docs) ;
+      # 5. vérifier la mise en forme sans modifier les fichiers ;
+      # 6. lancer les tests ;
+      # 7. construire la documentation, en traitant les avertissements comme des erreurs.
+      - name: Run checks
+        run: echo "CI à compléter" && exit 1

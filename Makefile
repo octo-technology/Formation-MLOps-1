@@ -1,7 +1,8 @@
 SHELL := /bin/bash
 .SILENT:
 
-PYTHON_DIRS := src tests
+PYTHON_DIRS := src tests docs
+SPHINX_OUTPUT_DIR ?= docs/_build/html
 
 .PHONY: help
 help:
@@ -28,6 +29,10 @@ test:
 install-hooks:
 	git config core.hooksPath .githooks && echo "✅ Hook pre-commit installé (.githooks/pre-commit)"
 
+.PHONY: sphinx  ## crée la documentation
+sphinx:
+	uv run sphinx-build -W -b html docs "$(SPHINX_OUTPUT_DIR)"
+
 .PHONY: test-notebook  ## exécute chaque notebook de notebook/ sur une copie isolée, sans modifier les modèles
 test-notebook:
 	uv run python scripts/run_notebook.py notebook
@@ -36,5 +41,5 @@ test-notebook:
 clean:
 	rm -rf build dist docs/_build *.egg-info .pytest_cache .ruff_cache */__pycache__ */*/__pycache__ */.ipynb_checkpoints
 
-.PHONY: tp3-validation  ## vérifie l'état de départ du TP3 (le notebook s'exécute et les tests passent)
-tp3-validation: test-notebook test
+.PHONY: tp4-validation  ## vérifie l'état de départ du TP4 (notebook, tests et documentation)
+tp4-validation: test-notebook test sphinx
