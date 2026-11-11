@@ -26,7 +26,7 @@ test-notebook:
 
 .PHONY: clean  ## supprime les fichiers générés (caches, build, doc) ; ne touche ni à .venv ni aux modèles
 clean:
-	rm -rf build dist docs/_build *.egg-info .pytest_cache .ruff_cache */__pycache__ */*/__pycache__ */.ipynb_checkpoints
+	rm -rf build dist docs/_build *.egg-info .pytest_cache .ruff_cache htmlcov .coverage */__pycache__ */*/__pycache__ */.ipynb_checkpoints
 
 .PHONY: tp2-validation  ## vérifie l'état de départ du TP2 (le notebook s'exécute de bout en bout)
 tp2-validation: test-notebook
