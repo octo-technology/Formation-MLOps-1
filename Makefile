@@ -51,9 +51,9 @@ sphinx:
 test-notebook:
 	uv run python scripts/run_notebook.py notebook
 
-.PHONY: clean  ## supprime les fichiers générés (caches, build, doc) ; ne touche ni à .venv ni aux modèles
+.PHONY: clean  ## supprime les fichiers générés (caches, build, doc, prédictions du notebook) ; ne touche ni à .venv ni aux modèles
 clean:
-	rm -rf build dist docs/_build *.egg-info .pytest_cache .ruff_cache htmlcov .coverage */__pycache__ */*/__pycache__ */.ipynb_checkpoints
+	rm -rf build dist docs/_build *.egg-info .pytest_cache .ruff_cache .mypy_cache htmlcov .coverage */__pycache__ */*/__pycache__ */.ipynb_checkpoints notebook/y_test_predictions.csv
 
 .PHONY: tp5-validation  ## vérifie l'état de départ du TP5 (notebook, tests et documentation)
 tp5-validation: test-notebook test sphinx
