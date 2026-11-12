@@ -28,11 +28,13 @@ module-root = ""
 dev = [
     "bandit>=1.9.4",
     "httpx2>=2.16.0",
+    "myst-parser>=5.2.0",
     "nbconvert>=7.17.2",
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
     "ruff>=0.17.2",
     "sphinx>=9.2.0",
+    "sphinxcontrib-mermaid>=2.1.1",
     "vulture>=2.16",
 ]
 

@@ -1,6 +1,6 @@
 # Compatible avec les versions de GNU Make installées par défaut (3.81 sur macOS, 4.x sous Linux) :
 # Chaque ligne de recette s'exécute dans un shell séparé. logique sur plusieurs lignes -> scripts/
-# Voir docs/adr/0001.
+# Voir adr/0001.
 
 SHELL := /bin/bash
 .SILENT:
@@ -67,6 +67,6 @@ sphinx:
 distribution:
 	uv build --out-dir "$(DIST_OUTPUT_DIR)"
 
-.PHONY: clean  ## supprime les fichiers générés (caches, build, doc) ; ne touche ni à .venv ni aux modèles
+.PHONY: clean  ## supprime les fichiers générés (caches, build, doc, prédictions du notebook) ; ne touche ni à .venv ni aux modèles
 clean:
-	rm -rf build dist docs/_build *.egg-info .pytest_cache .ruff_cache htmlcov .coverage */__pycache__ */*/__pycache__ */.ipynb_checkpoints
+	rm -rf build dist docs/_build *.egg-info .pytest_cache .ruff_cache .mypy_cache htmlcov .coverage */__pycache__ */*/__pycache__ */.ipynb_checkpoints notebook/y_test_predictions.csv
