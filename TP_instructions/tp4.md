@@ -21,7 +21,7 @@ uv sync --locked
 ```
 
 Nouveautés sur cette branche :
-- La documentation Sphinx est créée.
+- La documentation Sphinx est créée : la référence du code et une page d'architecture avec un schéma Mermaid (extensions MyST et `sphinxcontrib-mermaid`, solution des parties optionnelles du TP3).
 - Nouvelle commande : `make sphinx` (construit la documentation).
 - Un fichier `.github/workflows/ci.yml` à compléter : la CI échoue tant qu'il n'est pas complété.
 - Le fichier `trivy.yaml`, qui configure l'analyse des dépendances.
