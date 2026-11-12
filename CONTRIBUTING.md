@@ -2,7 +2,7 @@
 
 Quelques règles pour donner la formation et contribuer à ce repo.
 
-Les contributeurs changent souvent et il n'y a pas de passation : tout ce qu'il faut savoir doit être écrit ici, dans le `README.md`, ou dans les décisions d'architecture de [`docs/adr/`](docs/adr/README.md).
+Les contributeurs changent souvent et il n'y a pas de passation : tout ce qu'il faut savoir doit être écrit ici, dans le `README.md`, ou dans les décisions d'architecture de [`adr/`](adr/README.md).
 
 - [CONTRIBUTING](#contributing)
   - [:mortar_board: Je donne la formation](#mortar_board-je-donne-la-formation)
@@ -45,7 +45,7 @@ Les contributeurs changent souvent et il n'y a pas de passation : tout ce qu'il 
 | La solution finale (code, tests, API, Docker, CI) | les fichiers à la racine de `dev` |
 | Le contenu d'une branche de TP | `dev`, puis chaque branche concernée : voir [Quand ça touche aux branches de TP](#twisted_rightwards_arrows-quand-ça-touche-aux-branches-de-tp) |
 | Les consignes d'un TP | `TP_instructions/tpN.md` (publiées sur GitHub Pages à chaque push sur `dev`) |
-| Une commande du `Makefile` | le `Makefile`. Une recette tient sur une ligne, toute logique plus complexe va dans `scripts/` ([ADR 0001](docs/adr/0001-scripts-pour-la-logique-du-makefile.md)) |
+| Une commande du `Makefile` | le `Makefile`. Une recette tient sur une ligne, toute logique plus complexe va dans `scripts/` ([ADR 0001](adr/0001-scripts-pour-la-logique-du-makefile.md)) |
 | Une dépendance | `uv add <paquet>` ou `uv add --group dev <paquet>`, puis commite `pyproject.toml` et `uv.lock` ensemble |
 | Les slides | Google Slides, puis la section [Quand ça touche aux slides](#page_with_curl-quand-ça-touche-aux-slides) de ce fichier |
 
@@ -129,7 +129,7 @@ Règles des branches de TP :
 - `make tpN-validation` vérifie l'état de départ du TP. Il tourne à chaque push dans `.github/workflows/tp-validation.yml`, uniquement sur ce dépôt (pas sur les forks des apprenants). `ci.yml` reste la CI de l'apprenant : sa solution du TP4 à partir de la branche 5.
 - Le hook `.githooks/pre-commit` (à partir de la branche 3) est celui écrit au TP2.
 - Les notebooks sont commités sans sorties, sauf le brouillon du TP1 (mauvaise pratique volontaire).
-- Jamais de fichiers réservés aux formateurs : `TP_instructions/`, `docs/adr/`, `CONTRIBUTING.md`, `.github/workflows/static.yml`.
+- Jamais de fichiers réservés aux formateurs : `TP_instructions/`, `adr/`, `CONTRIBUTING.md`, `.github/workflows/static.yml`.
 
 ### :page_with_curl: Quand ça touche aux slides
 
@@ -188,7 +188,7 @@ Si le titre ne suffit pas, ajoute un corps qui explique **pourquoi** le changeme
 
 ## :books: Documenter les décisions
 
-Une décision structurante (outil, organisation du repo, convention qui ne va pas de soi) fait l'objet d'un ADR dans [`docs/adr/`](docs/adr/README.md).
+Une décision structurante (outil, organisation du repo, convention qui ne va pas de soi) fait l'objet d'un ADR dans [`adr/`](adr/README.md).
 Avant de remettre en cause un choix existant, lis l'ADR correspondant. Pour changer de décision, écris un nouvel ADR qui remplace l'ancien.
 
 ## :black_joker: Référents
