@@ -41,16 +41,18 @@ release = "0.1.0"
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
+    "myst_parser",
+    "sphinxcontrib.mermaid",
 ]
+
+# Les blocs ```mermaid des pages Markdown sont rendus comme des schémas, comme sur GitHub.
+myst_fence_as_directive = ["mermaid"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
-# The suffix(es) of source filenames.
-# You can specify multiple suffix as a list of string:
-#
-# source_suffix = ['.rst', '.md']
-source_suffix = ".rst"
+# The suffix(es) of source filenames: reStructuredText, and Markdown through MyST.
+source_suffix = {".rst": "restructuredtext", ".md": "markdown"}
 
 # The master toctree document.
 master_doc = "index"

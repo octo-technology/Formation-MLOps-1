@@ -8,6 +8,12 @@ Formation MLOps 1 : industrialisation de la science des données
 
 .. toctree::
    :maxdepth: 2
+   :caption: Le projet :
+
+   architecture
+
+.. toctree::
+   :maxdepth: 2
    :caption: Référence du code :
 
    api/modules
